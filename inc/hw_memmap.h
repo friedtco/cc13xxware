@@ -95,6 +95,7 @@
 #define AUX_SYSIF_BASE          0x400C6000 // AUX_SYSIF
 #define AUX_WUC_BASE            AUX_SYSIF_BASE
 #define AUX_TIMER01_BASE        0x400C7000 // AUX_TIMER01
+#define AUX_TIMER_BASE          AUX_TIMER01_BASE
 #define AUX_SMPH_BASE           0x400C8000 // AUX_SMPH
 #define AUX_ANAIF_BASE          0x400C9000 // AUX_ANAIF
 #define AUX_DDI0_OSC_BASE       0x400CA000 // DDI
