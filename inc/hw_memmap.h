@@ -81,6 +81,8 @@
 #define ADI2_BASE               0x40086000 // ADI
 #define ADI3_BASE               0x40086200 // ADI
 #define AON_PMCTL_BASE          0x40090000 // AON_PMCTL
+#define AON_SYSCTL_BASE         AON_PMCTL_BASE
+#define AON_WUC_BASE            0x40091000 // AON_WUC
 #define AON_RTC_BASE            0x40092000 // AON_RTC
 #define AON_EVENT_BASE          0x40093000 // AON_EVENT
 #define AON_IOC_BASE            0x40094000 // AON_IOC
@@ -91,6 +93,7 @@
 #define AUX_TDC_BASE            0x400C4000 // AUX_TDC
 #define AUX_EVCTL_BASE          0x400C5000 // AUX_EVCTL
 #define AUX_SYSIF_BASE          0x400C6000 // AUX_SYSIF
+#define AUX_WUC_BASE            AUX_SYSIF_BASE
 #define AUX_TIMER01_BASE        0x400C7000 // AUX_TIMER01
 #define AUX_SMPH_BASE           0x400C8000 // AUX_SMPH
 #define AUX_ANAIF_BASE          0x400C9000 // AUX_ANAIF

@@ -72,6 +72,7 @@
 
 // Sleep Control
 #define AON_PMCTL_O_SLEEPCTL                                        0x0000002C
+#define AON_SYSCTL_O_SLEEPCTL                                       AON_PMCTL_O_SLEEPCTL
 
 // JTAG Configuration
 #define AON_PMCTL_O_JTAGCFG                                         0x00000034

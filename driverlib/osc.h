@@ -116,6 +116,7 @@ extern "C"
 //
 //*****************************************************************************
 #define OSC_SRC_CLK_HF          0x00000001
+#define OSC_SRC_CLK_MF          0x00000002
 #define OSC_SRC_CLK_LF          0x00000004
 
 #define OSC_RCOSC_HF            0x00000000
