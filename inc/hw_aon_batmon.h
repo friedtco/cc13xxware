@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_aon_batmon_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,24 @@
 
 // Temperature Update
 #define AON_BATMON_O_TEMPUPD                                        0x00000034
+
+// Event Mask
+#define AON_BATMON_O_EVENTMASK                                      0x00000048
+
+// Event
+#define AON_BATMON_O_EVENT                                          0x0000004C
+
+// Battery Upper Limit
+#define AON_BATMON_O_BATTUL                                         0x00000050
+
+// Battery Lower Limit
+#define AON_BATMON_O_BATTLL                                         0x00000054
+
+// Temperature Upper Limit
+#define AON_BATMON_O_TEMPUL                                         0x00000058
+
+// Temperature Lower Limit
+#define AON_BATMON_O_TEMPLL                                         0x0000005C
 
 //*****************************************************************************
 //
@@ -165,11 +183,11 @@
 // Register: AON_BATMON_O_BATMONP0
 //
 //*****************************************************************************
-// Field:   [5:0] CFG
+// Field:   [6:0] CFG
 //
 // Internal. Only to be used through TI provided API.
-#define AON_BATMON_BATMONP0_CFG_W                                            6
-#define AON_BATMON_BATMONP0_CFG_M                                   0x0000003F
+#define AON_BATMON_BATMONP0_CFG_W                                            7
+#define AON_BATMON_BATMONP0_CFG_M                                   0x0000007F
 #define AON_BATMON_BATMONP0_CFG_S                                            0
 
 //*****************************************************************************
@@ -208,6 +226,14 @@
 // Register: AON_BATMON_O_FLASHPUMPP0
 //
 //*****************************************************************************
+// Field:     [9] DIS_NOISE_FILTER
+//
+// Internal. Only to be used through TI provided API.
+#define AON_BATMON_FLASHPUMPP0_DIS_NOISE_FILTER                     0x00000200
+#define AON_BATMON_FLASHPUMPP0_DIS_NOISE_FILTER_BITN                         9
+#define AON_BATMON_FLASHPUMPP0_DIS_NOISE_FILTER_M                   0x00000200
+#define AON_BATMON_FLASHPUMPP0_DIS_NOISE_FILTER_S                            9
+
 // Field:     [8] FALLB
 //
 // Internal. Only to be used through TI provided API.
@@ -335,6 +361,302 @@
 #define AON_BATMON_TEMPUPD_STAT_BITN                                         0
 #define AON_BATMON_TEMPUPD_STAT_M                                   0x00000001
 #define AON_BATMON_TEMPUPD_STAT_S                                            0
+
+//*****************************************************************************
+//
+// Register: AON_BATMON_O_EVENTMASK
+//
+//*****************************************************************************
+// Field:     [5] TEMP_UPDATE_MASK
+//
+// 1: EVENT.TEMP_UPDATE contributes to combined event from BATMON
+// 0: EVENT.TEMP_UPDATE does not contribute to combined event from BATMON
+#define AON_BATMON_EVENTMASK_TEMP_UPDATE_MASK                       0x00000020
+#define AON_BATMON_EVENTMASK_TEMP_UPDATE_MASK_BITN                           5
+#define AON_BATMON_EVENTMASK_TEMP_UPDATE_MASK_M                     0x00000020
+#define AON_BATMON_EVENTMASK_TEMP_UPDATE_MASK_S                              5
+
+// Field:     [4] BATT_UPDATE_MASK
+//
+// 1: EVENT.BATT_UPDATE contributes to combined event from BATMON
+// 0: EVENT.BATT_UPDATE does not contribute to combined event from BATMON
+#define AON_BATMON_EVENTMASK_BATT_UPDATE_MASK                       0x00000010
+#define AON_BATMON_EVENTMASK_BATT_UPDATE_MASK_BITN                           4
+#define AON_BATMON_EVENTMASK_BATT_UPDATE_MASK_M                     0x00000010
+#define AON_BATMON_EVENTMASK_BATT_UPDATE_MASK_S                              4
+
+// Field:     [3] TEMP_BELOW_LL_MASK
+//
+// 1: EVENT.TEMP_BELOW_LL contributes to combined event from BATMON
+// 0: EVENT.TEMP_BELOW_LL does not contribute to combined event from BATMON
+#define AON_BATMON_EVENTMASK_TEMP_BELOW_LL_MASK                     0x00000008
+#define AON_BATMON_EVENTMASK_TEMP_BELOW_LL_MASK_BITN                         3
+#define AON_BATMON_EVENTMASK_TEMP_BELOW_LL_MASK_M                   0x00000008
+#define AON_BATMON_EVENTMASK_TEMP_BELOW_LL_MASK_S                            3
+
+// Field:     [2] TEMP_OVER_UL_MASK
+//
+// 1: EVENT.TEMP_OVER_UL contributes to combined event from BATMON
+// 0: EVENT.TEMP_OVER_UL does not contribute to combined event from BATMON
+#define AON_BATMON_EVENTMASK_TEMP_OVER_UL_MASK                      0x00000004
+#define AON_BATMON_EVENTMASK_TEMP_OVER_UL_MASK_BITN                          2
+#define AON_BATMON_EVENTMASK_TEMP_OVER_UL_MASK_M                    0x00000004
+#define AON_BATMON_EVENTMASK_TEMP_OVER_UL_MASK_S                             2
+
+// Field:     [1] BATT_BELOW_LL_MASK
+//
+// 1: EVENT.BATT_BELOW_LL contributes to combined event from BATMON
+// 0: EVENT.BATT_BELOW_LL does not contribute to combined event from BATMON
+#define AON_BATMON_EVENTMASK_BATT_BELOW_LL_MASK                     0x00000002
+#define AON_BATMON_EVENTMASK_BATT_BELOW_LL_MASK_BITN                         1
+#define AON_BATMON_EVENTMASK_BATT_BELOW_LL_MASK_M                   0x00000002
+#define AON_BATMON_EVENTMASK_BATT_BELOW_LL_MASK_S                            1
+
+// Field:     [0] BATT_OVER_UL_MASK
+//
+// 1: EVENT.BATT_OVER_UL contributes to combined event from BATMON
+// 0: EVENT.BATT_OVER_UL does not contribute to combined event from BATMON
+#define AON_BATMON_EVENTMASK_BATT_OVER_UL_MASK                      0x00000001
+#define AON_BATMON_EVENTMASK_BATT_OVER_UL_MASK_BITN                          0
+#define AON_BATMON_EVENTMASK_BATT_OVER_UL_MASK_M                    0x00000001
+#define AON_BATMON_EVENTMASK_BATT_OVER_UL_MASK_S                             0
+
+//*****************************************************************************
+//
+// Register: AON_BATMON_O_EVENT
+//
+//*****************************************************************************
+// Field:     [5] TEMP_UPDATE
+//
+// Alias to TEMPUPD.STAT
+#define AON_BATMON_EVENT_TEMP_UPDATE                                0x00000020
+#define AON_BATMON_EVENT_TEMP_UPDATE_BITN                                    5
+#define AON_BATMON_EVENT_TEMP_UPDATE_M                              0x00000020
+#define AON_BATMON_EVENT_TEMP_UPDATE_S                                       5
+
+// Field:     [4] BATT_UPDATE
+//
+// Alias to BATUPD.STAT
+#define AON_BATMON_EVENT_BATT_UPDATE                                0x00000010
+#define AON_BATMON_EVENT_BATT_UPDATE_BITN                                    4
+#define AON_BATMON_EVENT_BATT_UPDATE_M                              0x00000010
+#define AON_BATMON_EVENT_BATT_UPDATE_S                                       4
+
+// Field:     [3] TEMP_BELOW_LL
+//
+// Read:
+// 1: Temperature level is below the lower limit set by TEMPLL.
+// 0: Temperature level is not below the lower limit set by TEMPLL.
+// Write:
+// 1: Clears the flag
+// 0: No change in the flag
+#define AON_BATMON_EVENT_TEMP_BELOW_LL                              0x00000008
+#define AON_BATMON_EVENT_TEMP_BELOW_LL_BITN                                  3
+#define AON_BATMON_EVENT_TEMP_BELOW_LL_M                            0x00000008
+#define AON_BATMON_EVENT_TEMP_BELOW_LL_S                                     3
+
+// Field:     [2] TEMP_OVER_UL
+//
+// Read:
+// 1: Temperature level is above the upper limit set by TEMPUL.
+// 0: Temperature level is not above the upper limit set by TEMPUL.
+// Write:
+// 1: Clears the flag
+// 0: No change in the flag
+#define AON_BATMON_EVENT_TEMP_OVER_UL                               0x00000004
+#define AON_BATMON_EVENT_TEMP_OVER_UL_BITN                                   2
+#define AON_BATMON_EVENT_TEMP_OVER_UL_M                             0x00000004
+#define AON_BATMON_EVENT_TEMP_OVER_UL_S                                      2
+
+// Field:     [1] BATT_BELOW_LL
+//
+// Read:
+// 1: Battery level is below the lower limit set by BATTLL.
+// 0: Battery level is not below the lower limit set by BATTLL.
+// Write:
+// 1: Clears the flag
+// 0: No change in the flag
+#define AON_BATMON_EVENT_BATT_BELOW_LL                              0x00000002
+#define AON_BATMON_EVENT_BATT_BELOW_LL_BITN                                  1
+#define AON_BATMON_EVENT_BATT_BELOW_LL_M                            0x00000002
+#define AON_BATMON_EVENT_BATT_BELOW_LL_S                                     1
+
+// Field:     [0] BATT_OVER_UL
+//
+// Read:
+// 1: Battery level is above the upper limit set by BATTUL.
+// 0: Battery level is not above the upper limit set by BATTUL.
+// Write:
+// 1: Clears the flag
+// 0: No change in the flag
+#define AON_BATMON_EVENT_BATT_OVER_UL                               0x00000001
+#define AON_BATMON_EVENT_BATT_OVER_UL_BITN                                   0
+#define AON_BATMON_EVENT_BATT_OVER_UL_M                             0x00000001
+#define AON_BATMON_EVENT_BATT_OVER_UL_S                                      0
+
+//*****************************************************************************
+//
+// Register: AON_BATMON_O_BATTUL
+//
+//*****************************************************************************
+// Field:  [10:8] INT
+//
+// Integer part:
+//
+// 0x0: 0V + fractional part
+// ...
+// 0x3: 3V + fractional part
+// 0x4: 4V + fractional part
+#define AON_BATMON_BATTUL_INT_W                                              3
+#define AON_BATMON_BATTUL_INT_M                                     0x00000700
+#define AON_BATMON_BATTUL_INT_S                                              8
+
+// Field:   [7:0] FRAC
+//
+// Fractional part, standard binary fractional encoding.
+//
+// 0x00: .0V
+// ...
+// 0x20: 1/8 = .125V
+// 0x40: 1/4 = .25V
+// 0x80: 1/2 = .5V
+// ...
+// 0xA0: 1/2 + 1/8 = .625V
+// ...
+// 0xFF: Max
+#define AON_BATMON_BATTUL_FRAC_W                                             8
+#define AON_BATMON_BATTUL_FRAC_M                                    0x000000FF
+#define AON_BATMON_BATTUL_FRAC_S                                             0
+
+//*****************************************************************************
+//
+// Register: AON_BATMON_O_BATTLL
+//
+//*****************************************************************************
+// Field:  [10:8] INT
+//
+// Integer part:
+//
+// 0x0: 0V + fractional part
+// ...
+// 0x3: 3V + fractional part
+// 0x4: 4V + fractional part
+#define AON_BATMON_BATTLL_INT_W                                              3
+#define AON_BATMON_BATTLL_INT_M                                     0x00000700
+#define AON_BATMON_BATTLL_INT_S                                              8
+
+// Field:   [7:0] FRAC
+//
+// Fractional part, standard binary fractional encoding.
+//
+// 0x00: .0V
+// ...
+// 0x20: 1/8 = .125V
+// 0x40: 1/4 = .25V
+// 0x80: 1/2 = .5V
+// ...
+// 0xA0: 1/2 + 1/8 = .625V
+// ...
+// 0xFF: Max
+#define AON_BATMON_BATTLL_FRAC_W                                             8
+#define AON_BATMON_BATTLL_FRAC_M                                    0x000000FF
+#define AON_BATMON_BATTLL_FRAC_S                                             0
+
+//*****************************************************************************
+//
+// Register: AON_BATMON_O_TEMPUL
+//
+//*****************************************************************************
+// Field:  [16:8] INT
+//
+// Integer part (signed) of temperature upper limit.
+// Total value = INTEGER + FRACTIONAL
+// 2's complement encoding
+//
+// 0x100: Min value
+// 0x1D8: -40C
+// 0x1FF: -1C
+// 0x00: 0C
+// 0x1B: 27C
+// 0x55: 85C
+// 0xFF: Max value
+#define AON_BATMON_TEMPUL_INT_W                                              9
+#define AON_BATMON_TEMPUL_INT_M                                     0x0001FF00
+#define AON_BATMON_TEMPUL_INT_S                                              8
+
+// Field:   [7:6] FRAC
+//
+// Fractional part of temperature upper limit.
+// Total value = INTEGER + FRACTIONAL
+// The encoding is an extension of the 2's complement encoding.
+//
+// 00: 0.0C
+// 01: 0.25C
+// 10: 0.5C
+// 11: 0.75C
+//
+// For example:
+// 000000001,00 = ( 1+0,00) =  1,00
+// 000000000,11 = ( 0+0,75) =  0,75
+// 000000000,10 = ( 0+0,50) =  0,50
+// 000000000,01 = ( 0+0,25) =  0,25
+// 000000000,00 = ( 0+0,00) =  0,00
+// 111111111,11 = (-1+0,75) = -0,25
+// 111111111,10 = (-1+0,50) = -0,50
+// 111111111,01 = (-1+0,25) = -0,75
+// 111111111,00 = (-1+0,00) = -1,00
+// 111111110,11 = (-2+0,75) = -1,25
+#define AON_BATMON_TEMPUL_FRAC_W                                             2
+#define AON_BATMON_TEMPUL_FRAC_M                                    0x000000C0
+#define AON_BATMON_TEMPUL_FRAC_S                                             6
+
+//*****************************************************************************
+//
+// Register: AON_BATMON_O_TEMPLL
+//
+//*****************************************************************************
+// Field:  [16:8] INT
+//
+// Integer part (signed) of temperature lower limit.
+// Total value = INTEGER + FRACTIONAL
+// 2's complement encoding
+//
+// 0x100: Min value
+// 0x1D8: -40C
+// 0x1FF: -1C
+// 0x00: 0C
+// 0x1B: 27C
+// 0x55: 85C
+// 0xFF: Max value
+#define AON_BATMON_TEMPLL_INT_W                                              9
+#define AON_BATMON_TEMPLL_INT_M                                     0x0001FF00
+#define AON_BATMON_TEMPLL_INT_S                                              8
+
+// Field:   [7:6] FRAC
+//
+// Fractional part of temperature lower limit.
+// Total value = INTEGER + FRACTIONAL
+// The encoding is an extension of the 2's complement encoding.
+//
+// 00: 0.0C
+// 01: 0.25C
+// 10: 0.5C
+// 11: 0.75C
+//
+// For example:
+// 000000001,00 = ( 1+0,00) =  1,00
+// 000000000,11 = ( 0+0,75) =  0,75
+// 000000000,10 = ( 0+0,50) =  0,50
+// 000000000,01 = ( 0+0,25) =  0,25
+// 000000000,00 = ( 0+0,00) =  0,00
+// 111111111,11 = (-1+0,75) = -0,25
+// 111111111,10 = (-1+0,50) = -0,50
+// 111111111,01 = (-1+0,25) = -0,75
+// 111111111,00 = (-1+0,00) = -1,00
+// 111111110,11 = (-2+0,75) = -1,25
+#define AON_BATMON_TEMPLL_FRAC_W                                             2
+#define AON_BATMON_TEMPLL_FRAC_M                                    0x000000C0
+#define AON_BATMON_TEMPLL_FRAC_S                                             6
 
 
 #endif // __AON_BATMON__

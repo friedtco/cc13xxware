@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_ioc_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -158,7 +158,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG0_IE                                               0x20000000
 #define IOC_IOCFG0_IE_BITN                                                  29
@@ -167,16 +167,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -192,7 +192,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -217,6 +218,39 @@
 #define IOC_IOCFG0_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG0_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG0_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG0_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG0_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG0_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG0_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG0_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG0_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG0_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG0_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG0_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG0_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG0_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG0_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -310,6 +344,28 @@
 #define IOC_IOCFG0_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG0_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG0_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG0_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG0_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG0_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG0_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG0_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG0_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG0_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO0
@@ -337,52 +393,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -428,6 +488,10 @@
 #define IOC_IOCFG0_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG0_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG0_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG0_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG0_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG0_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG0_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG0_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG0_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG0_PORT_ID_UART0_TX                                 0x00000010
@@ -461,7 +525,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG1_IE                                               0x20000000
 #define IOC_IOCFG1_IE_BITN                                                  29
@@ -470,16 +534,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -495,7 +559,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -520,6 +585,39 @@
 #define IOC_IOCFG1_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG1_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG1_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG1_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG1_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG1_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG1_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG1_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG1_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG1_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG1_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG1_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG1_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG1_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG1_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -613,6 +711,28 @@
 #define IOC_IOCFG1_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG1_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG1_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG1_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG1_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG1_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG1_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG1_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG1_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG1_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO1
@@ -640,52 +760,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -731,6 +855,10 @@
 #define IOC_IOCFG1_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG1_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG1_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG1_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG1_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG1_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG1_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG1_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG1_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG1_PORT_ID_UART0_TX                                 0x00000010
@@ -764,7 +892,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG2_IE                                               0x20000000
 #define IOC_IOCFG2_IE_BITN                                                  29
@@ -773,16 +901,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -798,7 +926,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -823,6 +952,39 @@
 #define IOC_IOCFG2_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG2_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG2_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG2_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG2_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG2_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG2_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG2_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG2_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG2_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG2_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG2_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG2_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG2_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG2_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -916,6 +1078,28 @@
 #define IOC_IOCFG2_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG2_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG2_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG2_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG2_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG2_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG2_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG2_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG2_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG2_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO2
@@ -943,52 +1127,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -1034,6 +1222,10 @@
 #define IOC_IOCFG2_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG2_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG2_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG2_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG2_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG2_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG2_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG2_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG2_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG2_PORT_ID_UART0_TX                                 0x00000010
@@ -1067,7 +1259,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG3_IE                                               0x20000000
 #define IOC_IOCFG3_IE_BITN                                                  29
@@ -1076,16 +1268,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -1101,7 +1293,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -1126,6 +1319,39 @@
 #define IOC_IOCFG3_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG3_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG3_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG3_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG3_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG3_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG3_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG3_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG3_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG3_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG3_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG3_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG3_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG3_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG3_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -1219,6 +1445,28 @@
 #define IOC_IOCFG3_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG3_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG3_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG3_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG3_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG3_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG3_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG3_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG3_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG3_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO3
@@ -1246,52 +1494,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -1337,6 +1589,10 @@
 #define IOC_IOCFG3_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG3_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG3_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG3_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG3_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG3_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG3_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG3_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG3_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG3_PORT_ID_UART0_TX                                 0x00000010
@@ -1370,7 +1626,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG4_IE                                               0x20000000
 #define IOC_IOCFG4_IE_BITN                                                  29
@@ -1379,16 +1635,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -1404,7 +1660,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -1429,6 +1686,39 @@
 #define IOC_IOCFG4_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG4_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG4_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG4_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG4_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG4_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG4_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG4_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG4_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG4_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG4_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG4_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG4_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG4_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG4_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -1522,6 +1812,28 @@
 #define IOC_IOCFG4_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG4_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG4_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG4_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG4_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG4_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG4_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG4_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG4_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG4_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO4
@@ -1549,52 +1861,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -1640,6 +1956,10 @@
 #define IOC_IOCFG4_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG4_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG4_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG4_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG4_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG4_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG4_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG4_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG4_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG4_PORT_ID_UART0_TX                                 0x00000010
@@ -1673,7 +1993,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG5_IE                                               0x20000000
 #define IOC_IOCFG5_IE_BITN                                                  29
@@ -1682,16 +2002,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -1707,7 +2027,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -1732,6 +2053,39 @@
 #define IOC_IOCFG5_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG5_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG5_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG5_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG5_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG5_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG5_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG5_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG5_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG5_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG5_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG5_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG5_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG5_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG5_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -1825,6 +2179,28 @@
 #define IOC_IOCFG5_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG5_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG5_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG5_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG5_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG5_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG5_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG5_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG5_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG5_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO5
@@ -1852,52 +2228,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -1943,6 +2323,10 @@
 #define IOC_IOCFG5_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG5_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG5_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG5_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG5_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG5_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG5_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG5_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG5_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG5_PORT_ID_UART0_TX                                 0x00000010
@@ -1976,7 +2360,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG6_IE                                               0x20000000
 #define IOC_IOCFG6_IE_BITN                                                  29
@@ -1985,16 +2369,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -2010,7 +2394,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -2035,6 +2420,39 @@
 #define IOC_IOCFG6_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG6_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG6_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG6_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG6_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG6_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG6_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG6_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG6_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG6_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG6_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG6_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG6_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG6_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG6_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -2128,6 +2546,28 @@
 #define IOC_IOCFG6_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG6_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG6_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG6_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG6_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG6_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG6_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG6_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG6_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG6_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO6
@@ -2155,52 +2595,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -2246,6 +2690,10 @@
 #define IOC_IOCFG6_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG6_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG6_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG6_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG6_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG6_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG6_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG6_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG6_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG6_PORT_ID_UART0_TX                                 0x00000010
@@ -2279,7 +2727,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG7_IE                                               0x20000000
 #define IOC_IOCFG7_IE_BITN                                                  29
@@ -2288,16 +2736,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -2313,7 +2761,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -2338,6 +2787,39 @@
 #define IOC_IOCFG7_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG7_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG7_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG7_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG7_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG7_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG7_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG7_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG7_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG7_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG7_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG7_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG7_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG7_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG7_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -2431,6 +2913,28 @@
 #define IOC_IOCFG7_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG7_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG7_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG7_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG7_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG7_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG7_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG7_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG7_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG7_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO7
@@ -2458,52 +2962,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -2549,6 +3057,10 @@
 #define IOC_IOCFG7_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG7_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG7_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG7_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG7_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG7_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG7_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG7_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG7_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG7_PORT_ID_UART0_TX                                 0x00000010
@@ -2582,7 +3094,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG8_IE                                               0x20000000
 #define IOC_IOCFG8_IE_BITN                                                  29
@@ -2591,16 +3103,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -2616,7 +3128,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -2641,6 +3154,39 @@
 #define IOC_IOCFG8_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG8_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG8_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG8_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG8_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG8_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG8_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG8_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG8_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG8_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG8_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG8_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG8_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG8_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG8_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -2734,6 +3280,28 @@
 #define IOC_IOCFG8_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG8_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG8_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG8_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG8_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG8_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG8_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG8_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG8_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG8_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO8
@@ -2761,52 +3329,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -2852,6 +3424,10 @@
 #define IOC_IOCFG8_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG8_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG8_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG8_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG8_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG8_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG8_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG8_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG8_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG8_PORT_ID_UART0_TX                                 0x00000010
@@ -2885,7 +3461,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG9_IE                                               0x20000000
 #define IOC_IOCFG9_IE_BITN                                                  29
@@ -2894,16 +3470,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -2919,7 +3495,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -2944,6 +3521,39 @@
 #define IOC_IOCFG9_IOMODE_OPENDR                                    0x04000000
 #define IOC_IOCFG9_IOMODE_INV                                       0x01000000
 #define IOC_IOCFG9_IOMODE_NORMAL                                    0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG9_IOEV_AON_PROG2_EN                                0x00800000
+#define IOC_IOCFG9_IOEV_AON_PROG2_EN_BITN                                   23
+#define IOC_IOCFG9_IOEV_AON_PROG2_EN_M                              0x00800000
+#define IOC_IOCFG9_IOEV_AON_PROG2_EN_S                                      23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG9_IOEV_AON_PROG1_EN                                0x00400000
+#define IOC_IOCFG9_IOEV_AON_PROG1_EN_BITN                                   22
+#define IOC_IOCFG9_IOEV_AON_PROG1_EN_M                              0x00400000
+#define IOC_IOCFG9_IOEV_AON_PROG1_EN_S                                      22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG9_IOEV_AON_PROG0_EN                                0x00200000
+#define IOC_IOCFG9_IOEV_AON_PROG0_EN_BITN                                   21
+#define IOC_IOCFG9_IOEV_AON_PROG0_EN_M                              0x00200000
+#define IOC_IOCFG9_IOEV_AON_PROG0_EN_S                                      21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -3037,6 +3647,28 @@
 #define IOC_IOCFG9_IOSTR_MIN                                        0x00000100
 #define IOC_IOCFG9_IOSTR_AUTO                                       0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG9_IOEV_RTC_EN                                      0x00000080
+#define IOC_IOCFG9_IOEV_RTC_EN_BITN                                          7
+#define IOC_IOCFG9_IOEV_RTC_EN_M                                    0x00000080
+#define IOC_IOCFG9_IOEV_RTC_EN_S                                             7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG9_IOEV_MCU_WU_EN                                   0x00000040
+#define IOC_IOCFG9_IOEV_MCU_WU_EN_BITN                                       6
+#define IOC_IOCFG9_IOEV_MCU_WU_EN_M                                 0x00000040
+#define IOC_IOCFG9_IOEV_MCU_WU_EN_S                                          6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO9
@@ -3064,52 +3696,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -3155,6 +3791,10 @@
 #define IOC_IOCFG9_PORT_ID_PORT_EVENT2                              0x00000019
 #define IOC_IOCFG9_PORT_ID_PORT_EVENT1                              0x00000018
 #define IOC_IOCFG9_PORT_ID_PORT_EVENT0                              0x00000017
+#define IOC_IOCFG9_PORT_ID_UART1_RTS                                0x00000016
+#define IOC_IOCFG9_PORT_ID_UART1_CTS                                0x00000015
+#define IOC_IOCFG9_PORT_ID_UART1_TX                                 0x00000014
+#define IOC_IOCFG9_PORT_ID_UART1_RX                                 0x00000013
 #define IOC_IOCFG9_PORT_ID_UART0_RTS                                0x00000012
 #define IOC_IOCFG9_PORT_ID_UART0_CTS                                0x00000011
 #define IOC_IOCFG9_PORT_ID_UART0_TX                                 0x00000010
@@ -3188,7 +3828,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG10_IE                                              0x20000000
 #define IOC_IOCFG10_IE_BITN                                                 29
@@ -3197,16 +3837,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -3222,7 +3862,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -3247,6 +3888,39 @@
 #define IOC_IOCFG10_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG10_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG10_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG10_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG10_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG10_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG10_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG10_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG10_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG10_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG10_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG10_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG10_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG10_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG10_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -3340,6 +4014,28 @@
 #define IOC_IOCFG10_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG10_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG10_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG10_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG10_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG10_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG10_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG10_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG10_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG10_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO10
@@ -3367,52 +4063,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -3458,6 +4158,10 @@
 #define IOC_IOCFG10_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG10_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG10_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG10_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG10_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG10_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG10_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG10_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG10_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG10_PORT_ID_UART0_TX                                0x00000010
@@ -3491,7 +4195,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG11_IE                                              0x20000000
 #define IOC_IOCFG11_IE_BITN                                                 29
@@ -3500,16 +4204,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -3525,7 +4229,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -3550,6 +4255,39 @@
 #define IOC_IOCFG11_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG11_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG11_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG11_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG11_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG11_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG11_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG11_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG11_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG11_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG11_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG11_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG11_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG11_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG11_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -3643,6 +4381,28 @@
 #define IOC_IOCFG11_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG11_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG11_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG11_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG11_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG11_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG11_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG11_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG11_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG11_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO11
@@ -3670,52 +4430,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -3761,6 +4525,10 @@
 #define IOC_IOCFG11_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG11_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG11_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG11_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG11_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG11_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG11_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG11_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG11_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG11_PORT_ID_UART0_TX                                0x00000010
@@ -3794,7 +4562,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG12_IE                                              0x20000000
 #define IOC_IOCFG12_IE_BITN                                                 29
@@ -3803,16 +4571,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -3828,7 +4596,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -3853,6 +4622,39 @@
 #define IOC_IOCFG12_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG12_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG12_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG12_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG12_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG12_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG12_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG12_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG12_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG12_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG12_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG12_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG12_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG12_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG12_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -3946,6 +4748,28 @@
 #define IOC_IOCFG12_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG12_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG12_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG12_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG12_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG12_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG12_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG12_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG12_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG12_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO12
@@ -3973,52 +4797,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -4064,6 +4892,10 @@
 #define IOC_IOCFG12_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG12_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG12_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG12_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG12_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG12_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG12_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG12_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG12_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG12_PORT_ID_UART0_TX                                0x00000010
@@ -4097,7 +4929,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG13_IE                                              0x20000000
 #define IOC_IOCFG13_IE_BITN                                                 29
@@ -4106,16 +4938,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -4131,7 +4963,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -4156,6 +4989,39 @@
 #define IOC_IOCFG13_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG13_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG13_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG13_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG13_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG13_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG13_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG13_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG13_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG13_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG13_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG13_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG13_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG13_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG13_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -4249,6 +5115,28 @@
 #define IOC_IOCFG13_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG13_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG13_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG13_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG13_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG13_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG13_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG13_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG13_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG13_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO13
@@ -4276,52 +5164,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -4367,6 +5259,10 @@
 #define IOC_IOCFG13_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG13_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG13_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG13_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG13_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG13_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG13_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG13_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG13_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG13_PORT_ID_UART0_TX                                0x00000010
@@ -4400,7 +5296,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG14_IE                                              0x20000000
 #define IOC_IOCFG14_IE_BITN                                                 29
@@ -4409,16 +5305,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -4434,7 +5330,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -4459,6 +5356,39 @@
 #define IOC_IOCFG14_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG14_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG14_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG14_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG14_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG14_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG14_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG14_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG14_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG14_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG14_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG14_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG14_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG14_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG14_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -4552,6 +5482,28 @@
 #define IOC_IOCFG14_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG14_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG14_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG14_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG14_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG14_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG14_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG14_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG14_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG14_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO14
@@ -4579,52 +5531,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -4670,6 +5626,10 @@
 #define IOC_IOCFG14_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG14_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG14_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG14_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG14_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG14_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG14_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG14_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG14_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG14_PORT_ID_UART0_TX                                0x00000010
@@ -4703,7 +5663,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG15_IE                                              0x20000000
 #define IOC_IOCFG15_IE_BITN                                                 29
@@ -4712,16 +5672,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -4737,7 +5697,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -4762,6 +5723,39 @@
 #define IOC_IOCFG15_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG15_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG15_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG15_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG15_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG15_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG15_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG15_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG15_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG15_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG15_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG15_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG15_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG15_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG15_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -4855,6 +5849,28 @@
 #define IOC_IOCFG15_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG15_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG15_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG15_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG15_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG15_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG15_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG15_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG15_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG15_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO15
@@ -4882,52 +5898,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -4973,6 +5993,10 @@
 #define IOC_IOCFG15_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG15_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG15_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG15_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG15_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG15_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG15_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG15_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG15_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG15_PORT_ID_UART0_TX                                0x00000010
@@ -5006,7 +6030,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG16_IE                                              0x20000000
 #define IOC_IOCFG16_IE_BITN                                                 29
@@ -5015,16 +6039,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -5040,7 +6064,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -5065,6 +6090,39 @@
 #define IOC_IOCFG16_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG16_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG16_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG16_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG16_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG16_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG16_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG16_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG16_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG16_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG16_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG16_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG16_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG16_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG16_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -5158,6 +6216,28 @@
 #define IOC_IOCFG16_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG16_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG16_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG16_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG16_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG16_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG16_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG16_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG16_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG16_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO16
@@ -5185,52 +6265,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -5276,6 +6360,10 @@
 #define IOC_IOCFG16_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG16_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG16_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG16_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG16_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG16_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG16_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG16_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG16_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG16_PORT_ID_UART0_TX                                0x00000010
@@ -5309,7 +6397,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG17_IE                                              0x20000000
 #define IOC_IOCFG17_IE_BITN                                                 29
@@ -5318,16 +6406,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -5343,7 +6431,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -5368,6 +6457,39 @@
 #define IOC_IOCFG17_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG17_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG17_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG17_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG17_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG17_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG17_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG17_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG17_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG17_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG17_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG17_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG17_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG17_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG17_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -5461,6 +6583,28 @@
 #define IOC_IOCFG17_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG17_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG17_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG17_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG17_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG17_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG17_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG17_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG17_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG17_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO17
@@ -5488,52 +6632,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -5579,6 +6727,10 @@
 #define IOC_IOCFG17_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG17_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG17_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG17_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG17_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG17_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG17_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG17_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG17_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG17_PORT_ID_UART0_TX                                0x00000010
@@ -5612,7 +6764,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG18_IE                                              0x20000000
 #define IOC_IOCFG18_IE_BITN                                                 29
@@ -5621,16 +6773,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -5646,7 +6798,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -5671,6 +6824,39 @@
 #define IOC_IOCFG18_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG18_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG18_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG18_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG18_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG18_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG18_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG18_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG18_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG18_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG18_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG18_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG18_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG18_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG18_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -5764,6 +6950,28 @@
 #define IOC_IOCFG18_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG18_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG18_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG18_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG18_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG18_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG18_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG18_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG18_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG18_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO18
@@ -5791,52 +6999,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -5882,6 +7094,10 @@
 #define IOC_IOCFG18_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG18_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG18_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG18_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG18_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG18_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG18_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG18_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG18_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG18_PORT_ID_UART0_TX                                0x00000010
@@ -5915,7 +7131,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG19_IE                                              0x20000000
 #define IOC_IOCFG19_IE_BITN                                                 29
@@ -5924,16 +7140,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -5949,7 +7165,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -5974,6 +7191,39 @@
 #define IOC_IOCFG19_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG19_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG19_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG19_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG19_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG19_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG19_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG19_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG19_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG19_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG19_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG19_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG19_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG19_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG19_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -6067,6 +7317,28 @@
 #define IOC_IOCFG19_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG19_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG19_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG19_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG19_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG19_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG19_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG19_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG19_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG19_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO19
@@ -6094,52 +7366,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -6185,6 +7461,10 @@
 #define IOC_IOCFG19_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG19_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG19_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG19_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG19_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG19_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG19_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG19_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG19_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG19_PORT_ID_UART0_TX                                0x00000010
@@ -6218,7 +7498,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG20_IE                                              0x20000000
 #define IOC_IOCFG20_IE_BITN                                                 29
@@ -6227,16 +7507,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -6252,7 +7532,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -6277,6 +7558,39 @@
 #define IOC_IOCFG20_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG20_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG20_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG20_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG20_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG20_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG20_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG20_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG20_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG20_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG20_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG20_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG20_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG20_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG20_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -6370,6 +7684,28 @@
 #define IOC_IOCFG20_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG20_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG20_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG20_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG20_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG20_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG20_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG20_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG20_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG20_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO20
@@ -6397,52 +7733,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -6488,6 +7828,10 @@
 #define IOC_IOCFG20_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG20_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG20_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG20_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG20_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG20_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG20_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG20_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG20_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG20_PORT_ID_UART0_TX                                0x00000010
@@ -6521,7 +7865,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG21_IE                                              0x20000000
 #define IOC_IOCFG21_IE_BITN                                                 29
@@ -6530,16 +7874,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -6555,7 +7899,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -6580,6 +7925,39 @@
 #define IOC_IOCFG21_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG21_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG21_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG21_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG21_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG21_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG21_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG21_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG21_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG21_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG21_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG21_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG21_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG21_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG21_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -6673,6 +8051,28 @@
 #define IOC_IOCFG21_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG21_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG21_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG21_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG21_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG21_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG21_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG21_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG21_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG21_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO21
@@ -6700,52 +8100,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -6791,6 +8195,10 @@
 #define IOC_IOCFG21_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG21_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG21_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG21_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG21_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG21_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG21_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG21_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG21_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG21_PORT_ID_UART0_TX                                0x00000010
@@ -6824,7 +8232,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG22_IE                                              0x20000000
 #define IOC_IOCFG22_IE_BITN                                                 29
@@ -6833,16 +8241,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -6858,7 +8266,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -6883,6 +8292,39 @@
 #define IOC_IOCFG22_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG22_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG22_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG22_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG22_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG22_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG22_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG22_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG22_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG22_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG22_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG22_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG22_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG22_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG22_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -6976,6 +8418,28 @@
 #define IOC_IOCFG22_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG22_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG22_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG22_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG22_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG22_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG22_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG22_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG22_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG22_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO22
@@ -7003,52 +8467,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -7094,6 +8562,10 @@
 #define IOC_IOCFG22_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG22_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG22_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG22_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG22_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG22_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG22_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG22_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG22_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG22_PORT_ID_UART0_TX                                0x00000010
@@ -7127,7 +8599,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG23_IE                                              0x20000000
 #define IOC_IOCFG23_IE_BITN                                                 29
@@ -7136,16 +8608,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -7161,7 +8633,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -7186,6 +8659,39 @@
 #define IOC_IOCFG23_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG23_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG23_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG23_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG23_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG23_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG23_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG23_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG23_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG23_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG23_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG23_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG23_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG23_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG23_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -7279,6 +8785,28 @@
 #define IOC_IOCFG23_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG23_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG23_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG23_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG23_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG23_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG23_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG23_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG23_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG23_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO23
@@ -7306,52 +8834,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -7397,6 +8929,10 @@
 #define IOC_IOCFG23_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG23_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG23_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG23_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG23_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG23_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG23_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG23_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG23_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG23_PORT_ID_UART0_TX                                0x00000010
@@ -7430,7 +8966,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG24_IE                                              0x20000000
 #define IOC_IOCFG24_IE_BITN                                                 29
@@ -7439,16 +8975,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -7464,7 +9000,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -7489,6 +9026,39 @@
 #define IOC_IOCFG24_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG24_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG24_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG24_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG24_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG24_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG24_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG24_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG24_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG24_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG24_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG24_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG24_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG24_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG24_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -7582,6 +9152,28 @@
 #define IOC_IOCFG24_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG24_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG24_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG24_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG24_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG24_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG24_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG24_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG24_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG24_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO24
@@ -7609,52 +9201,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -7700,6 +9296,10 @@
 #define IOC_IOCFG24_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG24_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG24_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG24_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG24_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG24_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG24_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG24_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG24_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG24_PORT_ID_UART0_TX                                0x00000010
@@ -7733,7 +9333,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG25_IE                                              0x20000000
 #define IOC_IOCFG25_IE_BITN                                                 29
@@ -7742,16 +9342,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -7767,7 +9367,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -7792,6 +9393,39 @@
 #define IOC_IOCFG25_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG25_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG25_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG25_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG25_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG25_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG25_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG25_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG25_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG25_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG25_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG25_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG25_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG25_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG25_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -7885,6 +9519,28 @@
 #define IOC_IOCFG25_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG25_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG25_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG25_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG25_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG25_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG25_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG25_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG25_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG25_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO25
@@ -7912,52 +9568,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -8003,6 +9663,10 @@
 #define IOC_IOCFG25_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG25_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG25_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG25_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG25_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG25_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG25_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG25_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG25_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG25_PORT_ID_UART0_TX                                0x00000010
@@ -8036,7 +9700,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG26_IE                                              0x20000000
 #define IOC_IOCFG26_IE_BITN                                                 29
@@ -8045,16 +9709,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -8070,7 +9734,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -8095,6 +9760,39 @@
 #define IOC_IOCFG26_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG26_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG26_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG26_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG26_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG26_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG26_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG26_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG26_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG26_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG26_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG26_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG26_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG26_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG26_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -8188,6 +9886,28 @@
 #define IOC_IOCFG26_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG26_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG26_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG26_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG26_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG26_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG26_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG26_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG26_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG26_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO26
@@ -8215,52 +9935,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -8306,6 +10030,10 @@
 #define IOC_IOCFG26_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG26_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG26_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG26_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG26_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG26_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG26_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG26_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG26_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG26_PORT_ID_UART0_TX                                0x00000010
@@ -8339,7 +10067,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG27_IE                                              0x20000000
 #define IOC_IOCFG27_IE_BITN                                                 29
@@ -8348,16 +10076,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -8373,7 +10101,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -8398,6 +10127,39 @@
 #define IOC_IOCFG27_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG27_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG27_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG27_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG27_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG27_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG27_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG27_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG27_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG27_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG27_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG27_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG27_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG27_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG27_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -8491,6 +10253,28 @@
 #define IOC_IOCFG27_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG27_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG27_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG27_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG27_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG27_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG27_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG27_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG27_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG27_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO27
@@ -8518,52 +10302,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -8609,6 +10397,10 @@
 #define IOC_IOCFG27_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG27_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG27_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG27_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG27_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG27_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG27_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG27_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG27_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG27_PORT_ID_UART0_TX                                0x00000010
@@ -8642,7 +10434,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG28_IE                                              0x20000000
 #define IOC_IOCFG28_IE_BITN                                                 29
@@ -8651,16 +10443,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -8676,7 +10468,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -8701,6 +10494,39 @@
 #define IOC_IOCFG28_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG28_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG28_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG28_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG28_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG28_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG28_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG28_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG28_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG28_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG28_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG28_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG28_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG28_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG28_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -8794,6 +10620,28 @@
 #define IOC_IOCFG28_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG28_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG28_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG28_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG28_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG28_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG28_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG28_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG28_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG28_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO28
@@ -8821,52 +10669,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -8912,6 +10764,10 @@
 #define IOC_IOCFG28_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG28_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG28_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG28_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG28_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG28_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG28_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG28_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG28_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG28_PORT_ID_UART0_TX                                0x00000010
@@ -8945,7 +10801,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG29_IE                                              0x20000000
 #define IOC_IOCFG29_IE_BITN                                                 29
@@ -8954,16 +10810,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -8979,7 +10835,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -9004,6 +10861,39 @@
 #define IOC_IOCFG29_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG29_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG29_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG29_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG29_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG29_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG29_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG29_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG29_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG29_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG29_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG29_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG29_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG29_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG29_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -9097,6 +10987,28 @@
 #define IOC_IOCFG29_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG29_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG29_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG29_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG29_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG29_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG29_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG29_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG29_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG29_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO29
@@ -9124,52 +11036,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -9215,6 +11131,10 @@
 #define IOC_IOCFG29_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG29_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG29_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG29_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG29_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG29_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG29_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG29_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG29_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG29_PORT_ID_UART0_TX                                0x00000010
@@ -9248,7 +11168,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG30_IE                                              0x20000000
 #define IOC_IOCFG30_IE_BITN                                                 29
@@ -9257,16 +11177,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -9282,7 +11202,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -9307,6 +11228,39 @@
 #define IOC_IOCFG30_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG30_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG30_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG30_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG30_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG30_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG30_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG30_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG30_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG30_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG30_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG30_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG30_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG30_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG30_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -9400,6 +11354,28 @@
 #define IOC_IOCFG30_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG30_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG30_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG30_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG30_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG30_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG30_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG30_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG30_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG30_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO30
@@ -9427,52 +11403,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -9518,6 +11498,10 @@
 #define IOC_IOCFG30_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG30_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG30_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG30_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG30_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG30_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG30_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG30_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG30_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG30_PORT_ID_UART0_TX                                0x00000010
@@ -9551,7 +11535,7 @@
 // 0: Input disabled
 // 1: Input enabled
 //
-// Note: If IO is configured for AUX  ie. PORT_ID = 0x08, the enable will be
+// Note: If IO is configured for AUX   PORT_ID = 0x08, the enable will be
 // ignored.
 #define IOC_IOCFG31_IE                                              0x20000000
 #define IOC_IOCFG31_IE_BITN                                                 29
@@ -9560,16 +11544,16 @@
 
 // Field: [28:27] WU_CFG
 //
-// If DIO is configured GPIO or non-AON peripheral signals, i.e. PORT_ID 0x00
-// or >0x08:
+// If DIO is configured GPIO or non-AON peripheral signals,  PORT_ID 0x00 or
+// >0x08:
 //
 // 00: No wake-up
 // 01: No wake-up
 // 10: Wakes up from shutdown if this pad is going low.
 // 11: Wakes up from shutdown if this pad is going high.
 //
-// If IO is configured for AON peripheral signals or AUX  ie. PORT_ID
-// 0x01-0x08, this register only sets wakeup enable or not.
+// If IO is configured for AON peripheral signals or AUX   PORT_ID 0x01-0x08,
+// this register only sets wakeup enable or not.
 //
 // 00, 01: Wakeup disabled
 // 10, 11: Wakeup enabled
@@ -9585,7 +11569,8 @@
 // Field: [26:24] IOMODE
 //
 // IO Mode
-// N/A for IO configured for AON periph. signals and AUX  ie. PORT_ID 0x01-0x08
+// Not applicable for IO configured for AON periph. signals and AUX   PORT_ID
+// 0x01-0x08
 // AUX has its own open_source/drain configuration.
 //
 // 0x2: Reserved. Undefined behavior.
@@ -9610,6 +11595,39 @@
 #define IOC_IOCFG31_IOMODE_OPENDR                                   0x04000000
 #define IOC_IOCFG31_IOMODE_INV                                      0x01000000
 #define IOC_IOCFG31_IOMODE_NORMAL                                   0x00000000
+
+// Field:    [23] IOEV_AON_PROG2_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG2 event
+// 1: Input edge detection asserts AON_PROG2 event
+#define IOC_IOCFG31_IOEV_AON_PROG2_EN                               0x00800000
+#define IOC_IOCFG31_IOEV_AON_PROG2_EN_BITN                                  23
+#define IOC_IOCFG31_IOEV_AON_PROG2_EN_M                             0x00800000
+#define IOC_IOCFG31_IOEV_AON_PROG2_EN_S                                     23
+
+// Field:    [22] IOEV_AON_PROG1_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG1 event
+// 1: Input edge detection asserts AON_PROG1 event
+#define IOC_IOCFG31_IOEV_AON_PROG1_EN                               0x00400000
+#define IOC_IOCFG31_IOEV_AON_PROG1_EN_BITN                                  22
+#define IOC_IOCFG31_IOEV_AON_PROG1_EN_M                             0x00400000
+#define IOC_IOCFG31_IOEV_AON_PROG1_EN_S                                     22
+
+// Field:    [21] IOEV_AON_PROG0_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert AON_PROG0 event
+// 1: Input edge detection asserts AON_PROG0 event
+#define IOC_IOCFG31_IOEV_AON_PROG0_EN                               0x00200000
+#define IOC_IOCFG31_IOEV_AON_PROG0_EN_BITN                                  21
+#define IOC_IOCFG31_IOEV_AON_PROG0_EN_M                             0x00200000
+#define IOC_IOCFG31_IOEV_AON_PROG0_EN_S                                     21
 
 // Field:    [18] EDGE_IRQ_EN
 //
@@ -9703,6 +11721,28 @@
 #define IOC_IOCFG31_IOSTR_MIN                                       0x00000100
 #define IOC_IOCFG31_IOSTR_AUTO                                      0x00000000
 
+// Field:     [7] IOEV_RTC_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert RTC event
+// 1: Input edge detection asserts RTC event
+#define IOC_IOCFG31_IOEV_RTC_EN                                     0x00000080
+#define IOC_IOCFG31_IOEV_RTC_EN_BITN                                         7
+#define IOC_IOCFG31_IOEV_RTC_EN_M                                   0x00000080
+#define IOC_IOCFG31_IOEV_RTC_EN_S                                            7
+
+// Field:     [6] IOEV_MCU_WU_EN
+//
+// Event asserted by this IO when edge detection is enabled
+//
+// 0: Input edge detection does not assert MCU_WU event
+// 1: Input edge detection asserts MCU_WU event
+#define IOC_IOCFG31_IOEV_MCU_WU_EN                                  0x00000040
+#define IOC_IOCFG31_IOEV_MCU_WU_EN_BITN                                      6
+#define IOC_IOCFG31_IOEV_MCU_WU_EN_M                                0x00000040
+#define IOC_IOCFG31_IOEV_MCU_WU_EN_S                                         6
+
 // Field:   [5:0] PORT_ID
 //
 // Selects usage for DIO31
@@ -9730,52 +11770,56 @@
 // CPU_SWV                  CPU SWV
 // PORT_EVENT7              PORT EVENT 7
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT6              PORT EVENT 6
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT5              PORT EVENT 5
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT4              PORT EVENT 4
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT3              PORT EVENT 3
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT2              PORT EVENT 2
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT1              PORT EVENT 1
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
 // PORT_EVENT0              PORT EVENT 0
 //                          Can be used as a general
-//                          purpose IO event by selecting it via registers
-//                          in the EVENT module, e.g.
+//                          purpose IO event by selecting it through
+//                          registers in the EVENT module, for example
 //                          EVENT:GPT0ACAPTSEL.EV, EVENT:UDMACH14BSEL.EV,
-//                          etc
+//                          and so on
+// UART1_RTS                UART1 RTS
+// UART1_CTS                UART1 CTS
+// UART1_TX                 UART1 TX
+// UART1_RX                 UART1 RX
 // UART0_RTS                UART0 RTS
 // UART0_CTS                UART0 CTS
 // UART0_TX                 UART0 TX
@@ -9821,6 +11865,10 @@
 #define IOC_IOCFG31_PORT_ID_PORT_EVENT2                             0x00000019
 #define IOC_IOCFG31_PORT_ID_PORT_EVENT1                             0x00000018
 #define IOC_IOCFG31_PORT_ID_PORT_EVENT0                             0x00000017
+#define IOC_IOCFG31_PORT_ID_UART1_RTS                               0x00000016
+#define IOC_IOCFG31_PORT_ID_UART1_CTS                               0x00000015
+#define IOC_IOCFG31_PORT_ID_UART1_TX                                0x00000014
+#define IOC_IOCFG31_PORT_ID_UART1_RX                                0x00000013
 #define IOC_IOCFG31_PORT_ID_UART0_RTS                               0x00000012
 #define IOC_IOCFG31_PORT_ID_UART0_CTS                               0x00000011
 #define IOC_IOCFG31_PORT_ID_UART0_TX                                0x00000010

@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       uart.h
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2017-06-05 12:13:49 +0200 (Mon, 05 Jun 2017)
+*  Revision:       49096
 *
 *  Description:    Defines and prototypes for the UART.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,12 +61,12 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_uart.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ints.h>
-#include <driverlib/interrupt.h>
-#include <driverlib/debug.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_uart.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ints.h"
+#include "interrupt.h"
+#include "debug.h"
 
 //*****************************************************************************
 //
@@ -100,14 +100,15 @@ extern "C"
 // as the ui32IntFlags parameter, and returned from UARTIntStatus.
 //
 //*****************************************************************************
-#define UART_INT_OE             0x400       // Overrun Error Interrupt Mask
-#define UART_INT_BE             0x200       // Break Error Interrupt Mask
-#define UART_INT_PE             0x100       // Parity Error Interrupt Mask
-#define UART_INT_FE             0x080       // Framing Error Interrupt Mask
-#define UART_INT_RT             0x040       // Receive Timeout Interrupt Mask
-#define UART_INT_TX             0x020       // Transmit Interrupt Mask
-#define UART_INT_RX             0x010       // Receive Interrupt Mask
-#define UART_INT_CTS            0x002       // CTS Modem Interrupt Mask
+#define UART_INT_EOT   ( UART_IMSC_EOTIM  ) // End Of Transmission Interrupt Mask
+#define UART_INT_OE    ( UART_IMSC_OEIM   ) // Overrun Error Interrupt Mask
+#define UART_INT_BE    ( UART_IMSC_BEIM   ) // Break Error Interrupt Mask
+#define UART_INT_PE    ( UART_IMSC_PEIM   ) // Parity Error Interrupt Mask
+#define UART_INT_FE    ( UART_IMSC_FEIM   ) // Framing Error Interrupt Mask
+#define UART_INT_RT    ( UART_IMSC_RTIM   ) // Receive Timeout Interrupt Mask
+#define UART_INT_TX    ( UART_IMSC_TXIM   ) // Transmit Interrupt Mask
+#define UART_INT_RX    ( UART_IMSC_RXIM   ) // Receive Interrupt Mask
+#define UART_INT_CTS   ( UART_IMSC_CTSMIM ) // CTS Modem Interrupt Mask
 
 //*****************************************************************************
 //
@@ -208,7 +209,8 @@ extern "C"
 static bool
 UARTBaseValid(uint32_t ui32Base)
 {
-    return(( ui32Base == UART0_BASE ) || ( ui32Base == UART0_NONBUF_BASE ));
+    return(( ui32Base == UART0_BASE ) || ( ui32Base == UART0_NONBUF_BASE ) ||
+           ( ui32Base == UART1_BASE ) || ( ui32Base == UART1_NONBUF_BASE )    );
 }
 #endif
 
@@ -235,9 +237,7 @@ UARTBaseValid(uint32_t ui32Base)
 __STATIC_INLINE void
 UARTParityModeSet(uint32_t ui32Base, uint32_t ui32Parity)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
     ASSERT((ui32Parity == UART_CONFIG_PAR_NONE) ||
            (ui32Parity == UART_CONFIG_PAR_EVEN) ||
@@ -245,9 +245,7 @@ UARTParityModeSet(uint32_t ui32Base, uint32_t ui32Parity)
            (ui32Parity == UART_CONFIG_PAR_ONE) ||
            (ui32Parity == UART_CONFIG_PAR_ZERO));
 
-    //
     // Set the parity mode.
-    //
     HWREG(ui32Base + UART_O_LCRH) = ((HWREG(ui32Base + UART_O_LCRH) &
                                       ~(UART_LCRH_SPS | UART_LCRH_EPS |
                                         UART_LCRH_PEN)) | ui32Parity);
@@ -273,14 +271,10 @@ UARTParityModeSet(uint32_t ui32Base, uint32_t ui32Parity)
 __STATIC_INLINE uint32_t
 UARTParityModeGet(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Return the current parity setting
-    //
     return(HWREG(ui32Base + UART_O_LCRH) &
            (UART_LCRH_SPS | UART_LCRH_EPS | UART_LCRH_PEN));
 }
@@ -313,9 +307,7 @@ __STATIC_INLINE void
 UARTFIFOLevelSet(uint32_t ui32Base, uint32_t ui32TxLevel,
                  uint32_t ui32RxLevel)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
     ASSERT((ui32TxLevel == UART_FIFO_TX1_8) ||
            (ui32TxLevel == UART_FIFO_TX2_8) ||
@@ -328,9 +320,7 @@ UARTFIFOLevelSet(uint32_t ui32Base, uint32_t ui32TxLevel,
            (ui32RxLevel == UART_FIFO_RX6_8) ||
            (ui32RxLevel == UART_FIFO_RX7_8));
 
-    //
     // Set the FIFO interrupt levels.
-    //
     HWREG(ui32Base + UART_O_IFLS) = ui32TxLevel | ui32RxLevel;
 }
 
@@ -441,19 +431,13 @@ extern void UARTConfigGetExpClk(uint32_t ui32Base, uint32_t ui32UARTClk,
 __STATIC_INLINE void
 UARTEnable(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Enable the FIFO.
-    //
     HWREG(ui32Base + UART_O_LCRH) |= UART_LCRH_FEN;
 
-    //
     // Enable RX, TX, and the UART.
-    //
     HWREG(ui32Base + UART_O_CTL) |= (UART_CTL_UARTEN | UART_CTL_TXE |
                                      UART_CTL_RXE);
 }
@@ -486,14 +470,10 @@ extern void UARTDisable(uint32_t ui32Base);
 __STATIC_INLINE void
 UARTFIFOEnable(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Enable the FIFO.
-    //
     HWREG(ui32Base + UART_O_LCRH) |= UART_LCRH_FEN;
 }
 
@@ -511,14 +491,10 @@ UARTFIFOEnable(uint32_t ui32Base)
 __STATIC_INLINE void
 UARTFIFODisable(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Disable the FIFO.
-    //
     HWREG(ui32Base + UART_O_LCRH) &= ~(UART_LCRH_FEN);
 }
 
@@ -539,14 +515,10 @@ UARTFIFODisable(uint32_t ui32Base)
 __STATIC_INLINE bool
 UARTCharsAvail(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Return the availability of characters.
-    //
     return((HWREG(ui32Base + UART_O_FR) & UART_FR_RXFE) ? false : true);
 }
 
@@ -567,14 +539,10 @@ UARTCharsAvail(uint32_t ui32Base)
 __STATIC_INLINE bool
 UARTSpaceAvail(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Return the availability of space.
-    //
     return((HWREG(ui32Base + UART_O_FR) & UART_FR_TXFF) ? false : true);
 }
 
@@ -669,14 +637,10 @@ extern void UARTCharPut(uint32_t ui32Base, uint8_t ui8Data);
 __STATIC_INLINE bool
 UARTBusy(uint32_t ui32Base)
 {
-    //
     // Check the argument.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Determine if the UART is busy.
-    //
     return((HWREG(ui32Base + UART_O_FR) & UART_FR_BUSY) ?
            UART_BUSY : UART_IDLE);
 }
@@ -699,14 +663,10 @@ UARTBusy(uint32_t ui32Base)
 __STATIC_INLINE void
 UARTBreakCtl(uint32_t ui32Base, bool bBreakState)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Set the break condition as requested.
-    //
     HWREG(ui32Base + UART_O_LCRH) =
          (bBreakState ?
          (HWREG(ui32Base + UART_O_LCRH) | UART_LCRH_BRK) :
@@ -715,14 +675,17 @@ UARTBreakCtl(uint32_t ui32Base, bool bBreakState)
 
 //*****************************************************************************
 //
-//! \brief Registers an interrupt handler for a UART interrupt.
+//! \brief Registers an interrupt handler for a UART interrupt in the dynamic interrupt table.
 //!
-//! This function does the actual registering of the interrupt handler.  This
-//! function enables the global interrupt in the interrupt controller; specific
-//! UART interrupts must be enabled via \ref UARTIntEnable(). It is the interrupt
-//! handler's responsibility to clear the interrupt source.
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
 //!
-//! \param ui32Base is the base address of the UART port.
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
+//!
+//! Specific UART interrupts must be enabled via \ref UARTIntEnable(). It is the
+//! interrupt handler's responsibility to clear the interrupt source.
+//!
+//! \param ui32Base is the base address of the UART module.
 //! \param pfnHandler is a pointer to the function to be called when the
 //! UART interrupt occurs.
 //!
@@ -736,14 +699,14 @@ extern void UARTIntRegister(uint32_t ui32Base, void (*pfnHandler)(void));
 
 //*****************************************************************************
 //
-//! \brief Unregisters an interrupt handler for a UART interrupt.
+//! \brief Unregisters an interrupt handler for a UART interrupt in the dynamic interrupt table.
 //!
 //! This function does the actual unregistering of the interrupt handler. It
 //! clears the handler to be called when a UART interrupt occurs.  This
 //! function also masks off the interrupt in the interrupt controller so that
 //! the interrupt handler no longer is called.
 //!
-//! \param ui32Base is the base address of the UART port.
+//! \param ui32Base is the base address of the UART module.
 //!
 //! \return None
 //!
@@ -764,6 +727,7 @@ extern void UARTIntUnregister(uint32_t ui32Base);
 //! \param ui32Base is the base address of the UART port.
 //! \param ui32IntFlags is the bit mask of the interrupt sources to be enabled.
 //! The parameter is the bitwise OR of any of the following:
+//! - \ref UART_INT_EOT : End Of Transmission interrupt.
 //! - \ref UART_INT_OE  : Overrun Error interrupt.
 //! - \ref UART_INT_BE  : Break Error interrupt.
 //! - \ref UART_INT_PE  : Parity Error interrupt.
@@ -779,14 +743,10 @@ extern void UARTIntUnregister(uint32_t ui32Base);
 __STATIC_INLINE void
 UARTIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Enable the specified interrupts.
-    //
     HWREG(ui32Base + UART_O_IMSC) |= ui32IntFlags;
 }
 
@@ -800,6 +760,7 @@ UARTIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //!
 //! \param ui32Base is the base address of the UART port.
 //! \param ui32IntFlags is the bit mask of the interrupt sources to be disabled.
+//! - \ref UART_INT_EOT : End Of Transmission interrupt.
 //! - \ref UART_INT_OE  : Overrun Error interrupt.
 //! - \ref UART_INT_BE  : Break Error interrupt.
 //! - \ref UART_INT_PE  : Parity Error interrupt.
@@ -815,14 +776,10 @@ UARTIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 __STATIC_INLINE void
 UARTIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Disable the specified interrupts.
-    //
     HWREG(ui32Base + UART_O_IMSC) &= ~(ui32IntFlags);
 }
 
@@ -840,6 +797,7 @@ UARTIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 //! - \c false : Raw interrupt status is required.
 //!
 //! \return Returns the current interrupt status, enumerated as a bit field of:
+//! - \ref UART_INT_EOT : End Of Transmission interrupt.
 //! - \ref UART_INT_OE  : Overrun Error interrupt.
 //! - \ref UART_INT_BE  : Break Error interrupt.
 //! - \ref UART_INT_PE  : Parity Error interrupt.
@@ -853,15 +811,11 @@ UARTIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 __STATIC_INLINE uint32_t
 UARTIntStatus(uint32_t ui32Base, bool bMasked)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Return either the interrupt status or the raw interrupt status as
     // requested.
-    //
     if(bMasked)
     {
         return(HWREG(ui32Base + UART_O_MIS));
@@ -897,6 +851,7 @@ UARTIntStatus(uint32_t ui32Base, bool bMasked)
 //!
 //! \param ui32Base is the base address of the UART port.
 //! \param ui32IntFlags is a bit mask of the interrupt sources to be cleared.
+//! - \ref UART_INT_EOT : End Of Transmission interrupt.
 //! - \ref UART_INT_OE  : Overrun Error interrupt.
 //! - \ref UART_INT_BE  : Break Error interrupt.
 //! - \ref UART_INT_PE  : Parity Error interrupt.
@@ -912,14 +867,10 @@ UARTIntStatus(uint32_t ui32Base, bool bMasked)
 __STATIC_INLINE void
 UARTIntClear(uint32_t ui32Base, uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Clear the requested interrupt sources
-    //
     HWREG(ui32Base + UART_O_ICR) = ui32IntFlags;
 }
 
@@ -947,14 +898,10 @@ UARTIntClear(uint32_t ui32Base, uint32_t ui32IntFlags)
 __STATIC_INLINE void
 UARTDMAEnable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Set the requested bits in the UART DMA control register.
-    //
     HWREG(ui32Base + UART_O_DMACTL) |= ui32DMAFlags;
 }
 
@@ -978,14 +925,10 @@ UARTDMAEnable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 __STATIC_INLINE void
 UARTDMADisable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Clear the requested bits in the UART DMA control register.
-    //
     HWREG(ui32Base + UART_O_DMACTL) &= ~ui32DMAFlags;
 }
 
@@ -1011,14 +954,10 @@ UARTDMADisable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 __STATIC_INLINE uint32_t
 UARTRxErrorGet(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Return the current value of the receive status register.
-    //
     return(HWREG(ui32Base + UART_O_RSR) & 0x0000000F);
 }
 
@@ -1039,15 +978,11 @@ UARTRxErrorGet(uint32_t ui32Base)
 __STATIC_INLINE void
 UARTRxErrorClear(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(UARTBaseValid(ui32Base));
 
-    //
     // Any write to the Error Clear Register will clear all bits which are
     // currently set.
-    //
     HWREG(ui32Base + UART_O_ECR) = 0;
 }
 
@@ -1065,9 +1000,7 @@ UARTRxErrorClear(uint32_t ui32Base)
 __STATIC_INLINE void
 UARTHwFlowControlEnable( uint32_t ui32Base )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( UARTBaseValid( ui32Base ));
 
     HWREG( ui32Base + UART_O_CTL ) |= ( UART_CTL_CTSEN | UART_CTL_RTSEN );
@@ -1087,9 +1020,7 @@ UARTHwFlowControlEnable( uint32_t ui32Base )
 __STATIC_INLINE void
 UARTHwFlowControlDisable( uint32_t ui32Base )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( UARTBaseValid( ui32Base ));
 
     HWREG( ui32Base + UART_O_CTL ) &= ~( UART_CTL_CTSEN | UART_CTL_RTSEN );
@@ -1103,7 +1034,7 @@ UARTHwFlowControlDisable( uint32_t ui32Base )
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_UARTFIFOLevelGet
         #undef  UARTFIFOLevelGet
         #define UARTFIFOLevelGet                ROM_UARTFIFOLevelGet

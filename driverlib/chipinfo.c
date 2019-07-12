@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       chipinfo.c
-*  Revised:        2016-08-11 14:48:49 +0200 (Thu, 11 Aug 2016)
-*  Revision:       47002
+*  Revised:        2018-08-17 09:28:06 +0200 (Fri, 17 Aug 2018)
+*  Revision:       52354
 *
 *  Description:    Collection of functions returning chip information.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 *
 ******************************************************************************/
 
-#include <driverlib/chipinfo.h>
+#include "chipinfo.h"
 
 //*****************************************************************************
 //
@@ -55,8 +55,8 @@
     #define ChipInfo_GetChipFamily          NOROM_ChipInfo_GetChipFamily
     #undef  ChipInfo_GetHwRevision
     #define ChipInfo_GetHwRevision          NOROM_ChipInfo_GetHwRevision
-    #undef  ThisCodeIsBuiltForCC13xxHwRev20AndLater_HaltIfViolated
-    #define ThisCodeIsBuiltForCC13xxHwRev20AndLater_HaltIfViolated NOROM_ThisCodeIsBuiltForCC13xxHwRev20AndLater_HaltIfViolated
+    #undef  ThisLibraryIsFor_CC13x2_CC26x2_HwRev20AndLater_HaltIfViolated
+    #define ThisLibraryIsFor_CC13x2_CC26x2_HwRev20AndLater_HaltIfViolated NOROM_ThisLibraryIsFor_CC13x2_CC26x2_HwRev20AndLater_HaltIfViolated
 #endif
 
 //*****************************************************************************
@@ -69,7 +69,6 @@ ChipInfo_GetSupportedProtocol_BV( void )
 {
    return ((ProtocolBitVector_t)( HWREG( PRCM_BASE + 0x1D4 ) & 0x0E ));
 }
-
 
 //*****************************************************************************
 //
@@ -84,8 +83,8 @@ ChipInfo_GetPackageType( void )
                           FCFG1_USER_ID_PKG_M ) >>
                           FCFG1_USER_ID_PKG_S ) ;
 
-   if (( packType < PACKAGE_4x4  ) ||
-       ( packType > PACKAGE_WCSP )    )
+   if (( packType < PACKAGE_4x4    ) ||
+       ( packType > PACKAGE_7x7_Q1 )    )
    {
       packType = PACKAGE_Unknown;
    }
@@ -101,26 +100,19 @@ ChipInfo_GetPackageType( void )
 ChipFamily_t
 ChipInfo_GetChipFamily( void )
 {
-   ChipFamily_t   chipFam  = FAMILY_Unknown  ;
    uint32_t       waferId                    ;
+   ChipFamily_t   chipFam = FAMILY_Unknown   ;
 
    waferId = (( HWREG( FCFG1_BASE + FCFG1_O_ICEPICK_DEVICE_ID ) &
-                           FCFG1_ICEPICK_DEVICE_ID_WAFER_ID_M ) >>
-                           FCFG1_ICEPICK_DEVICE_ID_WAFER_ID_S ) ;
+                                      FCFG1_ICEPICK_DEVICE_ID_WAFER_ID_M ) >>
+                                      FCFG1_ICEPICK_DEVICE_ID_WAFER_ID_S ) ;
 
-   if ( waferId == 0xB99A ) {
-      if ( ChipInfo_GetDeviceIdHwRevCode() == 0xB ) {
-                                    chipFam = FAMILY_CC26xx_R2    ;
-      } else {
-                                    chipFam = FAMILY_CC26xx       ;
-      }
-   } else if ( waferId == 0xB9BE )  chipFam = FAMILY_CC13xx       ;
-   else if (   waferId == 0xBB41 )  chipFam = FAMILY_CC26xx_Aga   ;
-   else if (   waferId == 0xBB20 )  chipFam = FAMILY_CC26xx_Liz   ;
+   if ( waferId == 0xBB41 ) {
+      chipFam = FAMILY_CC13x2_CC26x2 ;
+   }
 
    return ( chipFam );
 }
-
 
 //*****************************************************************************
 //
@@ -130,32 +122,44 @@ ChipInfo_GetChipFamily( void )
 ChipType_t
 ChipInfo_GetChipType( void )
 {
-   ChipType_t chipType      = CHIP_TYPE_Unknown ;
-   uint32_t   fcfg1UserId   = ChipInfo_GetUserId();
-   uint32_t   fcfg1Protocol = (( fcfg1UserId & FCFG1_USER_ID_PROTOCOL_M ) >>
-                                               FCFG1_USER_ID_PROTOCOL_S ) ;
+   ChipType_t     chipType       = CHIP_TYPE_Unknown        ;
+   ChipFamily_t   chipFam        = ChipInfo_GetChipFamily() ;
+   uint32_t       fcfg1UserId    = ChipInfo_GetUserId()     ;
+   uint32_t       fcfg1Protocol  = (( fcfg1UserId & FCFG1_USER_ID_PROTOCOL_M ) >>
+                                                    FCFG1_USER_ID_PROTOCOL_S ) ;
+   uint32_t       fcfg1Cc13      = (( fcfg1UserId & FCFG1_USER_ID_CC13_M ) >>
+                                                    FCFG1_USER_ID_CC13_S ) ;
+   uint32_t       fcfg1Pa        = (( fcfg1UserId & FCFG1_USER_ID_PA_M ) >>
+                                                    FCFG1_USER_ID_PA_S ) ;
 
-   switch( ChipInfo_GetChipFamily() ) {
-
-   case FAMILY_CC13xx :
+   if ( chipFam == FAMILY_CC13x2_CC26x2 ) {
       switch ( fcfg1Protocol ) {
-      case 0x8 :
-         chipType = CHIP_TYPE_CC1310 ;
-         break;
       case 0xF :
-         chipType = CHIP_TYPE_CC1350 ;
+         if( fcfg1Cc13 ) {
+            if ( fcfg1Pa ) {
+               chipType = CHIP_TYPE_CC1352P  ;
+            } else {
+               chipType = CHIP_TYPE_CC1352   ;
+            }
+         } else {
+            chipType = CHIP_TYPE_CC2652      ;
+         }
+         break;
+      case 0x9 :
+         if( fcfg1Pa ) {
+            chipType = CHIP_TYPE_unused      ;
+         } else {
+            chipType = CHIP_TYPE_CC2642      ;
+         }
+         break;
+      case 0x8 :
+         chipType = CHIP_TYPE_CC1312         ;
          break;
       }
-      break;
-
-   default :
-      chipType = CHIP_TYPE_Unknown ;
-      break;
    }
 
    return ( chipType );
 }
-
 
 //*****************************************************************************
 //
@@ -168,70 +172,39 @@ ChipInfo_GetHwRevision( void )
    HwRevision_t   hwRev       = HWREV_Unknown                     ;
    uint32_t       fcfg1Rev    = ChipInfo_GetDeviceIdHwRevCode()   ;
    uint32_t       minorHwRev  = ChipInfo_GetMinorHwRev()          ;
+   ChipFamily_t   chipFam     = ChipInfo_GetChipFamily()          ;
 
-   switch( ChipInfo_GetChipFamily() ) {
-   case FAMILY_CC26xx :
+   if ( chipFam == FAMILY_CC13x2_CC26x2 ) {
       switch ( fcfg1Rev ) {
-      case 1 : // CC26xx PG1.0
-         hwRev = HWREV_1_0;
+      case 0 : // CC13x2, CC26x2 - PG1.0
+      case 1 : // CC13x2, CC26x2 - PG1.01 (will also show up as PG1.0)
+         hwRev = (HwRevision_t)((uint32_t)HWREV_1_0 );
          break;
-      case 3 : // CC26xx PG2.0
-         hwRev = HWREV_2_0;
+      case 2 : // CC13x2, CC26x2 - PG1.1 (or later)
+         hwRev = (HwRevision_t)(((uint32_t)HWREV_1_1 ) + minorHwRev );
          break;
-      case 7 : // CC26xx PG2.1
-         hwRev = HWREV_2_1;
-         break;
-      case 8 : // CC26xx PG2.2 (or later)
-         hwRev = (HwRevision_t)(((uint32_t)HWREV_2_2 ) + minorHwRev );
+      case 3 : // CC13x2, CC26x2 - PG2.1 (or later)
+         hwRev = (HwRevision_t)(((uint32_t)HWREV_2_1 ) + minorHwRev );
          break;
       }
-      break;
-   case FAMILY_CC13xx :
-      switch ( fcfg1Rev ) {
-      case 0 : // CC13xx PG1.0
-         hwRev = HWREV_1_0;
-         break;
-      case 2 : // CC13xx PG2.0 (or later)
-         hwRev = (HwRevision_t)(((uint32_t)HWREV_2_0 ) + minorHwRev );
-         break;
-      }
-      break;
-   case FAMILY_CC26xx_Liz :
-   case FAMILY_CC26xx_Aga :
-      switch ( fcfg1Rev ) {
-      case 0 : // CC26xx_Liz or CC26xx_Aga PG1.0 (or later)
-         hwRev = (HwRevision_t)(((uint32_t)HWREV_1_0 ) + minorHwRev );
-         break;
-      }
-      break;
-   case FAMILY_CC26xx_R2  :
-      hwRev = (HwRevision_t)(((uint32_t)HWREV_1_0 ) + minorHwRev );
-      break;
-   default :
-      // GCC gives warning if not handling all options explicitly in a "switch" on a variable of type "enum"
-      break;
    }
 
    return ( hwRev );
 }
 
-
-
 //*****************************************************************************
-// ThisCodeIsBuiltForCC13xxHwRev20AndLater_HaltIfViolated()
+// ThisLibraryIsFor_CC13x2_CC26x2_HwRev20AndLater_HaltIfViolated()
 //*****************************************************************************
 void
-ThisCodeIsBuiltForCC13xxHwRev20AndLater_HaltIfViolated( void )
+ThisLibraryIsFor_CC13x2_CC26x2_HwRev20AndLater_HaltIfViolated( void )
 {
-   if (( ! ChipInfo_ChipFamilyIsCC13xx()     ) ||
-       ( ! ChipInfo_HwRevisionIs_GTEQ_2_0()  )    )
+   if (( ! ChipInfo_ChipFamilyIs_CC13x2_CC26x2() ) ||
+       ( ! ChipInfo_HwRevisionIs_GTEQ_2_0()      )    )
    {
       while(1)
       {
-         //
-         // This driverlib version is for CC13xx PG2.0 and later.
+         // This driverlib version is for the CC13x2/CC26x2 PG2.0 and later chips.
          // Do nothing - stay here forever
-         //
       }
    }
 }

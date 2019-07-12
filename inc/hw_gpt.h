@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_gpt_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -477,9 +477,9 @@
 // If the timer is stalled (CTL.TBSTALL is set) when this bit is set, TBMATCHR
 // and TBPR are updated according to the configuration of this bit.
 // ENUMs:
-// TOUPDATE                 Update the TBMATCHR and the TBPR, if used on the
-//                          next time-out.
-// CYCLEUPDATE              Update TBMATCHR and TBPR, if used on the next
+// TOUPDATE                 Update TBMATCHR and TBPR, if used, on the next
+//                          time-out.
+// CYCLEUPDATE              Update TBMATCHR and TBPR, if used, on the next
 //                          cycle.
 #define GPT_TBMR_TBMRSU                                             0x00000400
 #define GPT_TBMR_TBMRSU_BITN                                                10
@@ -523,9 +523,9 @@
 //                          timeout.
 // CYCLEUPDATE              Update the TBR register with the value in the
 //                          TBILR register on the next clock cycle. If the
-//                          prescaler is used, update the TBPS register
+//                          pre-scaler is used, update the TBPS register
 //                          with the value in the TBPR register on the next
-//                          timeout.
+//                          clock cycle.
 #define GPT_TBMR_TBILD                                              0x00000100
 #define GPT_TBMR_TBILD_BITN                                                  8
 #define GPT_TBMR_TBILD_M                                            0x00000100
@@ -582,7 +582,7 @@
 
 // Field:     [4] TBCDIR
 //
-// grep
+// GPT Timer B Count Direction
 // ENUMs:
 // UP                       The timer counts up. When counting up, the timer
 //                          starts from a value of 0x0.
@@ -1669,6 +1669,17 @@
 // Register: GPT_O_ANDCCP
 //
 //*****************************************************************************
+// Field:     [1] LD_TO_EN
+//
+// PWM assertion would happen at timeout
+//
+// 0: PWM assertion happens when counter matches load value
+// 1: PWM assertion happens at timeout of the counter
+#define GPT_ANDCCP_LD_TO_EN                                         0x00000002
+#define GPT_ANDCCP_LD_TO_EN_BITN                                             1
+#define GPT_ANDCCP_LD_TO_EN_M                                       0x00000002
+#define GPT_ANDCCP_LD_TO_EN_S                                                1
+
 // Field:     [0] CCP_AND_EN
 //
 // Enables AND operation of the CCP outputs for timers A and B.

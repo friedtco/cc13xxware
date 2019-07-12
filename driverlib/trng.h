@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       trng.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-05-23 12:08:52 +0200 (Tue, 23 May 2017)
+*  Revision:       49048
 *
 *  Description:    Defines and prototypes for the true random number gen.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,13 +61,13 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_trng.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ints.h>
-#include <driverlib/debug.h>
-#include <driverlib/interrupt.h>
-#include <driverlib/cpu.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_trng.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ints.h"
+#include "debug.h"
+#include "interrupt.h"
+#include "cpu.h"
 
 //*****************************************************************************
 //
@@ -205,9 +205,7 @@ extern uint32_t TRNGNumberGet(uint32_t ui32Word);
 __STATIC_INLINE uint32_t
 TRNGStatusGet(void)
 {
-    //
     // Return the status.
-    //
     return (HWREG(TRNG_BASE + TRNG_O_IRQFLAGSTAT));
 }
 
@@ -224,9 +222,7 @@ TRNGStatusGet(void)
 __STATIC_INLINE void
 TRNGReset(void)
 {
-    //
     // Reset the TRNG.
-    //
     HWREG(TRNG_BASE + TRNG_O_SWRESET) = 1;
 }
 
@@ -249,15 +245,11 @@ TRNGReset(void)
 __STATIC_INLINE void
 TRNGIntEnable(uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32IntFlags & TRNG_NUMBER_READY) ||
            (ui32IntFlags & TRNG_FRO_SHUTDOWN));
 
-    //
     // Enable the specified interrupts.
-    //
     HWREG(TRNG_BASE + TRNG_O_IRQFLAGMASK) |= ui32IntFlags;
 }
 
@@ -280,15 +272,11 @@ TRNGIntEnable(uint32_t ui32IntFlags)
 __STATIC_INLINE void
 TRNGIntDisable(uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32IntFlags & TRNG_NUMBER_READY) ||
            (ui32IntFlags & TRNG_FRO_SHUTDOWN));
 
-    //
     // Disable the specified interrupts.
-    //
     HWREG(TRNG_BASE + TRNG_O_IRQFLAGMASK) &= ~ui32IntFlags;
 }
 
@@ -314,10 +302,8 @@ TRNGIntStatus(bool bMasked)
 {
     uint32_t ui32Mask;
 
-    //
     // Return either the interrupt status or the raw interrupt status as
     // requested.
-    //
     if(bMasked)
     {
         ui32Mask = HWREG(TRNG_BASE + TRNG_O_IRQFLAGMASK);
@@ -363,29 +349,28 @@ TRNGIntStatus(bool bMasked)
 __STATIC_INLINE void
 TRNGIntClear(uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32IntFlags & TRNG_NUMBER_READY) ||
            (ui32IntFlags & TRNG_FRO_SHUTDOWN));
 
-    //
     // Clear the requested interrupt sources.
-    //
     HWREG(TRNG_BASE + TRNG_O_IRQFLAGCLR) = ui32IntFlags;
 }
 
 //*****************************************************************************
 //
-//! \brief Registers an interrupt handler for a TRNG interrupt.
+//! \brief Registers an interrupt handler for a TRNG interrupt in the dynamic interrupt table.
 //!
-//! This function does the actual registering of the interrupt handler. This
-//! function enables the global interrupt in the interrupt controller; specific
-//! UART interrupts must be enabled via \ref TRNGIntEnable(). It is the interrupt
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
+//!
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
+//!
+//! Specific TRNG interrupts must be enabled via \ref TRNGIntEnable(). It is the interrupt
 //! handler's responsibility to clear the interrupt source.
 //!
 //! \param pfnHandler is a pointer to the function to be called when the
-//! UART interrupt occurs.
+//! TRNG interrupt occurs.
 //!
 //! \return None
 //!
@@ -396,20 +381,16 @@ TRNGIntClear(uint32_t ui32IntFlags)
 __STATIC_INLINE void
 TRNGIntRegister(void (*pfnHandler)(void))
 {
-    //
     // Register the interrupt handler.
-    //
     IntRegister(INT_TRNG_IRQ, pfnHandler);
 
-    //
     // Enable the TRNG interrupt.
-    //
     IntEnable(INT_TRNG_IRQ);
 }
 
 //*****************************************************************************
 //
-//! \brief Unregisters an interrupt handler for a TRNG interrupt.
+//! \brief Unregisters an interrupt handler for a TRNG interrupt in the dynamic interrupt table.
 //!
 //! This function does the actual unregistering of the interrupt handler. It
 //! clears the handler to be called when a Crypto interrupt occurs. This
@@ -425,14 +406,10 @@ TRNGIntRegister(void (*pfnHandler)(void))
 __STATIC_INLINE void
 TRNGIntUnregister(void)
 {
-    //
     // Disable the interrupt.
-    //
     IntDisable(INT_TRNG_IRQ);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(INT_TRNG_IRQ);
 }
 
@@ -443,7 +420,7 @@ TRNGIntUnregister(void)
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_TRNGConfigure
         #undef  TRNGConfigure
         #define TRNGConfigure                   ROM_TRNGConfigure

@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_aux_sce_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -92,11 +92,11 @@
 #define AUX_SCE_CTL_FORCE_EV_HIGH_M                                 0x00FF0000
 #define AUX_SCE_CTL_FORCE_EV_HIGH_S                                         16
 
-// Field:  [11:8] RESET_VECTOR
+// Field:  [15:8] RESET_VECTOR
 //
 // Internal. Only to be used through TI provided API.
-#define AUX_SCE_CTL_RESET_VECTOR_W                                           4
-#define AUX_SCE_CTL_RESET_VECTOR_M                                  0x00000F00
+#define AUX_SCE_CTL_RESET_VECTOR_W                                           8
+#define AUX_SCE_CTL_RESET_VECTOR_M                                  0x0000FF00
 #define AUX_SCE_CTL_RESET_VECTOR_S                                           8
 
 // Field:     [6] DBG_FREEZE_EN
@@ -203,13 +203,13 @@
 #define AUX_SCE_CPUSTAT_WEV_M                                       0x00000200
 #define AUX_SCE_CPUSTAT_WEV_S                                                9
 
-// Field:     [8] SELF_STOP
+// Field:     [8] HALTED
 //
 // Internal. Only to be used through TI provided API.
-#define AUX_SCE_CPUSTAT_SELF_STOP                                   0x00000100
-#define AUX_SCE_CPUSTAT_SELF_STOP_BITN                                       8
-#define AUX_SCE_CPUSTAT_SELF_STOP_M                                 0x00000100
-#define AUX_SCE_CPUSTAT_SELF_STOP_S                                          8
+#define AUX_SCE_CPUSTAT_HALTED                                      0x00000100
+#define AUX_SCE_CPUSTAT_HALTED_BITN                                          8
+#define AUX_SCE_CPUSTAT_HALTED_M                                    0x00000100
+#define AUX_SCE_CPUSTAT_HALTED_S                                             8
 
 // Field:     [3] V_FLAG
 //
@@ -248,11 +248,11 @@
 // Register: AUX_SCE_O_WUSTAT
 //
 //*****************************************************************************
-// Field: [17:16] EXC_VECTOR
+// Field: [18:16] EXC_VECTOR
 //
 // Internal. Only to be used through TI provided API.
-#define AUX_SCE_WUSTAT_EXC_VECTOR_W                                          2
-#define AUX_SCE_WUSTAT_EXC_VECTOR_M                                 0x00030000
+#define AUX_SCE_WUSTAT_EXC_VECTOR_W                                          3
+#define AUX_SCE_WUSTAT_EXC_VECTOR_M                                 0x00070000
 #define AUX_SCE_WUSTAT_EXC_VECTOR_S                                         16
 
 // Field:     [8] WU_SIGNAL
@@ -266,9 +266,26 @@
 // Field:   [7:0] EV_SIGNALS
 //
 // Internal. Only to be used through TI provided API.
+// ENUMs:
+// SCEWEV_PROG              Internal. Only to be used through TI provided API.
+// AUX_ADC_FIFO_NOT_EMPTY   Internal. Only to be used through TI provided API.
+// AUX_TIMER1_EV_OR_IDLE    Internal. Only to be used through TI provided API.
+// AUX_TIMER0_EV_OR_IDLE    Internal. Only to be used through TI provided API.
+// AUX_TDC_DONE             Internal. Only to be used through TI provided API.
+// AUX_COMPB                Internal. Only to be used through TI provided API.
+// AUX_COMPA                Internal. Only to be used through TI provided API.
+// AUX_PROG_DLY_IDLE        Internal. Only to be used through TI provided API.
 #define AUX_SCE_WUSTAT_EV_SIGNALS_W                                          8
 #define AUX_SCE_WUSTAT_EV_SIGNALS_M                                 0x000000FF
 #define AUX_SCE_WUSTAT_EV_SIGNALS_S                                          0
+#define AUX_SCE_WUSTAT_EV_SIGNALS_SCEWEV_PROG                       0x00000080
+#define AUX_SCE_WUSTAT_EV_SIGNALS_AUX_ADC_FIFO_NOT_EMPTY            0x00000040
+#define AUX_SCE_WUSTAT_EV_SIGNALS_AUX_TIMER1_EV_OR_IDLE             0x00000020
+#define AUX_SCE_WUSTAT_EV_SIGNALS_AUX_TIMER0_EV_OR_IDLE             0x00000010
+#define AUX_SCE_WUSTAT_EV_SIGNALS_AUX_TDC_DONE                      0x00000008
+#define AUX_SCE_WUSTAT_EV_SIGNALS_AUX_COMPB                         0x00000004
+#define AUX_SCE_WUSTAT_EV_SIGNALS_AUX_COMPA                         0x00000002
+#define AUX_SCE_WUSTAT_EV_SIGNALS_AUX_PROG_DLY_IDLE                 0x00000001
 
 //*****************************************************************************
 //

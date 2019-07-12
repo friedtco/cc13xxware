@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_uart_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -110,7 +110,7 @@
 // received data input (UARTRXD input pin) was held LOW for longer than a
 // full-word transmission time (defined as start, data, parity and stop bits).
 // In FIFO mode, this error is associated with the character at the top of the
-// FIFO (i.e., the oldest received data character since last read). When a
+// FIFO (that is., the oldest received data character since last read). When a
 // break occurs, a 0 character is loaded into the FIFO. The next character is
 // enabled after the receive data input (UARTRXD input pin) goes to a 1
 // (marking state), and the next valid start bit is received.
@@ -125,7 +125,7 @@
 // When set to 1, it indicates that the parity of the received data character
 // does not match the parity that the LCRH.EPS and LCRH.SPS select.
 // In FIFO mode, this error is associated with the character at the top of the
-// FIFO (i.e., the oldest received data character since last read).
+// FIFO (that is, the oldest received data character since last read).
 #define UART_DR_PE                                                  0x00000200
 #define UART_DR_PE_BITN                                                      9
 #define UART_DR_PE_M                                                0x00000200
@@ -137,7 +137,7 @@
 // When set to 1, it indicates that the received character did not have a valid
 // stop bit (a valid stop bit is 1).
 // In FIFO mode, this error is associated with the character at the top of the
-// FIFO (i.e., the oldest received data character since last read).
+// FIFO (that is., the oldest received data character since last read).
 #define UART_DR_FE                                                  0x00000100
 #define UART_DR_FE_BITN                                                      8
 #define UART_DR_FE_M                                                0x00000100
@@ -619,6 +619,17 @@
 // Register: UART_O_IMSC
 //
 //*****************************************************************************
+// Field:    [11] EOTIM
+//
+// End of Transmission interrupt mask. A read returns the current mask for
+// UART's EoT interrupt. On a write of 1, the mask of the EoT interrupt is set
+// which means the interrupt state will be reflected in MIS.EOTMIS. A write of
+// 0 clears the mask which means MIS.EOTMIS will not reflect the interrupt.
+#define UART_IMSC_EOTIM                                             0x00000800
+#define UART_IMSC_EOTIM_BITN                                                11
+#define UART_IMSC_EOTIM_M                                           0x00000800
+#define UART_IMSC_EOTIM_S                                                   11
+
 // Field:    [10] OEIM
 //
 // Overrun error interrupt mask. A read returns the current mask for UART's
@@ -720,6 +731,17 @@
 // Register: UART_O_RIS
 //
 //*****************************************************************************
+// Field:    [11] EOTRIS
+//
+// End of Transmission interrupt status:
+// This field returns the raw interrupt state of UART's end of transmission
+// interrupt. End of transmission flag is set when all the Transmit data in the
+// FIFO and on the TX Line is tranmitted.
+#define UART_RIS_EOTRIS                                             0x00000800
+#define UART_RIS_EOTRIS_BITN                                                11
+#define UART_RIS_EOTRIS_M                                           0x00000800
+#define UART_RIS_EOTRIS_S                                                   11
+
 // Field:    [10] OERIS
 //
 // Overrun error interrupt status:
@@ -833,6 +855,17 @@
 // Register: UART_O_MIS
 //
 //*****************************************************************************
+// Field:    [11] EOTMIS
+//
+// End of Transmission interrupt status:
+// This field returns the masked interrupt state of the overrun interrupt which
+// is the AND product of raw interrupt state RIS.EOTRIS and the mask setting
+// IMSC.EOTIM.
+#define UART_MIS_EOTMIS                                             0x00000800
+#define UART_MIS_EOTMIS_BITN                                                11
+#define UART_MIS_EOTMIS_M                                           0x00000800
+#define UART_MIS_EOTMIS_S                                                   11
+
 // Field:    [10] OEMIS
 //
 // Overrun error masked interrupt status:
@@ -926,6 +959,16 @@
 // Register: UART_O_ICR
 //
 //*****************************************************************************
+// Field:    [11] EOTIC
+//
+// End of Transmission interrupt clear:
+// Writing 1 to this field clears the overrun error interrupt (RIS.EOTRIS).
+// Writing 0 has no effect.
+#define UART_ICR_EOTIC                                              0x00000800
+#define UART_ICR_EOTIC_BITN                                                 11
+#define UART_ICR_EOTIC_M                                            0x00000800
+#define UART_ICR_EOTIC_S                                                    11
+
 // Field:    [10] OEIC
 //
 // Overrun error interrupt clear:

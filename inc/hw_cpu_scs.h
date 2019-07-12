@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_cpu_scs_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -118,6 +118,9 @@
 // Irq 32 to 35 Priority
 #define CPU_SCS_O_NVIC_IPR8                                         0x00000420
 
+// Irq 32 to 35 Priority
+#define CPU_SCS_O_NVIC_IPR9                                         0x00000424
+
 // CPUID Base
 #define CPU_SCS_O_CPUID                                             0x00000D00
 
@@ -208,6 +211,39 @@
 // Coprocessor Access Control
 #define CPU_SCS_O_CPACR                                             0x00000D88
 
+// MPU Type
+#define CPU_SCS_O_MPU_TYPE                                          0x00000D90
+
+// MPU Control
+#define CPU_SCS_O_MPU_CTRL                                          0x00000D94
+
+// MPU Region Number
+#define CPU_SCS_O_MPU_RNR                                           0x00000D98
+
+// MPU Region Base Address
+#define CPU_SCS_O_MPU_RBAR                                          0x00000D9C
+
+// MPU Region Attribute and Size
+#define CPU_SCS_O_MPU_RASR                                          0x00000DA0
+
+// MPU Alias 1 Region Base Address
+#define CPU_SCS_O_MPU_RBAR_A1                                       0x00000DA4
+
+// MPU Alias 1 Region Attribute and Size
+#define CPU_SCS_O_MPU_RASR_A1                                       0x00000DA8
+
+// MPU Alias 2 Region Base Address
+#define CPU_SCS_O_MPU_RBAR_A2                                       0x00000DAC
+
+// MPU Alias 2 Region Attribute and Size
+#define CPU_SCS_O_MPU_RASR_A2                                       0x00000DB0
+
+// MPU Alias 3 Region Base Address
+#define CPU_SCS_O_MPU_RBAR_A3                                       0x00000DB4
+
+// MPU Alias 3 Region Attribute and Size
+#define CPU_SCS_O_MPU_RASR_A3                                       0x00000DB8
+
 // Debug Halting Control and Status
 #define CPU_SCS_O_DHCSR                                             0x00000DF0
 
@@ -222,6 +258,21 @@
 
 // Software Trigger Interrupt
 #define CPU_SCS_O_STIR                                              0x00000F00
+
+// Floating Point Context Control
+#define CPU_SCS_O_FPCCR                                             0x00000F34
+
+// Floating-Point Context Address
+#define CPU_SCS_O_FPCAR                                             0x00000F38
+
+// Floating Point Default Status Control
+#define CPU_SCS_O_FPDSCR                                            0x00000F3C
+
+// Media and FP Feature 0
+#define CPU_SCS_O_MVFR0                                             0x00000F40
+
+// Media and FP Feature 1
+#define CPU_SCS_O_MVFR1                                             0x00000F44
 
 //*****************************************************************************
 //
@@ -249,6 +300,23 @@
 // Register: CPU_SCS_O_ACTLR
 //
 //*****************************************************************************
+// Field:     [9] DISOOFP
+//
+// Disables floating point instructions completing out of order with respect to
+// integer instructions.
+#define CPU_SCS_ACTLR_DISOOFP                                       0x00000200
+#define CPU_SCS_ACTLR_DISOOFP_BITN                                           9
+#define CPU_SCS_ACTLR_DISOOFP_M                                     0x00000200
+#define CPU_SCS_ACTLR_DISOOFP_S                                              9
+
+// Field:     [8] DISFPCA
+//
+// Disable automatic update of CONTROL.FPCA
+#define CPU_SCS_ACTLR_DISFPCA                                       0x00000100
+#define CPU_SCS_ACTLR_DISFPCA_BITN                                           8
+#define CPU_SCS_ACTLR_DISFPCA_M                                     0x00000100
+#define CPU_SCS_ACTLR_DISFPCA_S                                              8
+
 // Field:     [2] DISFOLD
 //
 // Disables folding of IT instruction.
@@ -722,6 +790,46 @@
 // Register: CPU_SCS_O_NVIC_ISER1
 //
 //*****************************************************************************
+// Field:     [5] SETENA37
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit enables the
+// interrupt number 37 (See EVENT:CPUIRQSEL37.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ISER1_SETENA37                                 0x00000020
+#define CPU_SCS_NVIC_ISER1_SETENA37_BITN                                     5
+#define CPU_SCS_NVIC_ISER1_SETENA37_M                               0x00000020
+#define CPU_SCS_NVIC_ISER1_SETENA37_S                                        5
+
+// Field:     [4] SETENA36
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit enables the
+// interrupt number 36 (See EVENT:CPUIRQSEL36.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ISER1_SETENA36                                 0x00000010
+#define CPU_SCS_NVIC_ISER1_SETENA36_BITN                                     4
+#define CPU_SCS_NVIC_ISER1_SETENA36_M                               0x00000010
+#define CPU_SCS_NVIC_ISER1_SETENA36_S                                        4
+
+// Field:     [3] SETENA35
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit enables the
+// interrupt number 35 (See EVENT:CPUIRQSEL35.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ISER1_SETENA35                                 0x00000008
+#define CPU_SCS_NVIC_ISER1_SETENA35_BITN                                     3
+#define CPU_SCS_NVIC_ISER1_SETENA35_M                               0x00000008
+#define CPU_SCS_NVIC_ISER1_SETENA35_S                                        3
+
+// Field:     [2] SETENA34
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit enables the
+// interrupt number 34 (See EVENT:CPUIRQSEL34.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ISER1_SETENA34                                 0x00000004
+#define CPU_SCS_NVIC_ISER1_SETENA34_BITN                                     2
+#define CPU_SCS_NVIC_ISER1_SETENA34_M                               0x00000004
+#define CPU_SCS_NVIC_ISER1_SETENA34_S                                        2
+
 // Field:     [1] SETENA33
 //
 // Writing 0 to this bit has no effect, writing 1 to this bit enables the
@@ -1072,6 +1180,46 @@
 // Register: CPU_SCS_O_NVIC_ICER1
 //
 //*****************************************************************************
+// Field:     [5] CLRENA37
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit disables the
+// interrupt number  37 (See EVENT:CPUIRQSEL37.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ICER1_CLRENA37                                 0x00000020
+#define CPU_SCS_NVIC_ICER1_CLRENA37_BITN                                     5
+#define CPU_SCS_NVIC_ICER1_CLRENA37_M                               0x00000020
+#define CPU_SCS_NVIC_ICER1_CLRENA37_S                                        5
+
+// Field:     [4] CLRENA36
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit disables the
+// interrupt number  36 (See EVENT:CPUIRQSEL36.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ICER1_CLRENA36                                 0x00000010
+#define CPU_SCS_NVIC_ICER1_CLRENA36_BITN                                     4
+#define CPU_SCS_NVIC_ICER1_CLRENA36_M                               0x00000010
+#define CPU_SCS_NVIC_ICER1_CLRENA36_S                                        4
+
+// Field:     [3] CLRENA35
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit disables the
+// interrupt number  35 (See EVENT:CPUIRQSEL35.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ICER1_CLRENA35                                 0x00000008
+#define CPU_SCS_NVIC_ICER1_CLRENA35_BITN                                     3
+#define CPU_SCS_NVIC_ICER1_CLRENA35_M                               0x00000008
+#define CPU_SCS_NVIC_ICER1_CLRENA35_S                                        3
+
+// Field:     [2] CLRENA34
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit disables the
+// interrupt number  34 (See EVENT:CPUIRQSEL34.EV for details). Reading the bit
+// returns its current enable state.
+#define CPU_SCS_NVIC_ICER1_CLRENA34                                 0x00000004
+#define CPU_SCS_NVIC_ICER1_CLRENA34_BITN                                     2
+#define CPU_SCS_NVIC_ICER1_CLRENA34_M                               0x00000004
+#define CPU_SCS_NVIC_ICER1_CLRENA34_S                                        2
+
 // Field:     [1] CLRENA33
 //
 // Writing 0 to this bit has no effect, writing 1 to this bit disables the
@@ -1422,6 +1570,46 @@
 // Register: CPU_SCS_O_NVIC_ISPR1
 //
 //*****************************************************************************
+// Field:     [5] SETPEND37
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit pends the
+// interrupt number 37 (See EVENT:CPUIRQSEL37.EV for details). Reading the bit
+// returns its current state.
+#define CPU_SCS_NVIC_ISPR1_SETPEND37                                0x00000020
+#define CPU_SCS_NVIC_ISPR1_SETPEND37_BITN                                    5
+#define CPU_SCS_NVIC_ISPR1_SETPEND37_M                              0x00000020
+#define CPU_SCS_NVIC_ISPR1_SETPEND37_S                                       5
+
+// Field:     [4] SETPEND36
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit pends the
+// interrupt number 36 (See EVENT:CPUIRQSEL36.EV for details). Reading the bit
+// returns its current state.
+#define CPU_SCS_NVIC_ISPR1_SETPEND36                                0x00000010
+#define CPU_SCS_NVIC_ISPR1_SETPEND36_BITN                                    4
+#define CPU_SCS_NVIC_ISPR1_SETPEND36_M                              0x00000010
+#define CPU_SCS_NVIC_ISPR1_SETPEND36_S                                       4
+
+// Field:     [3] SETPEND35
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit pends the
+// interrupt number 35 (See EVENT:CPUIRQSEL35.EV for details). Reading the bit
+// returns its current state.
+#define CPU_SCS_NVIC_ISPR1_SETPEND35                                0x00000008
+#define CPU_SCS_NVIC_ISPR1_SETPEND35_BITN                                    3
+#define CPU_SCS_NVIC_ISPR1_SETPEND35_M                              0x00000008
+#define CPU_SCS_NVIC_ISPR1_SETPEND35_S                                       3
+
+// Field:     [2] SETPEND34
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit pends the
+// interrupt number 34 (See EVENT:CPUIRQSEL34.EV for details). Reading the bit
+// returns its current state.
+#define CPU_SCS_NVIC_ISPR1_SETPEND34                                0x00000004
+#define CPU_SCS_NVIC_ISPR1_SETPEND34_BITN                                    2
+#define CPU_SCS_NVIC_ISPR1_SETPEND34_M                              0x00000004
+#define CPU_SCS_NVIC_ISPR1_SETPEND34_S                                       2
+
 // Field:     [1] SETPEND33
 //
 // Writing 0 to this bit has no effect, writing 1 to this bit pends the
@@ -1772,6 +1960,46 @@
 // Register: CPU_SCS_O_NVIC_ICPR1
 //
 //*****************************************************************************
+// Field:     [5] CLRPEND37
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit clears the
+// corresponding pending interrupt 37 (See EVENT:CPUIRQSEL37.EV for details).
+// Reading the bit returns its current state.
+#define CPU_SCS_NVIC_ICPR1_CLRPEND37                                0x00000020
+#define CPU_SCS_NVIC_ICPR1_CLRPEND37_BITN                                    5
+#define CPU_SCS_NVIC_ICPR1_CLRPEND37_M                              0x00000020
+#define CPU_SCS_NVIC_ICPR1_CLRPEND37_S                                       5
+
+// Field:     [4] CLRPEND36
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit clears the
+// corresponding pending interrupt 36 (See EVENT:CPUIRQSEL36.EV for details).
+// Reading the bit returns its current state.
+#define CPU_SCS_NVIC_ICPR1_CLRPEND36                                0x00000010
+#define CPU_SCS_NVIC_ICPR1_CLRPEND36_BITN                                    4
+#define CPU_SCS_NVIC_ICPR1_CLRPEND36_M                              0x00000010
+#define CPU_SCS_NVIC_ICPR1_CLRPEND36_S                                       4
+
+// Field:     [3] CLRPEND35
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit clears the
+// corresponding pending interrupt 35 (See EVENT:CPUIRQSEL35.EV for details).
+// Reading the bit returns its current state.
+#define CPU_SCS_NVIC_ICPR1_CLRPEND35                                0x00000008
+#define CPU_SCS_NVIC_ICPR1_CLRPEND35_BITN                                    3
+#define CPU_SCS_NVIC_ICPR1_CLRPEND35_M                              0x00000008
+#define CPU_SCS_NVIC_ICPR1_CLRPEND35_S                                       3
+
+// Field:     [2] CLRPEND34
+//
+// Writing 0 to this bit has no effect, writing 1 to this bit clears the
+// corresponding pending interrupt 34 (See EVENT:CPUIRQSEL34.EV for details).
+// Reading the bit returns its current state.
+#define CPU_SCS_NVIC_ICPR1_CLRPEND34                                0x00000004
+#define CPU_SCS_NVIC_ICPR1_CLRPEND34_BITN                                    2
+#define CPU_SCS_NVIC_ICPR1_CLRPEND34_M                              0x00000004
+#define CPU_SCS_NVIC_ICPR1_CLRPEND34_S                                       2
+
 // Field:     [1] CLRPEND33
 //
 // Writing 0 to this bit has no effect, writing 1 to this bit clears the
@@ -2122,6 +2350,46 @@
 // Register: CPU_SCS_O_NVIC_IABR1
 //
 //*****************************************************************************
+// Field:     [5] ACTIVE37
+//
+// Reading 0 from this bit implies that interrupt line 37 is not active.
+// Reading 1 from this bit implies that the interrupt line 37 is active (See
+// EVENT:CPUIRQSEL37.EV for details).
+#define CPU_SCS_NVIC_IABR1_ACTIVE37                                 0x00000020
+#define CPU_SCS_NVIC_IABR1_ACTIVE37_BITN                                     5
+#define CPU_SCS_NVIC_IABR1_ACTIVE37_M                               0x00000020
+#define CPU_SCS_NVIC_IABR1_ACTIVE37_S                                        5
+
+// Field:     [4] ACTIVE36
+//
+// Reading 0 from this bit implies that interrupt line 36 is not active.
+// Reading 1 from this bit implies that the interrupt line 36 is active (See
+// EVENT:CPUIRQSEL36.EV for details).
+#define CPU_SCS_NVIC_IABR1_ACTIVE36                                 0x00000010
+#define CPU_SCS_NVIC_IABR1_ACTIVE36_BITN                                     4
+#define CPU_SCS_NVIC_IABR1_ACTIVE36_M                               0x00000010
+#define CPU_SCS_NVIC_IABR1_ACTIVE36_S                                        4
+
+// Field:     [3] ACTIVE35
+//
+// Reading 0 from this bit implies that interrupt line 35 is not active.
+// Reading 1 from this bit implies that the interrupt line 35 is active (See
+// EVENT:CPUIRQSEL35.EV for details).
+#define CPU_SCS_NVIC_IABR1_ACTIVE35                                 0x00000008
+#define CPU_SCS_NVIC_IABR1_ACTIVE35_BITN                                     3
+#define CPU_SCS_NVIC_IABR1_ACTIVE35_M                               0x00000008
+#define CPU_SCS_NVIC_IABR1_ACTIVE35_S                                        3
+
+// Field:     [2] ACTIVE34
+//
+// Reading 0 from this bit implies that interrupt line 34 is not active.
+// Reading 1 from this bit implies that the interrupt line 34 is active (See
+// EVENT:CPUIRQSEL34.EV for details).
+#define CPU_SCS_NVIC_IABR1_ACTIVE34                                 0x00000004
+#define CPU_SCS_NVIC_IABR1_ACTIVE34_BITN                                     2
+#define CPU_SCS_NVIC_IABR1_ACTIVE34_M                               0x00000004
+#define CPU_SCS_NVIC_IABR1_ACTIVE34_S                                        2
+
 // Field:     [1] ACTIVE33
 //
 // Reading 0 from this bit implies that interrupt line 33 is not active.
@@ -2411,6 +2679,20 @@
 // Register: CPU_SCS_O_NVIC_IPR8
 //
 //*****************************************************************************
+// Field: [31:24] PRI_35
+//
+// Priority of interrupt 35 (See EVENT:CPUIRQSEL35.EV for details).
+#define CPU_SCS_NVIC_IPR8_PRI_35_W                                           8
+#define CPU_SCS_NVIC_IPR8_PRI_35_M                                  0xFF000000
+#define CPU_SCS_NVIC_IPR8_PRI_35_S                                          24
+
+// Field: [23:16] PRI_34
+//
+// Priority of interrupt 34 (See EVENT:CPUIRQSEL34.EV for details).
+#define CPU_SCS_NVIC_IPR8_PRI_34_W                                           8
+#define CPU_SCS_NVIC_IPR8_PRI_34_M                                  0x00FF0000
+#define CPU_SCS_NVIC_IPR8_PRI_34_S                                          16
+
 // Field:  [15:8] PRI_33
 //
 // Priority of interrupt 33 (See EVENT:CPUIRQSEL33.EV for details).
@@ -2424,6 +2706,25 @@
 #define CPU_SCS_NVIC_IPR8_PRI_32_W                                           8
 #define CPU_SCS_NVIC_IPR8_PRI_32_M                                  0x000000FF
 #define CPU_SCS_NVIC_IPR8_PRI_32_S                                           0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_NVIC_IPR9
+//
+//*****************************************************************************
+// Field:  [15:8] PRI_37
+//
+// Priority of interrupt 37 (See EVENT:CPUIRQSEL37.EV for details).
+#define CPU_SCS_NVIC_IPR9_PRI_37_W                                           8
+#define CPU_SCS_NVIC_IPR9_PRI_37_M                                  0x0000FF00
+#define CPU_SCS_NVIC_IPR9_PRI_37_S                                           8
+
+// Field:   [7:0] PRI_36
+//
+// Priority of interrupt 36 (See EVENT:CPUIRQSEL36.EV for details).
+#define CPU_SCS_NVIC_IPR9_PRI_36_W                                           8
+#define CPU_SCS_NVIC_IPR9_PRI_36_M                                  0x000000FF
+#define CPU_SCS_NVIC_IPR9_PRI_36_S                                           0
 
 //*****************************************************************************
 //
@@ -3532,6 +3833,322 @@
 //*****************************************************************************
 //*****************************************************************************
 //
+// Register: CPU_SCS_O_MPU_TYPE
+//
+//*****************************************************************************
+// Field: [23:16] IREGION
+//
+// The processor core uses only a unified MPU, this field always reads 0x0.
+#define CPU_SCS_MPU_TYPE_IREGION_W                                           8
+#define CPU_SCS_MPU_TYPE_IREGION_M                                  0x00FF0000
+#define CPU_SCS_MPU_TYPE_IREGION_S                                          16
+
+// Field:  [15:8] DREGION
+//
+// Number of supported MPU regions field. This field reads 0x08 indicating
+// eight MPU regions.
+#define CPU_SCS_MPU_TYPE_DREGION_W                                           8
+#define CPU_SCS_MPU_TYPE_DREGION_M                                  0x0000FF00
+#define CPU_SCS_MPU_TYPE_DREGION_S                                           8
+
+// Field:     [0] SEPARATE
+//
+// The processor core uses only a unified MPU, thus this field is always 0.
+#define CPU_SCS_MPU_TYPE_SEPARATE                                   0x00000001
+#define CPU_SCS_MPU_TYPE_SEPARATE_BITN                                       0
+#define CPU_SCS_MPU_TYPE_SEPARATE_M                                 0x00000001
+#define CPU_SCS_MPU_TYPE_SEPARATE_S                                          0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_CTRL
+//
+//*****************************************************************************
+// Field:     [2] PRIVDEFENA
+//
+// This bit enables the default memory map for privileged access, as a
+// background region, when the MPU is enabled. The background region acts as if
+// it was region number 1 before any settable regions. Any region that is set
+// up overlays this default map, and overrides it. If this bit is not set, the
+// default memory map is disabled, and memory not covered by a region faults.
+// This applies to memory type, Execute Never (XN), cache and shareable rules.
+// However, this only applies to privileged mode (fetch and data access). User
+// mode code faults unless a region has been set up for its code and data. When
+// the MPU is disabled, the default map acts on both privileged and user mode
+// code. XN and SO rules always apply to the system partition whether this
+// enable is set or not. If the MPU is disabled, this bit is ignored.
+#define CPU_SCS_MPU_CTRL_PRIVDEFENA                                 0x00000004
+#define CPU_SCS_MPU_CTRL_PRIVDEFENA_BITN                                     2
+#define CPU_SCS_MPU_CTRL_PRIVDEFENA_M                               0x00000004
+#define CPU_SCS_MPU_CTRL_PRIVDEFENA_S                                        2
+
+// Field:     [1] HFNMIENA
+//
+// This bit enables the MPU when in Hard Fault, NMI, and FAULTMASK escalated
+// handlers. If this bit and ENABLE are set, the MPU is enabled when in these
+// handlers. If this bit is not set, the MPU is disabled when in these
+// handlers, regardless of the value of ENABLE bit. If this bit is set and
+// ENABLE is not set, behavior is unpredictable.
+#define CPU_SCS_MPU_CTRL_HFNMIENA                                   0x00000002
+#define CPU_SCS_MPU_CTRL_HFNMIENA_BITN                                       1
+#define CPU_SCS_MPU_CTRL_HFNMIENA_M                                 0x00000002
+#define CPU_SCS_MPU_CTRL_HFNMIENA_S                                          1
+
+// Field:     [0] ENABLE
+//
+// Enable MPU
+//
+// 0: MPU disabled
+// 1: MPU enabled
+#define CPU_SCS_MPU_CTRL_ENABLE                                     0x00000001
+#define CPU_SCS_MPU_CTRL_ENABLE_BITN                                         0
+#define CPU_SCS_MPU_CTRL_ENABLE_M                                   0x00000001
+#define CPU_SCS_MPU_CTRL_ENABLE_S                                            0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RNR
+//
+//*****************************************************************************
+// Field:   [7:0] REGION
+//
+// Region select field.
+// This field selects the region to operate on when using the MPU_RASR and
+// MPU_RBAR. It must be written first except when the address MPU_RBAR.VALID
+// and MPU_RBAR.REGION fields are written, which overwrites this.
+#define CPU_SCS_MPU_RNR_REGION_W                                             8
+#define CPU_SCS_MPU_RNR_REGION_M                                    0x000000FF
+#define CPU_SCS_MPU_RNR_REGION_S                                             0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RBAR
+//
+//*****************************************************************************
+// Field:  [31:5] ADDR
+//
+// Region base address field.
+// The position of the LSB depends on the region size, so that the base address
+// is aligned according to an even multiple of size. The power of 2 size
+// specified by the SZENABLE field of the MPU Region Attribute and Size
+// Register defines how many bits of base address are used.
+#define CPU_SCS_MPU_RBAR_ADDR_W                                             27
+#define CPU_SCS_MPU_RBAR_ADDR_M                                     0xFFFFFFE0
+#define CPU_SCS_MPU_RBAR_ADDR_S                                              5
+
+// Field:     [4] VALID
+//
+// MPU region number valid:
+// 0: MPU_RNR remains unchanged and is interpreted.
+// 1: MPU_RNR is overwritten by REGION.
+#define CPU_SCS_MPU_RBAR_VALID                                      0x00000010
+#define CPU_SCS_MPU_RBAR_VALID_BITN                                          4
+#define CPU_SCS_MPU_RBAR_VALID_M                                    0x00000010
+#define CPU_SCS_MPU_RBAR_VALID_S                                             4
+
+// Field:   [3:0] REGION
+//
+// MPU region override field
+#define CPU_SCS_MPU_RBAR_REGION_W                                            4
+#define CPU_SCS_MPU_RBAR_REGION_M                                   0x0000000F
+#define CPU_SCS_MPU_RBAR_REGION_S                                            0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RASR
+//
+//*****************************************************************************
+// Field:    [28] XN
+//
+// Instruction access disable:
+// 0: Enable instruction fetches
+// 1: Disable instruction fetches
+#define CPU_SCS_MPU_RASR_XN                                         0x10000000
+#define CPU_SCS_MPU_RASR_XN_BITN                                            28
+#define CPU_SCS_MPU_RASR_XN_M                                       0x10000000
+#define CPU_SCS_MPU_RASR_XN_S                                               28
+
+// Field: [26:24] AP
+//
+// Data access permission:
+// 0x0: Priviliged permissions: No access. User permissions: No access.
+// 0x1: Priviliged permissions: Read-write. User permissions: No access.
+// 0x2: Priviliged permissions: Read-write. User permissions: Read-only.
+// 0x3: Priviliged permissions: Read-write. User permissions: Read-write.
+// 0x4: Reserved
+// 0x5: Priviliged permissions: Read-only. User permissions: No access.
+// 0x6: Priviliged permissions: Read-only. User permissions: Read-only.
+// 0x7: Priviliged permissions: Read-only. User permissions: Read-only.
+#define CPU_SCS_MPU_RASR_AP_W                                                3
+#define CPU_SCS_MPU_RASR_AP_M                                       0x07000000
+#define CPU_SCS_MPU_RASR_AP_S                                               24
+
+// Field: [21:19] TEX
+//
+// Type extension
+#define CPU_SCS_MPU_RASR_TEX_W                                               3
+#define CPU_SCS_MPU_RASR_TEX_M                                      0x00380000
+#define CPU_SCS_MPU_RASR_TEX_S                                              19
+
+// Field:    [18] S
+//
+// Shareable bit:
+// 0: Not shareable
+// 1: Shareable
+#define CPU_SCS_MPU_RASR_S                                          0x00040000
+#define CPU_SCS_MPU_RASR_S_BITN                                             18
+#define CPU_SCS_MPU_RASR_S_M                                        0x00040000
+#define CPU_SCS_MPU_RASR_S_S                                                18
+
+// Field:    [17] C
+//
+// Cacheable bit:
+// 0: Not cacheable
+// 1: Cacheable
+#define CPU_SCS_MPU_RASR_C                                          0x00020000
+#define CPU_SCS_MPU_RASR_C_BITN                                             17
+#define CPU_SCS_MPU_RASR_C_M                                        0x00020000
+#define CPU_SCS_MPU_RASR_C_S                                                17
+
+// Field:    [16] B
+//
+// Bufferable bit:
+// 0: Not bufferable
+// 1: Bufferable
+#define CPU_SCS_MPU_RASR_B                                          0x00010000
+#define CPU_SCS_MPU_RASR_B_BITN                                             16
+#define CPU_SCS_MPU_RASR_B_M                                        0x00010000
+#define CPU_SCS_MPU_RASR_B_S                                                16
+
+// Field:  [15:8] SRD
+//
+// Sub-Region Disable field:
+// Setting a bit in this field disables the corresponding sub-region. Regions
+// are split into eight equal-sized sub-regions. Sub-regions are not supported
+// for region sizes of 128 bytes and less.
+#define CPU_SCS_MPU_RASR_SRD_W                                               8
+#define CPU_SCS_MPU_RASR_SRD_M                                      0x0000FF00
+#define CPU_SCS_MPU_RASR_SRD_S                                               8
+
+// Field:   [5:1] SIZE
+//
+// MPU Protection Region Size Field:
+// 0x04: 32B
+// 0x05: 64B
+// 0x06: 128B
+// 0x07: 256B
+// 0x08: 512B
+// 0x09: 1KB
+// 0x0A: 2KB
+// 0x0B: 4KB
+// 0x0C: 8KB
+// 0x0D: 16KB
+// 0x0E: 32KB
+// 0x0F: 64KB
+// 0x10: 128KB
+// 0x11: 256KB
+// 0x12: 512KB
+// 0x13: 1MB
+// 0x14: 2MB
+// 0x15: 4MB
+// 0x16: 8MB
+// 0x17: 16MB
+// 0x18: 32MB
+// 0x19: 64MB
+// 0x1A: 128MB
+// 0x1B: 256MB
+// 0x1C: 512MB
+// 0x1D: 1GB
+// 0x1E: 2GB
+// 0x1F: 4GB
+#define CPU_SCS_MPU_RASR_SIZE_W                                              5
+#define CPU_SCS_MPU_RASR_SIZE_M                                     0x0000003E
+#define CPU_SCS_MPU_RASR_SIZE_S                                              1
+
+// Field:     [0] ENABLE
+//
+// Region enable bit:
+// 0: Disable region
+// 1: Enable region
+#define CPU_SCS_MPU_RASR_ENABLE                                     0x00000001
+#define CPU_SCS_MPU_RASR_ENABLE_BITN                                         0
+#define CPU_SCS_MPU_RASR_ENABLE_M                                   0x00000001
+#define CPU_SCS_MPU_RASR_ENABLE_S                                            0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RBAR_A1
+//
+//*****************************************************************************
+// Field:  [31:0] MPU_RBAR_A1
+//
+// Alias for MPU_RBAR
+#define CPU_SCS_MPU_RBAR_A1_MPU_RBAR_A1_W                                   32
+#define CPU_SCS_MPU_RBAR_A1_MPU_RBAR_A1_M                           0xFFFFFFFF
+#define CPU_SCS_MPU_RBAR_A1_MPU_RBAR_A1_S                                    0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RASR_A1
+//
+//*****************************************************************************
+// Field:  [31:0] MPU_RASR_A1
+//
+// Alias for MPU_RASR
+#define CPU_SCS_MPU_RASR_A1_MPU_RASR_A1_W                                   32
+#define CPU_SCS_MPU_RASR_A1_MPU_RASR_A1_M                           0xFFFFFFFF
+#define CPU_SCS_MPU_RASR_A1_MPU_RASR_A1_S                                    0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RBAR_A2
+//
+//*****************************************************************************
+// Field:  [31:0] MPU_RBAR_A2
+//
+// Alias for MPU_RBAR
+#define CPU_SCS_MPU_RBAR_A2_MPU_RBAR_A2_W                                   32
+#define CPU_SCS_MPU_RBAR_A2_MPU_RBAR_A2_M                           0xFFFFFFFF
+#define CPU_SCS_MPU_RBAR_A2_MPU_RBAR_A2_S                                    0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RASR_A2
+//
+//*****************************************************************************
+// Field:  [31:0] MPU_RASR_A2
+//
+// Alias for MPU_RASR
+#define CPU_SCS_MPU_RASR_A2_MPU_RASR_A2_W                                   32
+#define CPU_SCS_MPU_RASR_A2_MPU_RASR_A2_M                           0xFFFFFFFF
+#define CPU_SCS_MPU_RASR_A2_MPU_RASR_A2_S                                    0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RBAR_A3
+//
+//*****************************************************************************
+// Field:  [31:0] MPU_RBAR_A3
+//
+// Alias for MPU_RBAR
+#define CPU_SCS_MPU_RBAR_A3_MPU_RBAR_A3_W                                   32
+#define CPU_SCS_MPU_RBAR_A3_MPU_RBAR_A3_M                           0xFFFFFFFF
+#define CPU_SCS_MPU_RBAR_A3_MPU_RBAR_A3_S                                    0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MPU_RASR_A3
+//
+//*****************************************************************************
+// Field:  [31:0] MPU_RASR_A3
+//
+// Alias for MPU_RASR
+#define CPU_SCS_MPU_RASR_A3_MPU_RASR_A3_W                                   32
+#define CPU_SCS_MPU_RASR_A3_MPU_RASR_A3_M                           0xFFFFFFFF
+#define CPU_SCS_MPU_RASR_A3_MPU_RASR_A3_S                                    0
+
+//*****************************************************************************
+//
 // Register: CPU_SCS_O_DHCSR
 //
 //*****************************************************************************
@@ -3880,6 +4497,293 @@
 #define CPU_SCS_STIR_INTID_W                                                 9
 #define CPU_SCS_STIR_INTID_M                                        0x000001FF
 #define CPU_SCS_STIR_INTID_S                                                 0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_FPCCR
+//
+//*****************************************************************************
+// Field:    [31] ASPEN
+//
+// Automatic State Preservation enable.
+// When this bit is set is will cause bit [2] of the Special CONTROL register
+// to be set (FPCA) on execution of a floating point instruction which results
+// in the floating point state automatically being preserved on exception
+// entry.
+#define CPU_SCS_FPCCR_ASPEN                                         0x80000000
+#define CPU_SCS_FPCCR_ASPEN_BITN                                            31
+#define CPU_SCS_FPCCR_ASPEN_M                                       0x80000000
+#define CPU_SCS_FPCCR_ASPEN_S                                               31
+
+// Field:    [30] LSPEN
+//
+// Lazy State Preservation enable.
+// Lazy state preservation is when the processor performs a context save, space
+// on the stack is reserved for the floating point state but it is not stacked
+// until the new context performs a floating point operation.
+// 0: Disable automatic lazy state preservation for floating-point context.
+// 1: Enable automatic lazy state preservation for floating-point context.
+#define CPU_SCS_FPCCR_LSPEN                                         0x40000000
+#define CPU_SCS_FPCCR_LSPEN_BITN                                            30
+#define CPU_SCS_FPCCR_LSPEN_M                                       0x40000000
+#define CPU_SCS_FPCCR_LSPEN_S                                               30
+
+// Field:     [8] MONRDY
+//
+// Indicates whether the the software executing when the processor allocated
+// the FP stack frame was able to set the DebugMonitor exception to pending.
+// 0: DebugMonitor is disabled or priority did not permit setting
+// DEMCR.MON_PEND when the floating-point stack frame was allocated.
+// 1: DebugMonitor is enabled and priority permits setting DEMCR.MON_PEND when
+// the floating-point stack frame was allocated.
+#define CPU_SCS_FPCCR_MONRDY                                        0x00000100
+#define CPU_SCS_FPCCR_MONRDY_BITN                                            8
+#define CPU_SCS_FPCCR_MONRDY_M                                      0x00000100
+#define CPU_SCS_FPCCR_MONRDY_S                                               8
+
+// Field:     [6] BFRDY
+//
+// Indicates whether the software executing when the processor allocated the FP
+// stack frame was able to set the BusFault exception to pending.
+// 0: BusFault is disabled or priority did not permit setting the BusFault
+// handler to the pending state when the floating-point stack frame was
+// allocated.
+// 1: BusFault is enabled and priority permitted setting the BusFault handler
+// to the pending state when the floating-point stack frame was allocated.
+#define CPU_SCS_FPCCR_BFRDY                                         0x00000040
+#define CPU_SCS_FPCCR_BFRDY_BITN                                             6
+#define CPU_SCS_FPCCR_BFRDY_M                                       0x00000040
+#define CPU_SCS_FPCCR_BFRDY_S                                                6
+
+// Field:     [5] MMRDY
+//
+// Indicates whether the software executing when the processor allocated the FP
+// stack frame was able to set the MemManage exception to pending.
+// 0: MemManage is disabled or priority did not permit setting the MemManage
+// handler to the pending state when the floating-point stack frame was
+// allocated.
+// 1: MemManage is enabled and priority permitted setting the MemManage handler
+// to the pending state when the floating-point stack frame was allocated.
+#define CPU_SCS_FPCCR_MMRDY                                         0x00000020
+#define CPU_SCS_FPCCR_MMRDY_BITN                                             5
+#define CPU_SCS_FPCCR_MMRDY_M                                       0x00000020
+#define CPU_SCS_FPCCR_MMRDY_S                                                5
+
+// Field:     [4] HFRDY
+//
+// Indicates whether the software executing when the processor allocated the FP
+// stack frame was able to set the HardFault exception to pending.
+// 0: Priority did not permit setting the HardFault handler to the pending
+// state when the floating-point stack frame was allocated.
+// 1: Priority permitted setting the HardFault handler to the pending state
+// when the floating-point stack frame was allocated.
+#define CPU_SCS_FPCCR_HFRDY                                         0x00000010
+#define CPU_SCS_FPCCR_HFRDY_BITN                                             4
+#define CPU_SCS_FPCCR_HFRDY_M                                       0x00000010
+#define CPU_SCS_FPCCR_HFRDY_S                                                4
+
+// Field:     [3] THREAD
+//
+// Indicates the processor mode was Thread when it allocated the FP stack
+// frame.
+// 0: Mode was not Thread Mode when the floating-point stack frame was
+// allocated.
+// 1: Mode was Thread Mode when the floating-point stack frame was allocated.
+#define CPU_SCS_FPCCR_THREAD                                        0x00000008
+#define CPU_SCS_FPCCR_THREAD_BITN                                            3
+#define CPU_SCS_FPCCR_THREAD_M                                      0x00000008
+#define CPU_SCS_FPCCR_THREAD_S                                               3
+
+// Field:     [1] USER
+//
+// Indicates the privilege level of the software executing was User
+// (Unpriviledged) when the processor allocated the FP stack frame:
+// 0: Privilege level was not user when the floating-point stack frame was
+// allocated.
+// 1: Privilege level was user when the floating-point stack frame was
+// allocated.
+#define CPU_SCS_FPCCR_USER                                          0x00000002
+#define CPU_SCS_FPCCR_USER_BITN                                              1
+#define CPU_SCS_FPCCR_USER_M                                        0x00000002
+#define CPU_SCS_FPCCR_USER_S                                                 1
+
+// Field:     [0] LSPACT
+//
+// Indicates whether Lazy preservation of the FP state is active:
+// 0: Lazy state preservation is not active.
+// 1: Lazy state preservation is active. floating-point stack frame has been
+// allocated but saving state to it has been deferred.
+#define CPU_SCS_FPCCR_LSPACT                                        0x00000001
+#define CPU_SCS_FPCCR_LSPACT_BITN                                            0
+#define CPU_SCS_FPCCR_LSPACT_M                                      0x00000001
+#define CPU_SCS_FPCCR_LSPACT_S                                               0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_FPCAR
+//
+//*****************************************************************************
+// Field:  [31:2] ADDRESS
+//
+// Holds the (double-word-aligned) location of the unpopulated floating-point
+// register space allocated on an exception stack frame.
+#define CPU_SCS_FPCAR_ADDRESS_W                                             30
+#define CPU_SCS_FPCAR_ADDRESS_M                                     0xFFFFFFFC
+#define CPU_SCS_FPCAR_ADDRESS_S                                              2
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_FPDSCR
+//
+//*****************************************************************************
+// Field:    [26] AHP
+//
+// Default value for Alternative Half Precision bit. (If this bit is set to 1
+// then Alternative half-precision format is selected).
+#define CPU_SCS_FPDSCR_AHP                                          0x04000000
+#define CPU_SCS_FPDSCR_AHP_BITN                                             26
+#define CPU_SCS_FPDSCR_AHP_M                                        0x04000000
+#define CPU_SCS_FPDSCR_AHP_S                                                26
+
+// Field:    [25] DN
+//
+// Default value for Default NaN mode bit. (If this bit is set to 1 then any
+// operation involving one or more NaNs returns the Default NaN).
+#define CPU_SCS_FPDSCR_DN                                           0x02000000
+#define CPU_SCS_FPDSCR_DN_BITN                                              25
+#define CPU_SCS_FPDSCR_DN_M                                         0x02000000
+#define CPU_SCS_FPDSCR_DN_S                                                 25
+
+// Field:    [24] FZ
+//
+// Default value for Flush-to-Zero mode bit. (If this bit is set to 1 then
+// Flush-to-zero mode is enabled).
+#define CPU_SCS_FPDSCR_FZ                                           0x01000000
+#define CPU_SCS_FPDSCR_FZ_BITN                                              24
+#define CPU_SCS_FPDSCR_FZ_M                                         0x01000000
+#define CPU_SCS_FPDSCR_FZ_S                                                 24
+
+// Field: [23:22] RMODE
+//
+// Default value for Rounding Mode control field. (The encoding for this field
+// is:
+// 0b00 Round to Nearest (RN) mode
+// 0b01 Round towards Plus Infinity (RP) mode
+// 0b10 Round towards Minus Infinity (RM) mode
+// 0b11 Round towards Zero (RZ) mode.
+// The specified rounding mode is used by almost all floating-point
+// instructions).
+#define CPU_SCS_FPDSCR_RMODE_W                                               2
+#define CPU_SCS_FPDSCR_RMODE_M                                      0x00C00000
+#define CPU_SCS_FPDSCR_RMODE_S                                              22
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MVFR0
+//
+//*****************************************************************************
+// Field: [31:28] FP_ROUNDING_MODES
+//
+// Indicates the rounding modes supported by the FP floating-point hardware.
+// The value of this field is: 0b0001 - all rounding modes supported.
+#define CPU_SCS_MVFR0_FP_ROUNDING_MODES_W                                    4
+#define CPU_SCS_MVFR0_FP_ROUNDING_MODES_M                           0xF0000000
+#define CPU_SCS_MVFR0_FP_ROUNDING_MODES_S                                   28
+
+// Field: [27:24] SHORT_VECTORS
+//
+// Indicates the hardware support for FP short vectors. The value of this field
+// is: 0b0000 - not supported.
+#define CPU_SCS_MVFR0_SHORT_VECTORS_W                                        4
+#define CPU_SCS_MVFR0_SHORT_VECTORS_M                               0x0F000000
+#define CPU_SCS_MVFR0_SHORT_VECTORS_S                                       24
+
+// Field: [23:20] SQUARE_ROOT
+//
+// Indicates the hardware support for FP square root operations. The value of
+// this field is: 0b0001 - supported.
+#define CPU_SCS_MVFR0_SQUARE_ROOT_W                                          4
+#define CPU_SCS_MVFR0_SQUARE_ROOT_M                                 0x00F00000
+#define CPU_SCS_MVFR0_SQUARE_ROOT_S                                         20
+
+// Field: [19:16] DIVIDE
+//
+// Indicates the hardware support for FP divide operations. The value of this
+// field is: 0b0001 - supported.
+#define CPU_SCS_MVFR0_DIVIDE_W                                               4
+#define CPU_SCS_MVFR0_DIVIDE_M                                      0x000F0000
+#define CPU_SCS_MVFR0_DIVIDE_S                                              16
+
+// Field: [15:12] FP_EXCEPTION_TRAPPING
+//
+// Indicates whether the FP hardware implementation supports exception
+// trapping. The value of this field is: 0b0000 - not supported.
+#define CPU_SCS_MVFR0_FP_EXCEPTION_TRAPPING_W                                4
+#define CPU_SCS_MVFR0_FP_EXCEPTION_TRAPPING_M                       0x0000F000
+#define CPU_SCS_MVFR0_FP_EXCEPTION_TRAPPING_S                               12
+
+// Field:  [11:8] DOUBLE_PRECISION
+//
+// Indicates the hardware support for FP double-precision operations. The value
+// of this field is: 0b0000 - not supported.
+#define CPU_SCS_MVFR0_DOUBLE_PRECISION_W                                     4
+#define CPU_SCS_MVFR0_DOUBLE_PRECISION_M                            0x00000F00
+#define CPU_SCS_MVFR0_DOUBLE_PRECISION_S                                     8
+
+// Field:   [7:4] SINGLE_PRECISION
+//
+// Indicates the hardware support for FP single-precision operations. The value
+// of this field is: 0b0010 - supported.
+#define CPU_SCS_MVFR0_SINGLE_PRECISION_W                                     4
+#define CPU_SCS_MVFR0_SINGLE_PRECISION_M                            0x000000F0
+#define CPU_SCS_MVFR0_SINGLE_PRECISION_S                                     4
+
+// Field:   [3:0] A_SIMD
+//
+// Indicates the size of the FP register bank. The value of this field is:
+// 0b0001 - supported, 16 x 64-bit registers.
+#define CPU_SCS_MVFR0_A_SIMD_W                                               4
+#define CPU_SCS_MVFR0_A_SIMD_M                                      0x0000000F
+#define CPU_SCS_MVFR0_A_SIMD_S                                               0
+
+//*****************************************************************************
+//
+// Register: CPU_SCS_O_MVFR1
+//
+//*****************************************************************************
+// Field: [31:28] FP_FUSED_MAC
+//
+// Indicates whether the FP supports fused multiply accumulate operations. The
+// value of this field is: 0b0001 - supported.
+#define CPU_SCS_MVFR1_FP_FUSED_MAC_W                                         4
+#define CPU_SCS_MVFR1_FP_FUSED_MAC_M                                0xF0000000
+#define CPU_SCS_MVFR1_FP_FUSED_MAC_S                                        28
+
+// Field: [27:24] FP_HPFP
+//
+// Indicates whether the FP supports half-precision floating-point conversion
+// operations. The value of this field is: 0b0001 - supported.
+#define CPU_SCS_MVFR1_FP_HPFP_W                                              4
+#define CPU_SCS_MVFR1_FP_HPFP_M                                     0x0F000000
+#define CPU_SCS_MVFR1_FP_HPFP_S                                             24
+
+// Field:   [7:4] D_NAN_MODE
+//
+// Indicates whether the FP hardware implementation supports only the Default
+// NaN mode. The value of this field is: 0b0001 - hardware supports propagation
+// of NaN values.
+#define CPU_SCS_MVFR1_D_NAN_MODE_W                                           4
+#define CPU_SCS_MVFR1_D_NAN_MODE_M                                  0x000000F0
+#define CPU_SCS_MVFR1_D_NAN_MODE_S                                           4
+
+// Field:   [3:0] FTZ_MODE
+//
+// Indicates whether the FP hardware implementation supports only the
+// Flush-to-Zero mode of operation. The value of this field is: 0b0001 -
+// hardware supports full denormalized number arithmetic.
+#define CPU_SCS_MVFR1_FTZ_MODE_W                                             4
+#define CPU_SCS_MVFR1_FTZ_MODE_M                                    0x0000000F
+#define CPU_SCS_MVFR1_FTZ_MODE_S                                             0
 
 
 #endif // __CPU_SCS__

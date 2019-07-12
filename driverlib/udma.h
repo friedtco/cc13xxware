@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       udma.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-05-23 12:08:52 +0200 (Tue, 23 May 2017)
+*  Revision:       49048
 *
 *  Description:    Defines and prototypes for the uDMA controller.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,12 +61,12 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_ints.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_udma.h>
-#include <driverlib/debug.h>
-#include <driverlib/interrupt.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_ints.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_udma.h"
+#include "debug.h"
+#include "interrupt.h"
 
 //*****************************************************************************
 //
@@ -361,14 +361,10 @@ uDMABaseValid(uint32_t ui32Base)
 __STATIC_INLINE void
 uDMAEnable(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Set the master enable bit in the config register.
-    //
     HWREG(ui32Base + UDMA_O_CFG) = UDMA_CFG_MASTERENABLE;
 }
 
@@ -387,14 +383,10 @@ uDMAEnable(uint32_t ui32Base)
 __STATIC_INLINE void
 uDMADisable(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Clear the master enable bit in the config register.
-    //
     HWREG(ui32Base + UDMA_O_CFG) = 0;
 }
 
@@ -414,14 +406,10 @@ uDMADisable(uint32_t ui32Base)
 __STATIC_INLINE uint32_t
 uDMAErrorStatusGet(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Return the uDMA error status.
-    //
     return(HWREG(ui32Base + UDMA_O_ERROR));
 }
 
@@ -440,14 +428,10 @@ uDMAErrorStatusGet(uint32_t ui32Base)
 __STATIC_INLINE void
 uDMAErrorStatusClear(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Clear the uDMA error interrupt.
-    //
     HWREG(ui32Base + UDMA_O_ERROR) = UDMA_ERROR_STATUS;
 }
 
@@ -472,15 +456,11 @@ uDMAErrorStatusClear(uint32_t ui32Base)
 __STATIC_INLINE void
 uDMAChannelEnable(uint32_t ui32Base, uint32_t ui32ChannelNum)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32ChannelNum < UDMA_NUM_CHANNELS);
 
-    //
     // Set the bit for this channel in the enable set register.
-    //
     HWREG(ui32Base + UDMA_O_SETCHANNELEN) = 1 << ui32ChannelNum;
 }
 
@@ -501,15 +481,11 @@ uDMAChannelEnable(uint32_t ui32Base, uint32_t ui32ChannelNum)
 __STATIC_INLINE void
 uDMAChannelDisable(uint32_t ui32Base, uint32_t ui32ChannelNum)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32ChannelNum < UDMA_NUM_CHANNELS);
 
-    //
     // Set the bit for this channel in the enable clear register.
-    //
     HWREG(ui32Base + UDMA_O_CLEARCHANNELEN) = 1 << ui32ChannelNum;
 }
 
@@ -532,16 +508,12 @@ uDMAChannelDisable(uint32_t ui32Base, uint32_t ui32ChannelNum)
 __STATIC_INLINE bool
 uDMAChannelIsEnabled(uint32_t ui32Base, uint32_t ui32ChannelNum)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32ChannelNum < UDMA_NUM_CHANNELS);
 
-    //
     // AND the specified channel bit with the enable register, and return the
     // result.
-    //
     return((HWREG(ui32Base + UDMA_O_SETCHANNELEN) & (1 << ui32ChannelNum)) ?
            true : false);
 }
@@ -577,17 +549,13 @@ uDMAChannelIsEnabled(uint32_t ui32Base, uint32_t ui32ChannelNum)
 __STATIC_INLINE void
 uDMAControlBaseSet(uint32_t ui32Base, void *pControlTable)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(((uint32_t)pControlTable & ~0x3FF) ==
            (uint32_t)pControlTable);
     ASSERT((uint32_t)pControlTable >= SRAM_BASE);
 
-    //
     // Program the base address into the register.
-    //
     HWREG(ui32Base + UDMA_O_CTRL) = (uint32_t)pControlTable;
 }
 
@@ -607,15 +575,11 @@ uDMAControlBaseSet(uint32_t ui32Base, void *pControlTable)
 __STATIC_INLINE void *
 uDMAControlBaseGet(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
 
     ASSERT(uDMABaseValid(ui32Base));
-    //
     // Read the current value of the control base register, and return it to
     // the caller.
-    //
     return((void *)HWREG(ui32Base + UDMA_O_CTRL));
 }
 
@@ -635,15 +599,11 @@ uDMAControlBaseGet(uint32_t ui32Base)
 __STATIC_INLINE void *
 uDMAControlAlternateBaseGet(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Read the current value of the control base register, and return it to
     // the caller.
-    //
     return((void *)HWREG(ui32Base + UDMA_O_ALTCTRL));
 }
 
@@ -671,15 +631,11 @@ uDMAControlAlternateBaseGet(uint32_t ui32Base)
 __STATIC_INLINE void
 uDMAChannelRequest(uint32_t ui32Base, uint32_t ui32ChannelNum)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32ChannelNum < UDMA_NUM_CHANNELS);
 
-    //
     // Set the bit for this channel in the software uDMA request register.
-    //
     HWREG(ui32Base + UDMA_O_SOFTREQ) = 1 << ui32ChannelNum;
 }
 
@@ -948,21 +904,23 @@ extern uint32_t uDMAChannelModeGet(uint32_t ui32Base,
 
 //*****************************************************************************
 //
-//! \brief Registers an interrupt handler for the uDMA controller.
+//! \brief Registers an interrupt handler for the uDMA controller in the dynamic interrupt table.
 //!
-//! This sets and enables the handler to be called when the uDMA controller
-//! generates an interrupt.
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
+//!
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
 //!
 //! \note The interrupt handler for uDMA is for transfer completion when the
-//! software channel is used, and for error interrupts. The
-//! interrupts for each peripheral channel are handled through the individual
-//! peripheral interrupt handlers.
+//! software channel is used, and for error interrupts. The interrupts for each
+//! peripheral channel are handled through the individual peripheral interrupt
+//! handlers.
 //!
-//! \param ui32Base is the base address of the uDMA port.
-//! \param ui32IntChannel identifies which uDMA interrupt is to be registered.
-//! - \b INT_DMA_DONE_COMB : Register an interrupt handler to process interrupts
+//! \param ui32Base is the base address of the uDMA module.
+//! \param ui32IntChannel specifies which uDMA interrupt is to be registered.
+//! - \c INT_DMA_DONE_COMB : Register an interrupt handler to process interrupts
 //!   from the uDMA software channel.
-//! - \b INT_DMA_ERR : Register an interrupt handler to process uDMA error
+//! - \c INT_DMA_ERR : Register an interrupt handler to process uDMA error
 //!   interrupts.
 //! \param pfnHandler is a pointer to the function to be called when the
 //! interrupt is activated.
@@ -977,36 +935,30 @@ __STATIC_INLINE void
 uDMAIntRegister(uint32_t ui32Base, uint32_t ui32IntChannel,
                 void (*pfnHandler)(void))
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(pfnHandler);
     ASSERT((ui32IntChannel == INT_DMA_DONE_COMB) || (ui32IntChannel == INT_DMA_ERR));
 
-    //
     // Register the interrupt handler.
-    //
     IntRegister(ui32IntChannel, pfnHandler);
 
-    //
     // Enable the memory management fault.
-    //
     IntEnable(ui32IntChannel);
 }
 
 //*****************************************************************************
 //
-//! \brief Unregisters an interrupt handler for the uDMA controller.
+//! \brief Unregisters an interrupt handler for the uDMA controller in the dynamic interrupt table.
 //!
 //! This function will disable and clear the handler to be called for the
 //! specified uDMA interrupt.
 //!
-//! \param ui32Base is the base address of the uDMA port.
-//! \param ui32IntChannel identifies which uDMA interrupt to unregister.
-//! - \b INT_DMA_DONE_COMB : Register an interrupt handler to process interrupts
+//! \param ui32Base is the base address of the uDMA module.
+//! \param ui32IntChannel specifies which uDMA interrupt to unregister.
+//! - \c INT_DMA_DONE_COMB : Register an interrupt handler to process interrupts
 //!   from the uDMA software channel.
-//! - \b INT_DMA_ERR : Register an interrupt handler to process uDMA error
+//! - \c INT_DMA_ERR : Register an interrupt handler to process uDMA error
 //!   interrupts.
 //!
 //! \return None
@@ -1018,20 +970,14 @@ uDMAIntRegister(uint32_t ui32Base, uint32_t ui32IntChannel,
 __STATIC_INLINE void
 uDMAIntUnregister(uint32_t ui32Base, uint32_t ui32IntChannel)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT((ui32IntChannel == INT_DMA_DONE_COMB) || (ui32IntChannel == INT_DMA_ERR));
 
-    //
     // Disable the interrupt.
-    //
     IntDisable(ui32IntChannel);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(ui32IntChannel);
 }
 
@@ -1053,14 +999,10 @@ uDMAIntUnregister(uint32_t ui32Base, uint32_t ui32IntChannel)
 __STATIC_INLINE void
 uDMAIntClear(uint32_t ui32Base, uint32_t ui32ChanMask)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Clear the requested bits in the uDMA interrupt status register.
-    //
     HWREG(ui32Base + UDMA_O_REQDONE) = ui32ChanMask;
 }
 
@@ -1080,14 +1022,10 @@ uDMAIntClear(uint32_t ui32Base, uint32_t ui32ChanMask)
 __STATIC_INLINE uint32_t
 uDMAIntStatus(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Return the uDMA interrupt status register.
-    //
     return (HWREG(ui32Base + UDMA_O_REQDONE));
 }
 
@@ -1112,15 +1050,11 @@ uDMAIntStatus(uint32_t ui32Base)
 __STATIC_INLINE void
 uDMAIntSwEventEnable(uint32_t ui32Base, uint32_t ui32IntChannel)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32IntChannel < UDMA_NUM_CHANNELS);
 
-    //
     // Enable the channel.
-    //
     HWREGBITW(ui32Base + UDMA_O_DONEMASK, ui32IntChannel) = 1;
 }
 
@@ -1143,15 +1077,11 @@ uDMAIntSwEventEnable(uint32_t ui32Base, uint32_t ui32IntChannel)
 __STATIC_INLINE void
 uDMAIntSwEventDisable(uint32_t ui32Base, uint32_t ui32IntChannel)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32IntChannel < UDMA_NUM_CHANNELS);
 
-    //
     // Disable the SW channel.
-    //
     HWREGBITW(ui32Base + UDMA_O_DONEMASK, ui32IntChannel) = 0;
 }
 
@@ -1169,14 +1099,10 @@ uDMAIntSwEventDisable(uint32_t ui32Base, uint32_t ui32IntChannel)
 __STATIC_INLINE uint32_t
 uDMAGetStatus(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
 
-    //
     // Read and return the status register.
-    //
     return HWREG(ui32Base + UDMA_O_STATUS);
 }
 
@@ -1196,15 +1122,11 @@ uDMAGetStatus(uint32_t ui32Base)
 __STATIC_INLINE void
 uDMAChannelPrioritySet(uint32_t ui32Base, uint32_t ui32ChannelNum)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32ChannelNum < UDMA_NUM_CHANNELS);
 
-    //
     // Set the channel priority to high.
-    //
     HWREG(ui32Base + UDMA_O_SETCHNLPRIORITY) = 1 << ui32ChannelNum;
 }
 
@@ -1223,15 +1145,11 @@ uDMAChannelPrioritySet(uint32_t ui32Base, uint32_t ui32ChannelNum)
 __STATIC_INLINE bool
 uDMAChannelPriorityGet(uint32_t ui32Base, uint32_t ui32ChannelNum)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32ChannelNum < UDMA_NUM_CHANNELS);
 
-    //
     // Return the channel priority.
-    //
     return(HWREG(ui32Base + UDMA_O_SETCHNLPRIORITY) & (1 << ui32ChannelNum) ?
            UDMA_PRIORITY_HIGH : UDMA_PRIORITY_LOW);
 }
@@ -1252,15 +1170,11 @@ uDMAChannelPriorityGet(uint32_t ui32Base, uint32_t ui32ChannelNum)
 __STATIC_INLINE void
 uDMAChannelPriorityClear(uint32_t ui32Base, uint32_t ui32ChannelNum)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(uDMABaseValid(ui32Base));
     ASSERT(ui32ChannelNum < UDMA_NUM_CHANNELS);
 
-    //
     // Clear the channel priority.
-    //
     HWREG(ui32Base + UDMA_O_CLEARCHNLPRIORITY) = 1 << ui32ChannelNum;
 }
 
@@ -1271,7 +1185,7 @@ uDMAChannelPriorityClear(uint32_t ui32Base, uint32_t ui32ChannelNum)
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_uDMAChannelAttributeEnable
         #undef  uDMAChannelAttributeEnable
         #define uDMAChannelAttributeEnable      ROM_uDMAChannelAttributeEnable

@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_ddi_0_osc_h
-*  Revised:        2016-06-16 09:00:03 +0200 (Thu, 16 Jun 2016)
-*  Revision:       46679
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -55,10 +55,10 @@
 // Amplitude Compensation Control
 #define DDI_0_OSC_O_AMPCOMPCTL                                      0x0000000C
 
-// Amplitude Compensation threshold 1
+// Amplitude Compensation Threshold 1
 #define DDI_0_OSC_O_AMPCOMPTH1                                      0x00000010
 
-// Amplitude Compensation threshold 2
+// Amplitude Compensation Threshold 2
 #define DDI_0_OSC_O_AMPCOMPTH2                                      0x00000014
 
 // Analog Bypass Values 1
@@ -82,14 +82,17 @@
 // RCOSCHF Control
 #define DDI_0_OSC_O_RCOSCHFCTL                                      0x00000030
 
+// RCOSC_MF Control
+#define DDI_0_OSC_O_RCOSCMFCTL                                      0x00000034
+
 // Status 0
-#define DDI_0_OSC_O_STAT0                                           0x00000034
+#define DDI_0_OSC_O_STAT0                                           0x0000003C
 
 // Status 1
-#define DDI_0_OSC_O_STAT1                                           0x00000038
+#define DDI_0_OSC_O_STAT1                                           0x00000040
 
 // Status 2
-#define DDI_0_OSC_O_STAT2                                           0x0000003C
+#define DDI_0_OSC_O_STAT2                                           0x00000044
 
 //*****************************************************************************
 //
@@ -136,30 +139,15 @@
 #define DDI_0_OSC_CTL0_DOUBLER_RESET_DURATION_M                     0x02000000
 #define DDI_0_OSC_CTL0_DOUBLER_RESET_DURATION_S                             25
 
-// Field:    [22] FORCE_KICKSTART_EN
+// Field:    [24] CLK_DCDC_SRC_SEL
 //
-// Internal. Only to be used through TI provided API.
-#define DDI_0_OSC_CTL0_FORCE_KICKSTART_EN                           0x00400000
-#define DDI_0_OSC_CTL0_FORCE_KICKSTART_EN_M                         0x00400000
-#define DDI_0_OSC_CTL0_FORCE_KICKSTART_EN_S                                 22
-
-// Field:    [16] ALLOW_SCLK_HF_SWITCHING
+// Select DCDC clock source.
 //
-// 0: Default - Switching of HF clock source is disabled .
-// 1: Allows switching of sclk_hf source.
-//
-// Provided to prevent switching of the SCLK_HF source when running from flash
-// (a long period during switching could corrupt flash). When sclk_hf
-// switching is disabled, a new source can be started when SCLK_HF_SRC_SEL is
-// changed, but the switch will not occur until this bit is set.  This bit
-// should be set to enable clock switching after STAT0.PENDINGSCLKHFSWITCHING
-// indicates  the new HF clock is ready. When switching completes (also
-// indicated by STAT0.PENDINGSCLKHFSWITCHING)  sclk_hf switching should be
-// disabled to prevent flash corruption.  Switching should not be enabled when
-// running from flash.
-#define DDI_0_OSC_CTL0_ALLOW_SCLK_HF_SWITCHING                      0x00010000
-#define DDI_0_OSC_CTL0_ALLOW_SCLK_HF_SWITCHING_M                    0x00010000
-#define DDI_0_OSC_CTL0_ALLOW_SCLK_HF_SWITCHING_S                            16
+// 0: CLK_DCDC is 48 MHz clock from RCOSC or XOSC / HPOSC
+// 1: CLK_DCDC is always 48 MHz clock from RCOSC
+#define DDI_0_OSC_CTL0_CLK_DCDC_SRC_SEL                             0x01000000
+#define DDI_0_OSC_CTL0_CLK_DCDC_SRC_SEL_M                           0x01000000
+#define DDI_0_OSC_CTL0_CLK_DCDC_SRC_SEL_S                                   24
 
 // Field:    [14] HPOSC_MODE_EN
 //
@@ -192,8 +180,8 @@
 //
 // This bit will only have effect when SCLK_LF_SRC_SEL is selecting the xosc_lf
 // as the sclk_lf source. The muxing performed by this bit is not glitch free.
-// The following procedure should be followed when changing this field to avoid
-// glitches on sclk_lf..
+// The following procedure must be followed when changing this field to avoid
+// glitches on sclk_lf.
 //
 // 1) Set SCLK_LF_SRC_SEL to select any source other than the xosc_lf clock
 // source.
@@ -209,13 +197,13 @@
 
 // Field:     [9] CLK_LOSS_EN
 //
-// Enable clock loss circuit and hence the indicators to system controller.
-// Checks both SCLK_HF and SCLK_LF clock loss indicators.
+// Enable clock loss detection and hence the indicators to the system
+// controller.  Checks both SCLK_HF, SCLK_MF and SCLK_LF clock loss indicators.
 //
 // 0: Disable
 // 1: Enable
 //
-// Clock loss detection should be disabled when changing the sclk_lf source.
+// Clock loss detection must be disabled when changing the sclk_lf source.
 // STAT0.SCLK_LF_SRC can be polled to determine when a change to a new sclk_lf
 // source has completed.
 #define DDI_0_OSC_CTL0_CLK_LOSS_EN                                  0x00000200
@@ -224,7 +212,7 @@
 
 // Field:   [8:7] ACLK_TDC_SRC_SEL
 //
-// Source select for aclk_tdc
+// Source select for aclk_tdc.
 //
 // 00: RCOSC_HF (48MHz)
 // 01: RCOSC_HF (24MHz)
@@ -234,17 +222,19 @@
 #define DDI_0_OSC_CTL0_ACLK_TDC_SRC_SEL_M                           0x00000180
 #define DDI_0_OSC_CTL0_ACLK_TDC_SRC_SEL_S                                    7
 
-// Field:   [6:5] ACLK_REF_SRC_SEL
+// Field:   [6:4] ACLK_REF_SRC_SEL
 //
 // Source select for aclk_ref
 //
-// 00: RCOSC_HF derived (31.25kHz)
-// 01: XOSC_HF derived (31.25kHz)
-// 10: RCOSC_LF (32kHz)
-// 11: XOSC_LF (32.768kHz)
-#define DDI_0_OSC_CTL0_ACLK_REF_SRC_SEL_W                                    2
-#define DDI_0_OSC_CTL0_ACLK_REF_SRC_SEL_M                           0x00000060
-#define DDI_0_OSC_CTL0_ACLK_REF_SRC_SEL_S                                    5
+// 000: RCOSC_HF derived (31.25kHz)
+// 001: XOSC_HF derived (31.25kHz)
+// 010: RCOSC_LF (32kHz)
+// 011: XOSC_LF (32.768kHz)
+// 100: RCOSC_MF (2MHz)
+// 101-111: Not used
+#define DDI_0_OSC_CTL0_ACLK_REF_SRC_SEL_W                                    3
+#define DDI_0_OSC_CTL0_ACLK_REF_SRC_SEL_M                           0x00000070
+#define DDI_0_OSC_CTL0_ACLK_REF_SRC_SEL_S                                    4
 
 // Field:   [3:2] SCLK_LF_SRC_SEL
 //
@@ -264,24 +254,11 @@
 #define DDI_0_OSC_CTL0_SCLK_LF_SRC_SEL_XOSCHFDLF                    0x00000004
 #define DDI_0_OSC_CTL0_SCLK_LF_SRC_SEL_RCOSCHFDLF                   0x00000000
 
-// Field:     [1] SCLK_MF_SRC_SEL
-//
-// Internal. Only to be used through TI provided API.
-// ENUMs:
-// XCOSCHFDMF               Medium frequency clock derived from high frequency
-//                          XOSC.
-// RCOSCHFDMF               Internal. Only to be used through TI provided API.
-#define DDI_0_OSC_CTL0_SCLK_MF_SRC_SEL                              0x00000002
-#define DDI_0_OSC_CTL0_SCLK_MF_SRC_SEL_M                            0x00000002
-#define DDI_0_OSC_CTL0_SCLK_MF_SRC_SEL_S                                     1
-#define DDI_0_OSC_CTL0_SCLK_MF_SRC_SEL_XCOSCHFDMF                   0x00000002
-#define DDI_0_OSC_CTL0_SCLK_MF_SRC_SEL_RCOSCHFDMF                   0x00000000
-
 // Field:     [0] SCLK_HF_SRC_SEL
 //
-// Source select for sclk_hf
+// Source select for sclk_hf.
 // ENUMs:
-// XOSC                     High frequency XOSC clk
+// XOSC                     High frequency XOSC clock
 // RCOSC                    High frequency RCOSC clock
 #define DDI_0_OSC_CTL0_SCLK_HF_SRC_SEL                              0x00000001
 #define DDI_0_OSC_CTL0_SCLK_HF_SRC_SEL_M                            0x00000001
@@ -534,12 +511,39 @@
 // Register: DDI_0_OSC_O_ATESTCTL
 //
 //*****************************************************************************
-// Field:    [29] SCLK_LF_AUX_EN
+// Field:    [31] SCLK_LF_AUX_EN
 //
 // Enable 32 kHz clock to AUX_COMPB.
-#define DDI_0_OSC_ATESTCTL_SCLK_LF_AUX_EN                           0x20000000
-#define DDI_0_OSC_ATESTCTL_SCLK_LF_AUX_EN_M                         0x20000000
-#define DDI_0_OSC_ATESTCTL_SCLK_LF_AUX_EN_S                                 29
+#define DDI_0_OSC_ATESTCTL_SCLK_LF_AUX_EN                           0x80000000
+#define DDI_0_OSC_ATESTCTL_SCLK_LF_AUX_EN_M                         0x80000000
+#define DDI_0_OSC_ATESTCTL_SCLK_LF_AUX_EN_S                                 31
+
+// Field: [15:14] TEST_RCOSCMF
+//
+// Test mode control for RCOSC_MF
+//
+// 0x0:  test modes disabled
+// 0x1:  boosted bias current into self biased inverter
+// 0x2:  clock qualification disabled
+// 0x3:  boosted bias current into self biased inverter + clock qualification
+// disabled
+#define DDI_0_OSC_ATESTCTL_TEST_RCOSCMF_W                                    2
+#define DDI_0_OSC_ATESTCTL_TEST_RCOSCMF_M                           0x0000C000
+#define DDI_0_OSC_ATESTCTL_TEST_RCOSCMF_S                                   14
+
+// Field: [13:12] ATEST_RCOSCMF
+//
+// ATEST control for RCOSC_MF
+//
+// 0x0:  ATEST disabled
+// 0x1:  ATEST enabled, VDD_LOCAL connected,  ATEST internal to **RCOSC_MF*
+// enabled to send out 2MHz clock.
+// 0x2:  ATEST disabled
+// 0x3:  ATEST enabled, bias current connected, ATEST internal to **RCOSC_MF*
+// enabled to send out 2MHz clock.
+#define DDI_0_OSC_ATESTCTL_ATEST_RCOSCMF_W                                   2
+#define DDI_0_OSC_ATESTCTL_ATEST_RCOSCMF_M                          0x00003000
+#define DDI_0_OSC_ATESTCTL_ATEST_RCOSCMF_S                                  12
 
 //*****************************************************************************
 //
@@ -587,6 +591,24 @@
 // Register: DDI_0_OSC_O_XOSCHFCTL
 //
 //*****************************************************************************
+// Field:    [13] TCXO_MODE_XOSC_HF_EN
+//
+// If this register  is 1 when TCXO_MODE  is 1, then the XOSC_HF is enabled,
+// turning on the XOSC_HF bias current allowing a DC bias point to be provided
+// to the clipped-sine wave clock signal on external input.
+#define DDI_0_OSC_XOSCHFCTL_TCXO_MODE_XOSC_HF_EN                    0x00002000
+#define DDI_0_OSC_XOSCHFCTL_TCXO_MODE_XOSC_HF_EN_M                  0x00002000
+#define DDI_0_OSC_XOSCHFCTL_TCXO_MODE_XOSC_HF_EN_S                          13
+
+// Field:    [12] TCXO_MODE
+//
+// If this register  is 1  when BYPASS is  1, this will enable clock
+// qualification on the TCXO clock on external input.  This register has no
+// effect when BYPASS is 0.
+#define DDI_0_OSC_XOSCHFCTL_TCXO_MODE                               0x00001000
+#define DDI_0_OSC_XOSCHFCTL_TCXO_MODE_M                             0x00001000
+#define DDI_0_OSC_XOSCHFCTL_TCXO_MODE_S                                     12
+
 // Field:   [9:8] PEAK_DET_ITRIM
 //
 // Internal. Only to be used through TI provided API.
@@ -668,6 +690,67 @@
 #define DDI_0_OSC_RCOSCHFCTL_RCOSCHF_CTRIM_W                                 8
 #define DDI_0_OSC_RCOSCHFCTL_RCOSCHF_CTRIM_M                        0x0000FF00
 #define DDI_0_OSC_RCOSCHFCTL_RCOSCHF_CTRIM_S                                 8
+
+//*****************************************************************************
+//
+// Register: DDI_0_OSC_O_RCOSCMFCTL
+//
+//*****************************************************************************
+// Field:  [15:9] RCOSC_MF_CAP_ARRAY
+//
+// Adjust RCOSC_MF capacitor array.
+//
+// 0x0:  nominal frequency, 0.625pF
+// 0x40:  highest frequency, 0.125pF
+// 0x3F:  lowest frequency, 1.125pF
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_CAP_ARRAY_W                            7
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_CAP_ARRAY_M                   0x0000FE00
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_CAP_ARRAY_S                            9
+
+// Field:     [8] RCOSC_MF_REG_SEL
+//
+// Choose regulator type.
+//
+// 0:  default
+// 1:  alternate
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_REG_SEL                       0x00000100
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_REG_SEL_M                     0x00000100
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_REG_SEL_S                              8
+
+// Field:   [7:6] RCOSC_MF_RES_COARSE
+//
+// Select coarse resistor for frequency adjustment.
+//
+// 0x0:  400kohms, default
+// 0x1:  300kohms, min
+// 0x2:  600kohms, max
+// 0x3:  500kohms
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_RES_COARSE_W                           2
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_RES_COARSE_M                  0x000000C0
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_RES_COARSE_S                           6
+
+// Field:   [5:4] RCOSC_MF_RES_FINE
+//
+// Select fine resistor for frequency adjustment.
+//
+// 0x0:  11kohms, minimum resistance, max freq
+// 0x1:  13kohms
+// 0x2:  16kohms
+// 0x3:  20kohms, max resistance, min freq
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_RES_FINE_W                             2
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_RES_FINE_M                    0x00000030
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_RES_FINE_S                             4
+
+// Field:   [3:0] RCOSC_MF_BIAS_ADJ
+//
+// Adjusts bias current to RCOSC_MF.
+//
+// 0x8 minimum current
+// 0x0 default current
+// 0x7 maximum current
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_BIAS_ADJ_W                             4
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_BIAS_ADJ_M                    0x0000000F
+#define DDI_0_OSC_RCOSCMFCTL_RCOSC_MF_BIAS_ADJ_S                             0
 
 //*****************************************************************************
 //
@@ -807,7 +890,7 @@
 
 // Field:     [0] PENDINGSCLKHFSWITCHING
 //
-// Indicates when sclk_hf is ready to be switched
+// Indicates when SCLK_HF clock source is ready to be switched
 #define DDI_0_OSC_STAT0_PENDINGSCLKHFSWITCHING                      0x00000001
 #define DDI_0_OSC_STAT0_PENDINGSCLKHFSWITCHING_M                    0x00000001
 #define DDI_0_OSC_STAT0_PENDINGSCLKHFSWITCHING_S                             0
@@ -857,12 +940,12 @@
 
 // Field: [27:22] HPM_UPDATE_AMP
 //
-// OSC amplitude during HPM_UPDATE state.
+// XOSC_HF amplitude during HPM_UPDATE state.
 // When amplitude compensation of XOSC_HF is enabled in high performance mode,
 // this value is the amplitude of the crystal oscillations measured by the
 // on-chip oscillator ADC, divided by 15 mV.  For example, a value of 0x20
-// would indicate that the crystal's amplitude is approximately 480 mV.  To
-// enable amplitude compensation, AON_WUC OSCCFG must be set to a on-zero
+// would indicate that the amplitude of the crystal is approximately 480 mV.
+// To enable amplitude compensation, AON_WUC OSCCFG must be set to a non-zero
 // value.
 #define DDI_0_OSC_STAT1_HPM_UPDATE_AMP_W                                     6
 #define DDI_0_OSC_STAT1_HPM_UPDATE_AMP_M                            0x0FC00000
@@ -870,12 +953,13 @@
 
 // Field: [21:16] LPM_UPDATE_AMP
 //
-// OSC amplitude during LPM_UPDATE state
-// When amplitude compensation of XOSC_HF is enabled in low power mode, this
+// XOSC_HF amplitude during LPM_UPDATE state
+// When amplitude compensation of XOSC_HF is enabled in low power  mode, this
 // value is the amplitude of the crystal oscillations measured by the on-chip
 // oscillator ADC, divided by 15 mV.  For example, a value of 0x20 would
-// indicate that the crystal's amplitude is approximately 480 mV.  To enable
-// amplitude compensation, AON_WUC OSCCFG must be set to a on-zero value.
+// indicate that the amplitude of the crystal is approximately 480 mV.  To
+// enable amplitude compensation, AON_WUC OSCCFG must be set to a non-zero
+// value.
 #define DDI_0_OSC_STAT1_LPM_UPDATE_AMP_W                                     6
 #define DDI_0_OSC_STAT1_LPM_UPDATE_AMP_M                            0x003F0000
 #define DDI_0_OSC_STAT1_LPM_UPDATE_AMP_S                                    16
@@ -973,7 +1057,7 @@
 
 // Field:     [2] ACLK_REF_GOOD
 //
-// ACLK_REF_GOOD
+// ACLK_REF_GOOD.
 #define DDI_0_OSC_STAT1_ACLK_REF_GOOD                               0x00000004
 #define DDI_0_OSC_STAT1_ACLK_REF_GOOD_M                             0x00000004
 #define DDI_0_OSC_STAT1_ACLK_REF_GOOD_S                                      2

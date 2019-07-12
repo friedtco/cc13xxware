@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       prcm.h
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2018-10-23 10:19:14 +0200 (Tue, 23 Oct 2018)
+*  Revision:       52979
 *
 *  Description:    Defines and prototypes for the PRCM
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,15 +61,16 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ints.h>
-#include <inc/hw_prcm.h>
-#include <inc/hw_nvic.h>
-#include <inc/hw_aon_rtc.h>
-#include <driverlib/interrupt.h>
-#include <driverlib/debug.h>
-#include <driverlib/cpu.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ints.h"
+#include "../inc/hw_prcm.h"
+#include "../inc/hw_nvic.h"
+#include "../inc/hw_aon_rtc.h"
+#include "interrupt.h"
+#include "debug.h"
+#include "cpu.h"
+
 
 //*****************************************************************************
 //
@@ -89,6 +90,8 @@ extern "C"
     #define PRCMInfClockConfigureGet        NOROM_PRCMInfClockConfigureGet
     #define PRCMAudioClockConfigSet         NOROM_PRCMAudioClockConfigSet
     #define PRCMAudioClockConfigSetOverride NOROM_PRCMAudioClockConfigSetOverride
+    #define PRCMAudioClockInternalSource    NOROM_PRCMAudioClockInternalSource
+    #define PRCMAudioClockExternalSource    NOROM_PRCMAudioClockExternalSource
     #define PRCMPowerDomainOn               NOROM_PRCMPowerDomainOn
     #define PRCMPowerDomainOff              NOROM_PRCMPowerDomainOff
     #define PRCMPeripheralRunEnable         NOROM_PRCMPeripheralRunEnable
@@ -141,6 +144,10 @@ extern "C"
                                             // control.
 #define PRCM_DOMAIN_VIMS        0x00000010  // VIMS domain ID for clock/power
                                             // control.
+#define PRCM_DOMAIN_VIMS_OFF_NO_WAKEUP                                        \
+                                0x00020010  // For function PRCMPowerDomainOff() it is an option to
+                                            // select that VIMS power domain shall not power up
+                                            // during the next wake up from uLDO (VIMS_MODE=0b10).
 #define PRCM_DOMAIN_CPU         0x00000020  // CPU domain ID for clock/power
                                             // control.
 #define PRCM_DOMAIN_TIMER       0x00000040  // GPT domain ID for clock
@@ -165,6 +172,11 @@ extern "C"
 #define PRCM_WCLK_SINGLE_PHASE  0x00000000
 #define PRCM_WCLK_DUAL_PHASE    0x00000002
 #define PRCM_WCLK_USER_DEF      0x00000004
+#define PRCM_I2S_WCLK_NEG_EDGE           0
+#define PRCM_I2S_WCLK_POS_EDGE           1
+#define PRCM_I2S_WCLK_SINGLE_PHASE       0
+#define PRCM_I2S_WCLK_DUAL_PHASE         1
+#define PRCM_I2S_WCLK_USER_DEF           2
 
 #define I2S_SAMPLE_RATE_16K     0x00000001
 #define I2S_SAMPLE_RATE_24K     0x00000002
@@ -173,25 +185,27 @@ extern "C"
 
 //*****************************************************************************
 //
-// Defines used for enabling and disabling peripheral modules in the MCU
-// domain
+// Defines used for enabling and disabling peripheral modules in the MCU domain
+// bits[11:8] Defines the index into the register offset constant tables:
+//            g_pui32RCGCRegs, g_pui32SCGCRegs and g_pui32DCGCRegs
+// bits[4:0]  Defines the bit position within the register pointet on in [11:8]
 //
 //*****************************************************************************
-#define PRCM_PERIPH_TIMER0      0x00000000  // Peripheral ID for GPT module 0
-#define PRCM_PERIPH_TIMER1      0x00000001  // Peripheral ID for GPT module 1
-#define PRCM_PERIPH_TIMER2      0x00000002  // Peripheral ID for GPT module 2
-#define PRCM_PERIPH_TIMER3      0x00000003  // Peripheral ID for GPT module 3
-#define PRCM_PERIPH_SSI0        0x00000100  // Peripheral ID for SSI module 0
-#define PRCM_PERIPH_SSI1        0x00000101  // Peripheral ID for SSI module 1
-#define PRCM_PERIPH_UART0       0x00000200  // Peripheral ID for UART module 0
-#define PRCM_PERIPH_UART1       0x00000201  // Peripheral ID for UART module 1
-#define PRCM_PERIPH_I2C0        0x00000300  // Peripheral ID for I2C module 0
-#define PRCM_PERIPH_I2C1        0x00000301  // Peripheral ID for I2C module 1
-#define PRCM_PERIPH_CRYPTO      0x00000400  // Peripheral ID for CRYPTO module
-#define PRCM_PERIPH_TRNG        0x00000401  // Peripheral ID for TRNG module
-#define PRCM_PERIPH_UDMA        0x00000408  // Peripheral ID for UDMA module
-#define PRCM_PERIPH_GPIO        0x00000500  // Peripheral ID for GPIO module
-#define PRCM_PERIPH_I2S         0x00000600  // Peripheral ID for I2S module
+#define PRCM_PERIPH_TIMER0 ( 0x00000000 | ( PRCM_GPTCLKGR_CLK_EN_S           )) // Peripheral ID for GPT module 0
+#define PRCM_PERIPH_TIMER1 ( 0x00000000 | ( PRCM_GPTCLKGR_CLK_EN_S       + 1 )) // Peripheral ID for GPT module 1
+#define PRCM_PERIPH_TIMER2 ( 0x00000000 | ( PRCM_GPTCLKGR_CLK_EN_S       + 2 )) // Peripheral ID for GPT module 2
+#define PRCM_PERIPH_TIMER3 ( 0x00000000 | ( PRCM_GPTCLKGR_CLK_EN_S       + 3 )) // Peripheral ID for GPT module 3
+#define PRCM_PERIPH_SSI0   ( 0x00000100 | ( PRCM_SSICLKGR_CLK_EN_S           )) // Peripheral ID for SSI module 0
+#define PRCM_PERIPH_SSI1   ( 0x00000100 | ( PRCM_SSICLKGR_CLK_EN_S       + 1 )) // Peripheral ID for SSI module 1
+#define PRCM_PERIPH_UART0  ( 0x00000200 | ( PRCM_UARTCLKGR_CLK_EN_S          )) // Peripheral ID for UART module 0
+#define PRCM_PERIPH_UART1  ( 0x00000200 | ( PRCM_UARTCLKGR_CLK_EN_S      + 1 )) // Peripheral ID for UART module 1
+#define PRCM_PERIPH_I2C0   ( 0x00000300 | ( PRCM_I2CCLKGR_CLK_EN_S           )) // Peripheral ID for I2C module 0
+#define PRCM_PERIPH_CRYPTO ( 0x00000400 | ( PRCM_SECDMACLKGR_CRYPTO_CLK_EN_S )) // Peripheral ID for CRYPTO module
+#define PRCM_PERIPH_TRNG   ( 0x00000400 | ( PRCM_SECDMACLKGR_TRNG_CLK_EN_S   )) // Peripheral ID for TRNG module
+#define PRCM_PERIPH_PKA    ( 0x00000400 | ( PRCM_SECDMACLKGR_PKA_CLK_EN_S    )) // Peripheral ID for PKA module
+#define PRCM_PERIPH_UDMA   ( 0x00000400 | ( PRCM_SECDMACLKGR_DMA_CLK_EN_S    )) // Peripheral ID for UDMA module
+#define PRCM_PERIPH_GPIO   ( 0x00000500 | ( PRCM_GPIOCLKGR_CLK_EN_S          )) // Peripheral ID for GPIO module
+#define PRCM_PERIPH_I2S    ( 0x00000600 | ( PRCM_I2SCLKGR_CLK_EN_S           )) // Peripheral ID for I2S module
 
 //*****************************************************************************
 //
@@ -225,10 +239,10 @@ PRCMPeripheralValid(uint32_t ui32Peripheral)
            (ui32Peripheral == PRCM_PERIPH_UART0)    ||
            (ui32Peripheral == PRCM_PERIPH_UART1)    ||
            (ui32Peripheral == PRCM_PERIPH_I2C0)     ||
-           (ui32Peripheral == PRCM_PERIPH_I2C1)     ||
-           (ui32Peripheral == PRCM_PERIPH_UDMA)     ||
-           (ui32Peripheral == PRCM_PERIPH_TRNG)     ||
            (ui32Peripheral == PRCM_PERIPH_CRYPTO)   ||
+           (ui32Peripheral == PRCM_PERIPH_TRNG)     ||
+           (ui32Peripheral == PRCM_PERIPH_PKA)      ||
+           (ui32Peripheral == PRCM_PERIPH_UDMA)     ||
            (ui32Peripheral == PRCM_PERIPH_GPIO)     ||
            (ui32Peripheral == PRCM_PERIPH_I2S));
 }
@@ -289,49 +303,6 @@ extern void PRCMInfClockConfigureSet(uint32_t ui32ClkDiv,
 //
 //*****************************************************************************
 extern uint32_t PRCMInfClockConfigureGet(uint32_t ui32PowerMode);
-
-//*****************************************************************************
-//
-//! \brief Request a power off of the MCU voltage domain.
-//!
-//! Use this function to request a power off of the entire MCU voltage domain.
-//! This request will have no affect until deepsleep mode is requested.
-//!
-//! \return None
-//!
-//! \sa \ref PRCMDeepSleep(), \ref PRCMMcuPowerOffCancel()
-//
-//*****************************************************************************
-__STATIC_INLINE void
-PRCMMcuPowerOff(void)
-{
-    //
-    // Assert the power off request signal.
-    //
-    HWREGBITW(PRCM_BASE + PRCM_O_VDCTL, PRCM_VDCTL_MCU_VD_BITN) = 1;
-}
-
-//*****************************************************************************
-//
-//! \brief Cancel a request for a power off of the MCU voltage domain.
-//!
-//! Use this function to cancel a request for power off of the entire MCU
-//! voltage domain. This could be relevant if a transition to power down is
-//! regretted and an application must backtrack.
-//!
-//! \return None
-//!
-//! \sa \ref PRCMDeepSleep(), \ref PRCMMcuPowerOff()
-//
-//*****************************************************************************
-__STATIC_INLINE void
-PRCMMcuPowerOffCancel(void)
-{
-    //
-    // Assert the power off request signal.
-    //
-    HWREGBITW(PRCM_BASE + PRCM_O_VDCTL, PRCM_VDCTL_MCU_VD_BITN) = 0;
-}
 
 //*****************************************************************************
 //
@@ -465,6 +436,8 @@ PRCMAudioClockDisable(void)
 //
 //! \brief Configure the audio clock generation.
 //!
+//! \deprecated This function will be removed in a future release.
+//!
 //! Use this function to set the sample rate when using internal audio clock
 //! generation for the I2S module.
 //!
@@ -492,12 +465,16 @@ PRCMAudioClockDisable(void)
 //! \sa \ref PRCMAudioClockConfigSetOverride()
 //
 //*****************************************************************************
+#ifndef DEPRECATED
 extern void PRCMAudioClockConfigSet(uint32_t ui32ClkConfig,
                                     uint32_t ui32SampleRate);
+#endif
 
 //*****************************************************************************
 //
 //! \brief Configure the audio clock generation with manual setting of clock divider.
+//!
+//! \deprecated This function will be removed in a future release.
 //!
 //! Use this function to set the audio clock divider values manually.
 //!
@@ -520,8 +497,64 @@ extern void PRCMAudioClockConfigSet(uint32_t ui32ClkConfig,
 //! \sa \ref PRCMAudioClockConfigSet()
 //
 //*****************************************************************************
+#ifndef DEPRECATED
 extern void PRCMAudioClockConfigSetOverride(uint32_t ui32ClkConfig, uint32_t ui32MstDiv,
                         uint32_t ui32BitDiv, uint32_t ui32WordDiv);
+#endif
+
+//*****************************************************************************
+//
+//! \brief Configure the audio clocks for I2S module.
+//!
+//! \note See hardware documentation before setting audio clock dividers.
+//!       This is user's responsability to provide valid clock dividers.
+//!
+//! \param ui8SamplingEdge Define the clock polarity:
+//!        - \ref PRCM_I2S_WCLK_NEG_EDGE
+//!        - \ref PRCM_I2S_WCLK_POS_EDGE
+//! \param ui8WCLKPhase Define I2S phase used
+//!        - PRCM_I2S_WCLK_SINGLE_PHASE
+//!        - PRCM_I2S_WCLK_DUAL_PHASE
+//!        - PRCM_I2S_WCLK_USER_DEF
+//! \param ui32MstDiv is the desired master clock divider.
+//! \param ui32BitDiv is the desired bit clock divider.
+//! \param ui32WordDiv is the desired word clock divider.
+//!
+//! \return None
+//!
+//*****************************************************************************
+extern void PRCMAudioClockConfigOverride
+                           (uint8_t  ui8SamplingEdge,
+                            uint8_t  ui8WCLKPhase,
+                            uint32_t ui32MstDiv,
+                            uint32_t ui32BitDiv,
+                            uint32_t ui32WordDiv);
+
+//*****************************************************************************
+//
+//! \brief Configure the audio clocks to be internally generated.
+//!
+//! Use this function to set the audio clocks as internal.
+//!
+//! \return None
+//!
+//! \sa \ref PRCMAudioClockExternalSource()
+//
+//*****************************************************************************
+extern void PRCMAudioClockInternalSource(void);
+
+//*****************************************************************************
+//
+//! \brief Configure the audio clocks to be externally generated.
+//!
+//! Use this function to set the audio clocks as external.
+//!
+//! \return None
+//!
+//! \sa \ref PRCMAudioClockInternalSource()
+//
+//*****************************************************************************
+extern void PRCMAudioClockExternalSource(void);
 
 //*****************************************************************************
 //
@@ -539,11 +572,11 @@ extern void PRCMAudioClockConfigSetOverride(uint32_t ui32ClkConfig, uint32_t ui3
 //! - \ref PRCMDomainEnable()
 //! - \ref PRCMDomainDisable()
 //! - \ref PRCMPeripheralRunEnable()
-//! - \ref PRCMPeripheralRunEnable()
+//! - \ref PRCMPeripheralRunDisable()
 //! - \ref PRCMPeripheralSleepEnable()
-//! - \ref PRCMPeripheralSleepEnable()
+//! - \ref PRCMPeripheralSleepDisable()
 //! - \ref PRCMPeripheralDeepSleepEnable()
-//! - \ref PRCMPeripheralDeepSleepEnable()
+//! - \ref PRCMPeripheralDeepSleepDisable()
 //!
 //! \return None
 //!
@@ -553,9 +586,7 @@ extern void PRCMAudioClockConfigSetOverride(uint32_t ui32ClkConfig, uint32_t ui3
 __STATIC_INLINE void
 PRCMLoadSet(void)
 {
-    //
     // Enable the update of all load related registers.
-    //
     HWREG(PRCM_NONBUF_BASE + PRCM_O_CLKLOADCTL) = PRCM_CLKLOADCTL_LOAD;
 }
 
@@ -573,9 +604,7 @@ PRCMLoadSet(void)
 __STATIC_INLINE bool
 PRCMLoadGet(void)
 {
-    //
     // Return the load status.
-    //
     return ((HWREG(PRCM_BASE + PRCM_O_CLKLOADCTL) & PRCM_CLKLOADCTL_LOAD_DONE) ?
             true : false);
 }
@@ -603,15 +632,11 @@ PRCMLoadGet(void)
 __STATIC_INLINE void
 PRCMDomainEnable(uint32_t ui32Domains)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32Domains & PRCM_DOMAIN_RFCORE) ||
            (ui32Domains & PRCM_DOMAIN_VIMS));
 
-    //
     // Enable the clock domain(s).
-    //
     if(ui32Domains & PRCM_DOMAIN_RFCORE)
     {
         HWREG(PRCM_BASE + PRCM_O_RFCCLKG) = PRCM_RFCCLKG_CLK_EN;
@@ -646,15 +671,11 @@ PRCMDomainEnable(uint32_t ui32Domains)
 __STATIC_INLINE void
 PRCMDomainDisable(uint32_t ui32Domains)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32Domains & PRCM_DOMAIN_RFCORE) ||
            (ui32Domains & PRCM_DOMAIN_VIMS));
 
-    //
     // Disable the power domains.
-    //
     if(ui32Domains & PRCM_DOMAIN_RFCORE)
     {
         HWREG(PRCM_BASE + PRCM_O_RFCCLKG) = 0x0;
@@ -669,33 +690,32 @@ PRCMDomainDisable(uint32_t ui32Domains)
 //
 //! \brief Turn power on in power domains in the MCU domain.
 //!
-//! Use this function to turn on power domains inside the MCU voltage
-//! domain.
+//! Use this function to turn on power domains inside the MCU voltage domain.
 //!
 //! Power on and power off request has different implications for the
 //! different power domains.
 //! - RF Core power domain:
-//!   - Power On : Domain is on or in the process of turning on.
-//!   - Power Off: Domain is powered down when System CPU is in deep sleep. The third
-//!                option for the RF Core is to power down when the it is idle.
-//!                This can be set using \b PRCMRfPowerDownWhenIdle()
+//!   - Power On  : Domain is on or in the process of turning on.
+//!   - Power Off : Domain is powered down when System CPU is in deep sleep. The third
+//!                 option for the RF Core is to power down when the it is idle.
+//!                 This can be set using \b PRCMRfPowerDownWhenIdle()
 //! - SERIAL power domain:
-//!   - Power on : Domain is powered on.
+//!   - Power on  : Domain is powered on.
 //!   - Power off : Domain is powered off.
 //! - PERIPHERIAL power domain:
-//!   - Power on : Domain is powered on.
+//!   - Power on  : Domain is powered on.
 //!   - Power off : Domain is powered off.
 //! - VIMS power domain:
-//!   - Power On: Domain is powered if Bus domain is powered.
-//!   - Power Off: Domain is only powered when CPU domain is on.
+//!   - Power On  : Domain is powered if Bus domain is powered.
+//!   - Power Off : Domain is only powered when CPU domain is on.
 //! - BUS power domain:
-//!   - Power On: Domain is on.
-//!   - Power Off: Domain is on if requested by RF Core or if CPU domain is on.
+//!   - Power On  : Domain is on.
+//!   - Power Off : Domain is on if requested by RF Core or if CPU domain is on.
 //! - CPU power domain:
-//!   - Power On: Domain is on.
-//!   - Power Off: Domain is powering down if System CPU is idle. This will also
-//!                initiate a power down of the SRAM and BUS power domains, unless
-//!                RF Core is requesting them to be on.
+//!   - Power On  : Domain is on.
+//!   - Power Off : Domain is powering down if System CPU is idle. This will also
+//!                 initiate a power down of the SRAM and BUS power domains, unless
+//!                 RF Core is requesting them to be on.
 //!
 //! \note After a call to this function the status of the power domain should
 //! be checked using either \ref PRCMPowerDomainStatus().
@@ -706,8 +726,7 @@ PRCMDomainDisable(uint32_t ui32Domains)
 //! The domains that can be turned on/off are:
 //! - \b PRCM_DOMAIN_RFCORE : RF Core
 //! - \b PRCM_DOMAIN_SERIAL : SSI0, UART0, I2C0
-//! - \b PRCM_DOMAIN_PERIPH : GPT0, GPT1, GPT2, GPT3, GPIO, SSI1, I2S,
-//!                           DMA, UART1, I2C1
+//! - \b PRCM_DOMAIN_PERIPH : GPT0, GPT1, GPT2, GPT3, GPIO, SSI1, I2S, DMA, UART1
 //! - \b PRCM_DOMAIN_VIMS   : SRAM, FLASH, ROM
 //! - \b PRCM_DOMAIN_SYSBUS
 //! - \b PRCM_DOMAIN_CPU
@@ -721,19 +740,18 @@ extern void PRCMPowerDomainOn(uint32_t ui32Domains);
 //
 //! \brief Turn off a specific power domain.
 //!
-//! Use this function to power down domains inside the MCU voltage
-//! domain.
+//! Use this function to power down domains inside the MCU voltage domain.
 //!
 //! \note For specifics regarding on/off configuration please see
 //! \ref PRCMPowerDomainOn().
 //!
 //! \param ui32Domains determines which domain to request a power down for.
 //! The domains that can be turned on/off are:
-//! - \b PRCM_DOMAIN_RFCORE : RF Core
-//! - \b PRCM_DOMAIN_SERIAL : SSI0, UART0, I2C0
-//! - \b PRCM_DOMAIN_PERIPH : GPT0, GPT1, GPT2, GPT3, GPIO, SSI1, I2S,
-//!                           DMA, UART1, I2C1
-//! - \b PRCM_DOMAIN_VIMS   : SRAM, FLASH, ROM
+//! - \b PRCM_DOMAIN_RFCORE             : RF Core
+//! - \b PRCM_DOMAIN_SERIAL             : SSI0, UART0, I2C0
+//! - \b PRCM_DOMAIN_PERIPH             : GPT0, GPT1, GPT2, GPT3, GPIO, SSI1, I2S, DMA, UART1
+//! - \b PRCM_DOMAIN_VIMS               : SRAM, FLASH, ROM
+//! - \b PRCM_DOMAIN_VIMS_OFF_NO_WAKEUP : SRAM, FLASH, ROM
 //! - \b PRCM_DOMAIN_SYSBUS
 //! - \b PRCM_DOMAIN_CPU
 //!
@@ -791,9 +809,9 @@ PRCMRfPowerDownWhenIdle(void)
 //! - \ref PRCM_PERIPH_UART0
 //! - \ref PRCM_PERIPH_UART1
 //! - \ref PRCM_PERIPH_I2C0
-//! - \ref PRCM_PERIPH_I2C1
 //! - \ref PRCM_PERIPH_CRYPTO
 //! - \ref PRCM_PERIPH_TRNG
+//! - \ref PRCM_PERIPH_PKA
 //! - \ref PRCM_PERIPH_UDMA
 //! - \ref PRCM_PERIPH_GPIO
 //! - \ref PRCM_PERIPH_I2S
@@ -807,7 +825,7 @@ extern void PRCMPeripheralRunEnable(uint32_t ui32Peripheral);
 
 //*****************************************************************************
 //
-//! Disables a peripheral in Run mode
+//! \brief Disables a peripheral in Run mode
 //!
 //! Peripherals are disabled with this function. Once disabled, they will not
 //! operate or respond to register reads/writes.
@@ -833,9 +851,9 @@ extern void PRCMPeripheralRunEnable(uint32_t ui32Peripheral);
 //! - \ref PRCM_PERIPH_UART0
 //! - \ref PRCM_PERIPH_UART1
 //! - \ref PRCM_PERIPH_I2C0
-//! - \ref PRCM_PERIPH_I2C1
 //! - \ref PRCM_PERIPH_CRYPTO
 //! - \ref PRCM_PERIPH_TRNG
+//! - \ref PRCM_PERIPH_PKA
 //! - \ref PRCM_PERIPH_UDMA
 //! - \ref PRCM_PERIPH_GPIO
 //! - \ref PRCM_PERIPH_I2S
@@ -873,9 +891,9 @@ extern void PRCMPeripheralRunDisable(uint32_t ui32Peripheral);
 //! - \ref PRCM_PERIPH_UART0
 //! - \ref PRCM_PERIPH_UART1
 //! - \ref PRCM_PERIPH_I2C0
-//! - \ref PRCM_PERIPH_I2C1
 //! - \ref PRCM_PERIPH_CRYPTO
 //! - \ref PRCM_PERIPH_TRNG
+//! - \ref PRCM_PERIPH_PKA
 //! - \ref PRCM_PERIPH_UDMA
 //! - \ref PRCM_PERIPH_GPIO
 //! - \ref PRCM_PERIPH_I2S
@@ -914,9 +932,9 @@ extern void PRCMPeripheralSleepEnable(uint32_t ui32Peripheral);
 //! - \ref PRCM_PERIPH_UART0
 //! - \ref PRCM_PERIPH_UART1
 //! - \ref PRCM_PERIPH_I2C0
-//! - \ref PRCM_PERIPH_I2C1
 //! - \ref PRCM_PERIPH_CRYPTO
 //! - \ref PRCM_PERIPH_TRNG
+//! - \ref PRCM_PERIPH_PKA
 //! - \ref PRCM_PERIPH_UDMA
 //! - \ref PRCM_PERIPH_GPIO
 //! - \ref PRCM_PERIPH_I2S
@@ -954,9 +972,9 @@ extern void PRCMPeripheralSleepDisable(uint32_t ui32Peripheral);
 //! - \ref PRCM_PERIPH_UART0
 //! - \ref PRCM_PERIPH_UART1
 //! - \ref PRCM_PERIPH_I2C0
-//! - \ref PRCM_PERIPH_I2C1
 //! - \ref PRCM_PERIPH_CRYPTO
 //! - \ref PRCM_PERIPH_TRNG
+//! - \ref PRCM_PERIPH_PKA
 //! - \ref PRCM_PERIPH_UDMA
 //! - \ref PRCM_PERIPH_GPIO
 //! - \ref PRCM_PERIPH_I2S
@@ -997,9 +1015,9 @@ extern void PRCMPeripheralDeepSleepEnable(uint32_t ui32Peripheral);
 //! - \ref PRCM_PERIPH_UART0
 //! - \ref PRCM_PERIPH_UART1
 //! - \ref PRCM_PERIPH_I2C0
-//! - \ref PRCM_PERIPH_I2C1
 //! - \ref PRCM_PERIPH_CRYPTO
 //! - \ref PRCM_PERIPH_TRNG
+//! - \ref PRCM_PERIPH_PKA
 //! - \ref PRCM_PERIPH_UDMA
 //! - \ref PRCM_PERIPH_GPIO
 //! - \ref PRCM_PERIPH_I2S
@@ -1022,7 +1040,7 @@ extern void PRCMPeripheralDeepSleepDisable(uint32_t ui32Peripheral);
 //! The parameter must be an OR'ed combination of one or several of:
 //! - \ref PRCM_DOMAIN_RFCORE : RF Core.
 //! - \ref PRCM_DOMAIN_SERIAL : SSI0, UART0, I2C0
-//! - \ref PRCM_DOMAIN_PERIPH : GPT0, GPT1, GPT2, GPT3, GPIO, SSI1, I2S, DMA, UART1, I2C1
+//! - \ref PRCM_DOMAIN_PERIPH : GPT0, GPT1, GPT2, GPT3, GPIO, SSI1, I2S, DMA, UART1
 //!
 //! \return Returns status of the requested domains:
 //! - \ref PRCM_DOMAIN_POWER_ON  : The specified domains are \b all powered up.
@@ -1048,9 +1066,7 @@ extern uint32_t PRCMPowerDomainStatus(uint32_t ui32Domains);
 __STATIC_INLINE bool
 PRCMRfReady(void)
 {
-    //
     // Return the ready status of the RF Core.
-    //
     return ((HWREG(PRCM_BASE + PRCM_O_PDSTAT1RFC) &
              PRCM_PDSTAT1RFC_ON) ? true : false);
 }
@@ -1062,7 +1078,7 @@ PRCMRfReady(void)
 //!
 //! This function places the processor into sleep mode; it does not return
 //! until the processor returns to run mode.  The peripherals that are enabled
-//! via \brief PRCMPeripheralSleepEnable() continue to operate and can wake up the
+//! via PRCMPeripheralSleepEnable() continue to operate and can wake up the
 //! processor.
 //!
 //! \return None
@@ -1073,9 +1089,7 @@ PRCMRfReady(void)
 __STATIC_INLINE void
 PRCMSleep(void)
 {
-    //
     // Wait for an interrupt.
-    //
     CPUwfi();
 }
 
@@ -1133,7 +1147,7 @@ PRCMCacheRetentionDisable( void )
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_PRCMInfClockConfigureSet
         #undef  PRCMInfClockConfigureSet
         #define PRCMInfClockConfigureSet        ROM_PRCMInfClockConfigureSet
@@ -1149,6 +1163,14 @@ PRCMCacheRetentionDisable( void )
     #ifdef ROM_PRCMAudioClockConfigSetOverride
         #undef  PRCMAudioClockConfigSetOverride
         #define PRCMAudioClockConfigSetOverride ROM_PRCMAudioClockConfigSetOverride
+    #endif
+    #ifdef ROM_PRCMAudioClockInternalSource
+        #undef  PRCMAudioClockInternalSource
+        #define PRCMAudioClockInternalSource    ROM_PRCMAudioClockInternalSource
+    #endif
+    #ifdef ROM_PRCMAudioClockExternalSource
+        #undef  PRCMAudioClockExternalSource
+        #define PRCMAudioClockExternalSource    ROM_PRCMAudioClockExternalSource
     #endif
     #ifdef ROM_PRCMPowerDomainOn
         #undef  PRCMPowerDomainOn

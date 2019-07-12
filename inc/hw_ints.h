@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_ints_h
-*  Revised:        2016-06-21 09:05:39 +0200 (Tue, 21 Jun 2016)
-*  Revision:       46731
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,7 @@
 #define INT_I2C_IRQ                     17 // Interrupt event from I2C
 #define INT_RFC_CPE_1                   18 // Combined Interrupt for CPE
                                            // Generated events
+#define INT_PKA_IRQ                     19 // PKA Interrupt event
 #define INT_AON_RTC_COMB                20 // Event from AON_RTC
 #define INT_UART0_COMB                  21 // UART0 combined interrupt
 #define INT_AUX_SWEV0                   22 // AUX software event 0
@@ -64,7 +65,7 @@
 #define INT_SSI1_COMB                   24 // SSI1 combined interrupt
 #define INT_RFC_CPE_0                   25 // Combined Interrupt for CPE
                                            // Generated events
-#define INT_RFC_HW_COMB                 26 // Combined RCF hardware interrupt
+#define INT_RFC_HW_COMB                 26 // Combined RFC hardware interrupt
 #define INT_RFC_CMD_ACK                 27 // RFC Doorbell Command
                                            // Acknowledgement Interrupt
 #define INT_I2S_IRQ                     28 // Interrupt event from I2S
@@ -90,13 +91,19 @@
 #define INT_AUX_COMPA                   47 // AUX Compare A event
 #define INT_AUX_ADC_IRQ                 48 // AUX ADC interrupt event
 #define INT_TRNG_IRQ                    49 // TRNG Interrupt event
+#define INT_OSC_COMB                    50 // Combined event from Oscillator
+                                           // control
+#define INT_AUX_TIMER2_EV0              51 // AUX Timer2 event 0
+#define INT_UART1_COMB                  52 // UART1 combined interrupt
+#define INT_BATMON_COMB                 53 // Combined event from battery
+                                           // monitor
 
 //*****************************************************************************
 //
 // The following are defines for number of interrupts and priority levels.
 //
 //*****************************************************************************
-#define NUM_INTERRUPTS                  50 // Number of interrupts
+#define NUM_INTERRUPTS                  54 // Number of interrupts
 #define NUM_PRIORITY_BITS                3 // Number of Priority bits
 #define NUM_PRIORITY                     8 // Number of priority levels
 

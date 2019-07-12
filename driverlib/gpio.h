@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       gpio.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2018-05-02 11:11:40 +0200 (Wed, 02 May 2018)
+*  Revision:       51951
 *
 *  Description:    Defines and prototypes for the GPIO.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -60,10 +60,10 @@ extern "C"
 #endif
 
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_gpio.h>
-#include <driverlib/debug.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_gpio.h"
+#include "debug.h"
 
 //*****************************************************************************
 //
@@ -71,8 +71,8 @@ extern "C"
 //
 //*****************************************************************************
 #ifdef DRIVERLIB_DEBUG
-#include <inc/hw_fcfg1.h>
-#include <driverlib/chipinfo.h>
+#include "../inc/hw_fcfg1.h"
+#include "chipinfo.h"
 
 static bool
 dioNumberLegal( uint32_t dioNumber )
@@ -82,15 +82,22 @@ dioNumberLegal( uint32_t dioNumber )
             FCFG1_IOCONF_GPIO_CNT_M ) >>
             FCFG1_IOCONF_GPIO_CNT_S ) ;
 
-    //
-    // Special handling of CC13xx 7x7, where IO_CNT = 30 and legal range is 1..30
+    // CC13x2 + CC26x2
+    if ( ChipInfo_ChipFamilyIs_CC13x2_CC26x2() )
+    {
+        return ( (dioNumber >= (31 - ioCount)) && (dioNumber < 31) )
+    }
+    // Special handling of CC13x0 7x7, where IO_CNT = 30 and legal range is 1..30
     // for all other chips legal range is 0..(dioNumber-1)
-    //
-    if (( ioCount == 30 ) && ChipInfo_ChipFamilyIsCC13xx() ) {
+    else if (( ioCount == 30 ) && ChipInfo_ChipFamilyIs_CC13x0() )
+    {
         return (( dioNumber > 0 ) && ( dioNumber <= ioCount ));
-    } else {
+    }
+    else
+    {
         return ( dioNumber < ioCount );
     }
+
 }
 #endif
 
@@ -163,14 +170,10 @@ dioNumberLegal( uint32_t dioNumber )
 __STATIC_INLINE uint32_t
 GPIO_readDio( uint32_t dioNumber )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
 
-    //
     // Return the input value from the specified DIO.
-    //
     return (( HWREG( GPIO_BASE + GPIO_O_DIN31_0 ) >> dioNumber ) & 1 );
 }
 
@@ -178,7 +181,7 @@ GPIO_readDio( uint32_t dioNumber )
 //
 //! \brief Reads the input value for the specified DIOs.
 //!
-//! This function returns the the input value for multiple DIOs.
+//! This function returns the input value for multiple DIOs.
 //! The value returned is not shifted and hence matches the corresponding dioMask bits.
 //!
 //! \param dioMask is the bit-mask representation of the DIOs to read.
@@ -197,14 +200,10 @@ GPIO_readDio( uint32_t dioNumber )
 __STATIC_INLINE uint32_t
 GPIO_readMultiDio( uint32_t dioMask )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
-    //
     // Return the input value from the specified DIOs.
-    //
     return ( HWREG( GPIO_BASE + GPIO_O_DIN31_0 ) & dioMask );
 }
 
@@ -225,15 +224,11 @@ GPIO_readMultiDio( uint32_t dioMask )
 __STATIC_INLINE void
 GPIO_writeDio( uint32_t dioNumber, uint32_t value )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
     ASSERT(( value == 0 ) || ( value == 1 ));
 
-    //
     // Write 0 or 1 to the byte indexed DOUT map
-    //
     HWREGB( GPIO_BASE + dioNumber ) = value;
 }
 
@@ -261,9 +256,7 @@ GPIO_writeDio( uint32_t dioNumber, uint32_t value )
 __STATIC_INLINE void
 GPIO_writeMultiDio( uint32_t dioMask, uint32_t bitVectoredValue )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
     HWREG( GPIO_BASE + GPIO_O_DOUT31_0 ) =
@@ -285,14 +278,10 @@ GPIO_writeMultiDio( uint32_t dioMask, uint32_t bitVectoredValue )
 __STATIC_INLINE void
 GPIO_setDio( uint32_t dioNumber )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
 
-    //
     // Set the specified DIO.
-    //
     HWREG( GPIO_BASE + GPIO_O_DOUTSET31_0 ) = ( 1 << dioNumber );
 }
 
@@ -314,14 +303,10 @@ GPIO_setDio( uint32_t dioNumber )
 __STATIC_INLINE void
 GPIO_setMultiDio( uint32_t dioMask )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
-    //
     // Set the DIOs.
-    //
     HWREG( GPIO_BASE + GPIO_O_DOUTSET31_0 ) = dioMask;
 }
 
@@ -339,14 +324,10 @@ GPIO_setMultiDio( uint32_t dioMask )
 __STATIC_INLINE void
 GPIO_clearDio( uint32_t dioNumber )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
 
-    //
     // Clear the specified DIO.
-    //
     HWREG( GPIO_BASE + GPIO_O_DOUTCLR31_0 ) = ( 1 << dioNumber );
 }
 
@@ -368,14 +349,10 @@ GPIO_clearDio( uint32_t dioNumber )
 __STATIC_INLINE void
 GPIO_clearMultiDio( uint32_t dioMask )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
-    //
     // Clear the DIOs.
-    //
     HWREG( GPIO_BASE + GPIO_O_DOUTCLR31_0 ) = dioMask;
 }
 
@@ -393,14 +370,10 @@ GPIO_clearMultiDio( uint32_t dioMask )
 __STATIC_INLINE void
 GPIO_toggleDio( uint32_t dioNumber )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
 
-    //
     // Toggle the specified DIO.
-    //
     HWREG( GPIO_BASE + GPIO_O_DOUTTGL31_0 ) = ( 1 << dioNumber );
 }
 
@@ -422,14 +395,10 @@ GPIO_toggleDio( uint32_t dioNumber )
 __STATIC_INLINE void
 GPIO_toggleMultiDio( uint32_t dioMask )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
-    //
     // Toggle the DIOs.
-    //
     HWREG( GPIO_BASE + GPIO_O_DOUTTGL31_0 ) = dioMask;
 }
 
@@ -452,14 +421,10 @@ GPIO_toggleMultiDio( uint32_t dioMask )
 __STATIC_INLINE uint32_t
 GPIO_getOutputEnableDio( uint32_t dioNumber )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
 
-    //
     // Return the output enable status for the specified DIO.
-    //
     return (( HWREG( GPIO_BASE + GPIO_O_DOE31_0 ) >> dioNumber ) & 1 );
 }
 
@@ -486,14 +451,10 @@ GPIO_getOutputEnableDio( uint32_t dioNumber )
 __STATIC_INLINE uint32_t
 GPIO_getOutputEnableMultiDio( uint32_t dioMask )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
-    //
     // Return the output enable value for the specified DIOs.
-    //
     return ( HWREG( GPIO_BASE + GPIO_O_DOE31_0 ) & dioMask );
 }
 
@@ -517,16 +478,12 @@ GPIO_getOutputEnableMultiDio( uint32_t dioMask )
 __STATIC_INLINE void
 GPIO_setOutputEnableDio( uint32_t dioNumber, uint32_t outputEnableValue )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
     ASSERT(( outputEnableValue == GPIO_OUTPUT_DISABLE ) ||
            ( outputEnableValue == GPIO_OUTPUT_ENABLE  )    );
 
-    //
     // Update the output enable bit for the specified DIO.
-    //
     HWREGBITW( GPIO_BASE + GPIO_O_DOE31_0, dioNumber ) = outputEnableValue;
 }
 
@@ -557,9 +514,7 @@ GPIO_setOutputEnableDio( uint32_t dioNumber, uint32_t outputEnableValue )
 __STATIC_INLINE void
 GPIO_setOutputEnableMultiDio( uint32_t dioMask, uint32_t bitVectoredOutputEnable )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
     HWREG( GPIO_BASE + GPIO_O_DOE31_0 ) =
@@ -583,14 +538,10 @@ GPIO_setOutputEnableMultiDio( uint32_t dioMask, uint32_t bitVectoredOutputEnable
 __STATIC_INLINE uint32_t
 GPIO_getEventDio( uint32_t dioNumber )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
 
-    //
     // Return the event status for the specified DIO.
-    //
     return (( HWREG( GPIO_BASE + GPIO_O_EVFLAGS31_0 ) >> dioNumber ) & 1 );
 }
 
@@ -608,7 +559,7 @@ GPIO_getEventDio( uint32_t dioNumber )
 //! - ...
 //! - \ref GPIO_DIO_31_MASK
 //!
-//! \return Returns a bit vector with the current event status correspondig to the specified DIOs.
+//! \return Returns a bit vector with the current event status corresponding to the specified DIOs.
 //! - 0 : Corresponding DIO has no triggered event.
 //! - 1 : Corresponding DIO has a triggered event.
 //!
@@ -618,14 +569,10 @@ GPIO_getEventDio( uint32_t dioNumber )
 __STATIC_INLINE uint32_t
 GPIO_getEventMultiDio( uint32_t dioMask )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
-    //
     // Return the event status for the specified DIO.
-    //
     return ( HWREG( GPIO_BASE + GPIO_O_EVFLAGS31_0 ) & dioMask );
 }
 
@@ -643,14 +590,10 @@ GPIO_getEventMultiDio( uint32_t dioMask )
 __STATIC_INLINE void
 GPIO_clearEventDio( uint32_t dioNumber )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioNumberLegal( dioNumber ));
 
-    //
     // Clear the event status for the specified DIO.
-    //
     HWREG( GPIO_BASE + GPIO_O_EVFLAGS31_0 ) = ( 1 << dioNumber );
 }
 
@@ -673,14 +616,10 @@ GPIO_clearEventDio( uint32_t dioNumber )
 __STATIC_INLINE void
 GPIO_clearEventMultiDio( uint32_t dioMask )
 {
-    //
     // Check the arguments.
-    //
     ASSERT( dioMask & GPIO_DIO_ALL_MASK );
 
-    //
     // Clear the event status for the specified DIOs.
-    //
     HWREG( GPIO_BASE + GPIO_O_EVFLAGS31_0 ) = dioMask;
 }
 

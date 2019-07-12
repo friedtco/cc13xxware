@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_aon_rtc_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,12 @@
 
 // AON Synchronization
 #define AON_RTC_O_SYNC                                              0x0000002C
+
+// Current  Counter Value
+#define AON_RTC_O_TIME                                              0x00000030
+
+// Synchronization to SCLK_LF
+#define AON_RTC_O_SYNCLF                                            0x00000034
 
 //*****************************************************************************
 //
@@ -198,11 +204,10 @@
 // CH2CMP provided that the channel is enabled and the new value matches any
 // time between next  RTC value and 1 second in the past
 //
-// Writing 1 clears this flag. Note that a new event can not occur on this
-// channel in first 2 SCLK_LF cycles after a clearance.
+// Writing 1 clears this flag.
 //
-// AUX_SCE can read the flag through AUX_WUC:WUEVFLAGS.AON_RTC_CH2 and clear it
-// using AUX_WUC:WUEVCLR.AON_RTC_CH2.
+// AUX_SCE can read the flag through AUX_EVCTL:EVSTAT2.AON_RTC_CH2 and clear it
+// using AUX_SYSIF:RTCEVCLR.RTC_CH2_EV_CLR.
 #define AON_RTC_EVFLAGS_CH2                                         0x00010000
 #define AON_RTC_EVFLAGS_CH2_BITN                                            16
 #define AON_RTC_EVFLAGS_CH2_M                                       0x00010000
@@ -219,8 +224,7 @@
 // CH1CMP provided that the channel is enabled, in compare mode and the new
 // value matches any time between next  RTC value and 1 second in the past.
 //
-// Writing 1 clears this flag. Note that a new event can not occur on this
-// channel in first 2 SCLK_LF cycles after a clearance.
+// Writing 1 clears this flag.
 #define AON_RTC_EVFLAGS_CH1                                         0x00000100
 #define AON_RTC_EVFLAGS_CH1_BITN                                             8
 #define AON_RTC_EVFLAGS_CH1_M                                       0x00000100
@@ -235,8 +239,7 @@
 // CH0CMP provided that the channels is enabled and the new value matches any
 // time between next  RTC value and 1 second in the past.
 //
-// Writing 1 clears this flag. Note that a new event can not occur on this
-// channel in first 2 SCLK_LF cycles after a clearance.
+// Writing 1 clears this flag.
 #define AON_RTC_EVFLAGS_CH0                                         0x00000001
 #define AON_RTC_EVFLAGS_CH0_BITN                                             0
 #define AON_RTC_EVFLAGS_CH0_M                                       0x00000001
@@ -299,8 +302,8 @@
 // second.
 //
 // NOTE: This register is read only. Modification of the register value must be
-// done using registers AUX_WUC:RTCSUBSECINC1 ,  AUX_WUC:RTCSUBSECINC0 and
-// AUX_WUC:RTCSUBSECINCCTL
+// done using registers AUX_SYSIF:RTCSUBSECINC0 ,  AUX_SYSIF:RTCSUBSECINC1 and
+// AUX_SYSIF:RTCSUBSECINCCTL
 #define AON_RTC_SUBSECINC_VALUEINC_W                                        24
 #define AON_RTC_SUBSECINC_VALUEINC_M                                0x00FFFFFF
 #define AON_RTC_SUBSECINC_VALUEINC_S                                         0
@@ -386,7 +389,7 @@
 // Example:
 // To generate a compare  5.5 seconds RTC start,- set this value = 0x0005_8000
 //
-// *) It can take up to 2 SCLK_LF clock cycles before event occurs due to
+// *) It can take up to one SCLK_LF clock cycles before event occurs due to
 // synchronization.
 #define AON_RTC_CH0CMP_VALUE_W                                              32
 #define AON_RTC_CH0CMP_VALUE_M                                      0xFFFFFFFF
@@ -416,7 +419,7 @@
 // Example:
 // To generate a compare  5.5 seconds RTC start,- set this value = 0x0005_8000
 //
-// *) It can take up to 2 SCLK_LF clock cycles before event occurs due to
+// *) It can take up to one SCLK_LF clock cycles before event occurs due to
 // synchronization.
 #define AON_RTC_CH1CMP_VALUE_W                                              32
 #define AON_RTC_CH1CMP_VALUE_M                                      0xFFFFFFFF
@@ -446,7 +449,7 @@
 // Example:
 // To generate a compare  5.5 seconds RTC start,- set this value = 0x0005_8000
 //
-// *) It can take up to 2 SCLK_LF clock cycles before event occurs due to
+// *) It can take up to one SCLK_LF clock cycles before event occurs due to
 // synchronization.
 #define AON_RTC_CH2CMP_VALUE_W                                              32
 #define AON_RTC_CH2CMP_VALUE_M                                      0xFFFFFFFF
@@ -495,7 +498,7 @@
 // until there are no outstanding write requests between MCU and AON
 //
 // Note: Writing to this register prior to reading will force a wait until next
-// SCLK_LF  edge. This is recommended for syncing read registers from AON when
+// SCLK_MF  edge. This is recommended for syncing read registers from AON when
 // waking up from sleep
 // Failure to do so may result in reading AON values from prior to going to
 // sleep
@@ -503,6 +506,41 @@
 #define AON_RTC_SYNC_WBUSY_BITN                                              0
 #define AON_RTC_SYNC_WBUSY_M                                        0x00000001
 #define AON_RTC_SYNC_WBUSY_S                                                 0
+
+//*****************************************************************************
+//
+// Register: AON_RTC_O_TIME
+//
+//*****************************************************************************
+// Field: [31:16] SEC_L
+//
+// Returns the lower halfword of SEC register.
+#define AON_RTC_TIME_SEC_L_W                                                16
+#define AON_RTC_TIME_SEC_L_M                                        0xFFFF0000
+#define AON_RTC_TIME_SEC_L_S                                                16
+
+// Field:  [15:0] SUBSEC_H
+//
+// Returns the upper halfword of SUBSEC register.
+#define AON_RTC_TIME_SUBSEC_H_W                                             16
+#define AON_RTC_TIME_SUBSEC_H_M                                     0x0000FFFF
+#define AON_RTC_TIME_SUBSEC_H_S                                              0
+
+//*****************************************************************************
+//
+// Register: AON_RTC_O_SYNCLF
+//
+//*****************************************************************************
+// Field:     [0] PHASE
+//
+// This bit will always return the SCLK_LF phase. The return will delayed until
+// a positive or negative edge of SCLK_LF is seen.
+// 0: Falling edge of SCLK_LF
+// 1: Rising edge of SCLK_LF
+#define AON_RTC_SYNCLF_PHASE                                        0x00000001
+#define AON_RTC_SYNCLF_PHASE_BITN                                            0
+#define AON_RTC_SYNCLF_PHASE_M                                      0x00000001
+#define AON_RTC_SYNCLF_PHASE_S                                               0
 
 
 #endif // __AON_RTC__

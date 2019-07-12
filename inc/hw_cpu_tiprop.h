@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_cpu_tiprop_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -46,9 +46,6 @@
 // Internal
 #define CPU_TIPROP_O_TRACECLKMUX                                    0x00000FF8
 
-// Internal
-#define CPU_TIPROP_O_DYN_CG                                         0x00000FFC
-
 //*****************************************************************************
 //
 // Register: CPU_TIPROP_O_TRACECLKMUX
@@ -66,18 +63,6 @@
 #define CPU_TIPROP_TRACECLKMUX_TRACECLK_N_SWV_S                              0
 #define CPU_TIPROP_TRACECLKMUX_TRACECLK_N_SWV_TRACECLK              0x00000001
 #define CPU_TIPROP_TRACECLKMUX_TRACECLK_N_SWV_SWV                   0x00000000
-
-//*****************************************************************************
-//
-// Register: CPU_TIPROP_O_DYN_CG
-//
-//*****************************************************************************
-// Field:   [1:0] DYN_CG
-//
-// Internal. Only to be used through TI provided API.
-#define CPU_TIPROP_DYN_CG_DYN_CG_W                                           2
-#define CPU_TIPROP_DYN_CG_DYN_CG_M                                  0x00000003
-#define CPU_TIPROP_DYN_CG_DYN_CG_S                                           0
 
 
 #endif // __CPU_TIPROP__

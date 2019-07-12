@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_adi_3_refsys_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-09-27 10:33:21 +0200 (Thu, 27 Sep 2018)
+*  Revision:       52772
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -43,8 +43,8 @@
 // ADI_3_REFSYS component
 //
 //*****************************************************************************
-// Analog Test Control
-#define ADI_3_REFSYS_O_SPARE0                                       0x00000001
+// Internal
+#define ADI_3_REFSYS_O_ATESTCTL1                                    0x00000001
 
 // Internal
 #define ADI_3_REFSYS_O_REFSYSCTL0                                   0x00000002
@@ -67,7 +67,7 @@
 // DCDC Control 2
 #define ADI_3_REFSYS_O_DCDCCTL2                                     0x00000008
 
-// DCDC Control 3
+// Internal
 #define ADI_3_REFSYS_O_DCDCCTL3                                     0x00000009
 
 // Internal
@@ -76,18 +76,49 @@
 // Internal
 #define ADI_3_REFSYS_O_DCDCCTL5                                     0x0000000B
 
+// RECHARGE_CONTROL_1
+#define ADI_3_REFSYS_O_AUX_DEBUG                                    0x0000000C
+
+// Recharge Comparator Control Byte 0
+#define ADI_3_REFSYS_O_CTL_RECHARGE_CMP0                            0x0000000D
+
+// Recharge Comparator Control Byte 1
+#define ADI_3_REFSYS_O_CTL_RECHARGE_CMP1                            0x0000000E
+
 //*****************************************************************************
 //
-// Register: ADI_3_REFSYS_O_SPARE0
+// Register: ADI_3_REFSYS_O_ATESTCTL1
 //
 //*****************************************************************************
-// Field:   [7:0] SPARE0
+// Field:   [4:3] ATEST0_CTL
 //
-// Software should not rely on the value of a reserved. Writing any other value
-// than the reset value may result in undefined behavior.
-#define ADI_3_REFSYS_SPARE0_SPARE0_W                                         8
-#define ADI_3_REFSYS_SPARE0_SPARE0_M                                0x000000FF
-#define ADI_3_REFSYS_SPARE0_SPARE0_S                                         0
+// Internal. Only to be used through TI provided API.
+// ENUMs:
+// ICELL_A0                 Internal. Only to be used through TI provided API.
+// IREF_A0                  Internal. Only to be used through TI provided API.
+// NC                       Internal. Only to be used through TI provided API.
+#define ADI_3_REFSYS_ATESTCTL1_ATEST0_CTL_W                                  2
+#define ADI_3_REFSYS_ATESTCTL1_ATEST0_CTL_M                         0x00000018
+#define ADI_3_REFSYS_ATESTCTL1_ATEST0_CTL_S                                  3
+#define ADI_3_REFSYS_ATESTCTL1_ATEST0_CTL_ICELL_A0                  0x00000010
+#define ADI_3_REFSYS_ATESTCTL1_ATEST0_CTL_IREF_A0                   0x00000008
+#define ADI_3_REFSYS_ATESTCTL1_ATEST0_CTL_NC                        0x00000000
+
+// Field:   [2:0] ATEST1_CTL
+//
+// Internal. Only to be used through TI provided API.
+// ENUMs:
+// VREFM_A1                 Internal. Only to be used through TI provided API.
+// VPP_DIV5_A1              Internal. Only to be used through TI provided API.
+// VREAD_DIV2_A1            Internal. Only to be used through TI provided API.
+// NC                       Internal. Only to be used through TI provided API.
+#define ADI_3_REFSYS_ATESTCTL1_ATEST1_CTL_W                                  3
+#define ADI_3_REFSYS_ATESTCTL1_ATEST1_CTL_M                         0x00000007
+#define ADI_3_REFSYS_ATESTCTL1_ATEST1_CTL_S                                  0
+#define ADI_3_REFSYS_ATESTCTL1_ATEST1_CTL_VREFM_A1                  0x00000004
+#define ADI_3_REFSYS_ATESTCTL1_ATEST1_CTL_VPP_DIV5_A1               0x00000002
+#define ADI_3_REFSYS_ATESTCTL1_ATEST1_CTL_VREAD_DIV2_A1             0x00000001
+#define ADI_3_REFSYS_ATESTCTL1_ATEST1_CTL_NC                        0x00000000
 
 //*****************************************************************************
 //
@@ -234,6 +265,13 @@
 #define ADI_3_REFSYS_REFSYSCTL2_TRIM_VREF_W                                  4
 #define ADI_3_REFSYS_REFSYSCTL2_TRIM_VREF_M                         0x000000F0
 #define ADI_3_REFSYS_REFSYSCTL2_TRIM_VREF_S                                  4
+
+// Field:     [3] BOD_EXTERNAL_REG_MODE
+//
+// Internal. Only to be used through TI provided API.
+#define ADI_3_REFSYS_REFSYSCTL2_BOD_EXTERNAL_REG_MODE               0x00000008
+#define ADI_3_REFSYS_REFSYSCTL2_BOD_EXTERNAL_REG_MODE_M             0x00000008
+#define ADI_3_REFSYS_REFSYSCTL2_BOD_EXTERNAL_REG_MODE_S                      3
 
 // Field:   [1:0] TRIM_TSENSE
 //
@@ -413,6 +451,22 @@
 // Register: ADI_3_REFSYS_O_DCDCCTL3
 //
 //*****************************************************************************
+// Field:   [1:0] VDDR_BOOST_COMP
+//
+// Internal. Only to be used through TI provided API.
+// ENUMs:
+// BOOST_P1                 Internal. Only to be used through TI provided API.
+// BOOST                    Internal. Only to be used through TI provided API.
+// BOOST_N1                 Internal. Only to be used through TI provided API.
+// DEFAULT                  Internal. Only to be used through TI provided API.
+#define ADI_3_REFSYS_DCDCCTL3_VDDR_BOOST_COMP_W                              2
+#define ADI_3_REFSYS_DCDCCTL3_VDDR_BOOST_COMP_M                     0x00000003
+#define ADI_3_REFSYS_DCDCCTL3_VDDR_BOOST_COMP_S                              0
+#define ADI_3_REFSYS_DCDCCTL3_VDDR_BOOST_COMP_BOOST_P1              0x00000003
+#define ADI_3_REFSYS_DCDCCTL3_VDDR_BOOST_COMP_BOOST                 0x00000002
+#define ADI_3_REFSYS_DCDCCTL3_VDDR_BOOST_COMP_BOOST_N1              0x00000001
+#define ADI_3_REFSYS_DCDCCTL3_VDDR_BOOST_COMP_DEFAULT               0x00000000
+
 //*****************************************************************************
 //
 // Register: ADI_3_REFSYS_O_DCDCCTL4
@@ -476,6 +530,156 @@
 #define ADI_3_REFSYS_DCDCCTL5_IPEAK_W                                        3
 #define ADI_3_REFSYS_DCDCCTL5_IPEAK_M                               0x00000007
 #define ADI_3_REFSYS_DCDCCTL5_IPEAK_S                                        0
+
+//*****************************************************************************
+//
+// Register: ADI_3_REFSYS_O_AUX_DEBUG
+//
+//*****************************************************************************
+// Field:     [6] LPM_BIAS_BACKUP_EN
+//
+// Activate the backup circuit in case the main circuit does not work
+#define ADI_3_REFSYS_AUX_DEBUG_LPM_BIAS_BACKUP_EN                   0x00000040
+#define ADI_3_REFSYS_AUX_DEBUG_LPM_BIAS_BACKUP_EN_M                 0x00000040
+#define ADI_3_REFSYS_AUX_DEBUG_LPM_BIAS_BACKUP_EN_S                          6
+
+// Field:     [5] DAC_DBG_OFFSET_COMP
+//
+// Offset compensation signal (Debug Mode)
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_OFFSET_COMP                  0x00000020
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_OFFSET_COMP_M                0x00000020
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_OFFSET_COMP_S                         5
+
+// Field:     [4] DAC_DBG_HOLD
+//
+// S-H Cap hold signal (Debug Mode)
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_HOLD                         0x00000010
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_HOLD_M                       0x00000010
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_HOLD_S                                4
+
+// Field:     [3] DAC_DBG_PRECHARGE
+//
+// PRE-CHARGE signal (Debug Mode)
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_PRECHARGE                    0x00000008
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_PRECHARGE_M                  0x00000008
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_PRECHARGE_S                           3
+
+// Field:     [2] DAC_DBG_CAP_SAMPLE
+//
+// Cap-array sample signal (Debug Mode)
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_CAP_SAMPLE                   0x00000004
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_CAP_SAMPLE_M                 0x00000004
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_CAP_SAMPLE_S                          2
+
+// Field:     [1] DAC_DBG_SAMPLE
+//
+// S-H Cap sample signal (Debug Mode)
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_SAMPLE                       0x00000002
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_SAMPLE_M                     0x00000002
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_SAMPLE_S                              1
+
+// Field:     [0] DAC_DBG_EN
+//
+// Enable Debug Mode
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_EN                           0x00000001
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_EN_M                         0x00000001
+#define ADI_3_REFSYS_AUX_DEBUG_DAC_DBG_EN_S                                  0
+
+//*****************************************************************************
+//
+// Register: ADI_3_REFSYS_O_CTL_RECHARGE_CMP0
+//
+//*****************************************************************************
+// Field:     [4] COMP_CLK_DISABLE
+//
+// Enable/Disable the 32 kHz clock (SCLK_LF)  to the recharge comparator
+// ENUMs:
+// DIS                      Disable the clock
+// EN                       Enable the clock
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_COMP_CLK_DISABLE             0x00000010
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_COMP_CLK_DISABLE_M           0x00000010
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_COMP_CLK_DISABLE_S                    4
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_COMP_CLK_DISABLE_DIS         0x00000010
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_COMP_CLK_DISABLE_EN          0x00000000
+
+// Field:   [3:0] TRIM_RECHARGE_COMP_REFLEVEL
+//
+// Trim ref level of recharge.
+//
+// 0xF:  90% of VDDR level.
+// 0x0:  100% of VDDR level.
+//
+// Step size = 0.67% of VDDR level.
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_TRIM_RECHARGE_COMP_REFLEVEL_W \
+                                                                             4
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_TRIM_RECHARGE_COMP_REFLEVEL_M \
+                                                                    0x0000000F
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP0_TRIM_RECHARGE_COMP_REFLEVEL_S \
+                                                                             0
+
+//*****************************************************************************
+//
+// Register: ADI_3_REFSYS_O_CTL_RECHARGE_CMP1
+//
+//*****************************************************************************
+// Field:     [7] RECHARGE_BLOCK_VTRIG_EN
+//
+// Enable/Disable ATEST input to VDDR input of recharge comparator. Used for
+// trimming the recharge voltage reference level
+// ENUMs:
+// EN                       Enable. VDDR input is connected to ATEST network
+// DIS                      Disable. VDDR input is connected to VDDR itself
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_VTRIG_EN      0x00000080
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_VTRIG_EN_M     \
+                                                                    0x00000080
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_VTRIG_EN_S     \
+                                                                             7
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_VTRIG_EN_EN    \
+                                                                    0x00000080
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_VTRIG_EN_DIS   \
+                                                                    0x00000000
+
+// Field:     [6] RECHARGE_BLOCK_ATEST_EN
+//
+// Enable/Disable test inputs/outputs to recharge comparator block
+// ENUMs:
+// EN                       Enable
+// DIS                      Disable
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_ATEST_EN      0x00000040
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_ATEST_EN_M     \
+                                                                    0x00000040
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_ATEST_EN_S     \
+                                                                             6
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_ATEST_EN_EN    \
+                                                                    0x00000040
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_RECHARGE_BLOCK_ATEST_EN_DIS   \
+                                                                    0x00000000
+
+// Field:     [5] FORCE_SAMPLE_VDDR
+//
+// Force Sample of VDDR on cap divider
+// ENUMs:
+// EN                       Enable
+// DIS                      Disable
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_FORCE_SAMPLE_VDDR            0x00000020
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_FORCE_SAMPLE_VDDR_M          0x00000020
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_FORCE_SAMPLE_VDDR_S                   5
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_FORCE_SAMPLE_VDDR_EN         0x00000020
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_FORCE_SAMPLE_VDDR_DIS        0x00000000
+
+// Field:   [4:0] TRIM_RECHARGE_COMP_OFFSET
+//
+// Trim offset of Recharge comparator.
+//
+// 0x00:  Maximum degeneration on input side (VDDR side).
+// 0x1F:  Maximum degeneration on reference side from cap divider.
+// 0x10: Nominal code.
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_TRIM_RECHARGE_COMP_OFFSET_W   \
+                                                                             5
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_TRIM_RECHARGE_COMP_OFFSET_M   \
+                                                                    0x0000001F
+#define ADI_3_REFSYS_CTL_RECHARGE_CMP1_TRIM_RECHARGE_COMP_OFFSET_S   \
+                                                                             0
 
 
 #endif // __ADI_3_REFSYS__

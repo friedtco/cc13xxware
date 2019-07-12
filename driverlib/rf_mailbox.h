@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       rf_mailbox.h
-*  Revised:        $ $
-*  Revision:       $ $
+*  Revised:        2018-11-02 11:52:02 +0100 (Fri, 02 Nov 2018)
+*  Revision:       18756
 *
 *  Description:    Definitions for interface between system and radio CPU
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -46,12 +46,12 @@
 /// \name RF mode values
 /// Defines used to indicate mode of operation to radio core.
 ///@{
-#define RF_MODE_PROPRIETARY_SUB_1  0x00
-#define RF_MODE_BLE                0x01
-#define RF_MODE_IEEE_15_4          0x02
-#define RF_MODE_PROPRIETARY_2_4    0x03
-#define RF_MODE_PROPRIETARY        RF_MODE_PROPRIETARY_2_4
-#define RF_MODE_MULTIPLE           0x05
+#define RF_MODE_AUTO             0x00
+#define RF_MODE_BLE              0x00
+#define RF_MODE_IEEE_15_4        0x00
+#define RF_MODE_PROPRIETARY_2_4  0x00
+#define RF_MODE_PROPRIETARY      RF_MODE_PROPRIETARY_2_4
+#define RF_MODE_MULTIPLE         0x00
 ///@}
 
 
@@ -83,6 +83,9 @@ typedef struct {
 #define IRQN_TX_RETRANS             9           ///< Packet retransmitted
 #define IRQN_TX_ENTRY_DONE          10          ///< Tx queue data entry state changed to Finished
 #define IRQN_TX_BUFFER_CHANGED      11          ///< A buffer change is complete
+#define IRQN_COMMAND_STARTED        12          ///< A radio operation command has gone into active state
+#define IRQN_FG_COMMAND_STARTED     13          ///< FG level radio operation command has gone into active state
+#define IRQN_PA_CHANGED             14          ///< PA is changed
 #define IRQN_RX_OK                  16          ///< Packet received with CRC OK, payload, and not to be ignored
 #define IRQN_RX_NOK                 17          ///< Packet received with CRC error
 #define IRQN_RX_IGNORED             18          ///< Packet received with CRC OK, but to be ignored
@@ -115,6 +118,10 @@ typedef struct {
 
 #define IRQ_TX_ENTRY_DONE           (1U << IRQN_TX_ENTRY_DONE)
 #define IRQ_TX_BUFFER_CHANGED       (1U << IRQN_TX_BUFFER_CHANGED)
+
+#define IRQ_COMMAND_STARTED         (1U << IRQN_COMMAND_STARTED)
+#define IRQ_FG_COMMAND_STARTED      (1U << IRQN_FG_COMMAND_STARTED)
+#define IRQ_PA_CHANGED              (1U << IRQN_PA_CHANGED)
 
 #define IRQ_RX_OK                   (1U << IRQN_RX_OK)
 #define IRQ_RX_NOK                  (1U << IRQN_RX_NOK)
@@ -238,8 +245,8 @@ typedef struct {
 #define ERROR_CMDID      0x0805   ///< Next operation has a command ID that is undefined or not a radio
                                   ///< operation command
 #define ERROR_WRONG_BG   0x0806   ///< FG level command not compatible with running BG level command
-#define ERROR_NO_SETUP   0x0807   ///< Operation using Rx or Tx attemted without CMD_RADIO_SETUP
-#define ERROR_NO_FS      0x0808   ///< Operation using Rx or Tx attemted without frequency synth configured
+#define ERROR_NO_SETUP   0x0807   ///< Operation using Rx or Tx attempted without CMD_RADIO_SETUP
+#define ERROR_NO_FS      0x0808   ///< Operation using Rx or Tx attempted without frequency synth configured
 #define ERROR_SYNTH_PROG 0x0809   ///< Synthesizer calibration failed
 #define ERROR_TXUNF      0x080A   ///< Tx underflow observed
 #define ERROR_RXOVF      0x080B   ///< Rx overflow observed
@@ -266,7 +273,6 @@ typedef struct {
 #define DATA_ENTRY_FINISHED 3     ///< Radio CPU is finished accessing the entry
 #define DATA_ENTRY_UNFINISHED 4   ///< Radio CPU is finished accessing the entry, but packet could not be finished
 ///@}
-
 
 
 /// \name Macros for RF register override
@@ -299,20 +305,37 @@ typedef struct {
 (((_POSITION_##cmd##_##field) + ((offset) << 1)) << 4) | ((uint32_t)(val) << 16))
 /// 8-bit SW register as defined in radio_par_def.txt
 #define SW_REG_BYTE_OVERRIDE(cmd, field, val) (0x8003 | ((_POSITION_##cmd##_##field) << 4) | \
-((uint32_t)(val) << 16))
+(((uint32_t)(val) & 0xFF) << 16))
 /// Two 8-bit SW registers as defined in radio_par_def.txt; the one given by field and the next byte.
 #define SW_REG_2BYTE_OVERRIDE(cmd, field, val0, val1) (3 | (((_POSITION_##cmd##_##field) & 0xFFFE) << 4) | \
                                                        (((uint32_t)(val0) << 16) & 0x00FF0000) | ((uint32_t)(val1) << 24))
+#define SW_REG_MASK_OVERRIDE(cmd, field, offset, mask, val) (0x8003 | \
+((_POSITION_##cmd##_##field + (offset)) << 4) | (((uint32_t)(val) & 0xFF) << 16) | (((uint32_t)(mask) & 0xFF) << 24))
+
 #define HW16_ARRAY_OVERRIDE(addr, length) (1 | (((uintptr_t) (addr)) & 0xFFFC) | ((uint32_t)(length) << 16))
 #define HW32_ARRAY_OVERRIDE(addr, length) (1 | (((uintptr_t) (addr)) & 0xFFFC) | \
 ((uint32_t)(length) << 16) | (1U << 30))
+#define HW16_MASK_ARRAY_OVERRIDE(addr, length) (0x20000001 | (((uintptr_t) (addr)) & 0xFFFC) | ((uint32_t)(length) << 16))
+#define HW32_MASK_ARRAY_OVERRIDE(addr, length) (0x60000001 | (((uintptr_t) (addr)) & 0xFFFC) | ((uint32_t)(length) << 16))
+#define HW16_MASK_VAL(mask, val) ((mask) << 16 | (val))
 #define ADI_ARRAY_OVERRIDE(adiNo, addr, bHalfSize, length) (1 | ((((addr) & 0x3F) << 2)) | \
 ((!!(bHalfSize)) << 8) | ((!!(adiNo)) << 9) | ((uint32_t)(length) << 16) | (2U << 30))
 #define SW_ARRAY_OVERRIDE(cmd, firstfield, length) (1 | (((_POSITION_##cmd##_##firstfield)) << 2) | \
 ((uint32_t)(length) << 16) | (3U << 30))
-#define MCE_RFE_OVERRIDE(bMceRam, mceRomBank, mceMode, bRfeRam, rfeRomBank, rfeMode) \
-   (7 | ((!!(bMceRam)) << 8) | (((mceRomBank) & 0x07) << 9) | ((!!(bRfeRam)) << 12) | (((rfeRomBank) & 0x07) << 13) | \
+#define MCE_RFE_OVERRIDE(mceCfg, mceRomBank, mceMode, rfeCfg, rfeRomBank, rfeMode) \
+   (7 | ((mceCfg & 2) << 3) | ((rfeCfg & 2) << 4) |\
+    ((mceCfg & 1) << 6) | (((mceRomBank) & 0x0F) << 7) | \
+    ((rfeCfg & 1) << 11) | (((rfeRomBank) & 0x0F) << 12) | \
     (((mceMode) & 0x00FF) << 16) | (((rfeMode) & 0x00FF) << 24))
+#define HPOSC_OVERRIDE(freqOffset) (0x000B | ((freqOffset) << 16))
+#define TX20_POWER_OVERRIDE(tx20Power) (0x002B | (((uint32_t) tx20Power) << 10))
+#define TX_STD_POWER_OVERRIDE(txPower) (0x022B | (((uint32_t) txPower) << 10))
+#define MCE_RFE_SPLIT_OVERRIDE(mceRxCfg, mceTxCfg, rfeRxCfg, rfeTxCfg) \
+    (0x003B | ((mceRxCfg) << 12) | ((mceTxCfg) << 17) | ((rfeRxCfg) << 22) | ((rfeTxCfg) << 27))
+#define CENTER_FREQ_OVERRIDE(centerFreq, flags) (0x004B | ((flags & 0x03) << 18) | \
+   ((centerFreq) << 20))
+#define MOD_TYPE_OVERRIDE(modType, deviation, stepSz, flags) (0x005B | ((flags & 0x01) << 15) | \
+   ((modType) << 16) | ((deviation) << 19) |((stepSz) << 30) )
 #define NEW_OVERRIDE_SEGMENT(address) (((((uintptr_t)(address)) & 0x03FFFFFC) << 6) | 0x000F | \
    (((((uintptr_t)(address) >> 24) == 0x20) ? 0x01 : \
      (((uintptr_t)(address) >> 24) == 0x21) ? 0x02 : \

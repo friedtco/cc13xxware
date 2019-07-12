@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_ccfg_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-10-19 08:48:09 +0200 (Fri, 19 Oct 2018)
+*  Revision:       52957
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -44,70 +44,70 @@
 //
 //*****************************************************************************
 // Extern LF clock configuration
-#define CCFG_O_EXT_LF_CLK                                           0x00000FA8
+#define CCFG_O_EXT_LF_CLK                                           0x00001FA8
 
 // Mode Configuration 1
-#define CCFG_O_MODE_CONF_1                                          0x00000FAC
+#define CCFG_O_MODE_CONF_1                                          0x00001FAC
 
 // CCFG Size and Disable Flags
-#define CCFG_O_SIZE_AND_DIS_FLAGS                                   0x00000FB0
+#define CCFG_O_SIZE_AND_DIS_FLAGS                                   0x00001FB0
 
 // Mode Configuration 0
-#define CCFG_O_MODE_CONF                                            0x00000FB4
+#define CCFG_O_MODE_CONF                                            0x00001FB4
 
 // Voltage Load 0
-#define CCFG_O_VOLT_LOAD_0                                          0x00000FB8
+#define CCFG_O_VOLT_LOAD_0                                          0x00001FB8
 
 // Voltage Load 1
-#define CCFG_O_VOLT_LOAD_1                                          0x00000FBC
+#define CCFG_O_VOLT_LOAD_1                                          0x00001FBC
 
 // Real Time Clock Offset
-#define CCFG_O_RTC_OFFSET                                           0x00000FC0
+#define CCFG_O_RTC_OFFSET                                           0x00001FC0
 
 // Frequency Offset
-#define CCFG_O_FREQ_OFFSET                                          0x00000FC4
+#define CCFG_O_FREQ_OFFSET                                          0x00001FC4
 
 // IEEE MAC Address 0
-#define CCFG_O_IEEE_MAC_0                                           0x00000FC8
+#define CCFG_O_IEEE_MAC_0                                           0x00001FC8
 
 // IEEE MAC Address 1
-#define CCFG_O_IEEE_MAC_1                                           0x00000FCC
+#define CCFG_O_IEEE_MAC_1                                           0x00001FCC
 
 // IEEE BLE Address 0
-#define CCFG_O_IEEE_BLE_0                                           0x00000FD0
+#define CCFG_O_IEEE_BLE_0                                           0x00001FD0
 
 // IEEE BLE Address 1
-#define CCFG_O_IEEE_BLE_1                                           0x00000FD4
+#define CCFG_O_IEEE_BLE_1                                           0x00001FD4
 
 // Bootloader Configuration
-#define CCFG_O_BL_CONFIG                                            0x00000FD8
+#define CCFG_O_BL_CONFIG                                            0x00001FD8
 
 // Erase Configuration
-#define CCFG_O_ERASE_CONF                                           0x00000FDC
+#define CCFG_O_ERASE_CONF                                           0x00001FDC
 
 // TI Options
-#define CCFG_O_CCFG_TI_OPTIONS                                      0x00000FE0
+#define CCFG_O_CCFG_TI_OPTIONS                                      0x00001FE0
 
 // Test Access Points Enable 0
-#define CCFG_O_CCFG_TAP_DAP_0                                       0x00000FE4
+#define CCFG_O_CCFG_TAP_DAP_0                                       0x00001FE4
 
 // Test Access Points Enable 1
-#define CCFG_O_CCFG_TAP_DAP_1                                       0x00000FE8
+#define CCFG_O_CCFG_TAP_DAP_1                                       0x00001FE8
 
 // Image Valid
-#define CCFG_O_IMAGE_VALID_CONF                                     0x00000FEC
+#define CCFG_O_IMAGE_VALID_CONF                                     0x00001FEC
 
 // Protect Sectors 0-31
-#define CCFG_O_CCFG_PROT_31_0                                       0x00000FF0
+#define CCFG_O_CCFG_PROT_31_0                                       0x00001FF0
 
 // Protect Sectors 32-63
-#define CCFG_O_CCFG_PROT_63_32                                      0x00000FF4
+#define CCFG_O_CCFG_PROT_63_32                                      0x00001FF4
 
 // Protect Sectors 64-95
-#define CCFG_O_CCFG_PROT_95_64                                      0x00000FF8
+#define CCFG_O_CCFG_PROT_95_64                                      0x00001FF8
 
 // Protect Sectors 96-127
-#define CCFG_O_CCFG_PROT_127_96                                     0x00000FFC
+#define CCFG_O_CCFG_PROT_127_96                                     0x00001FFC
 
 //*****************************************************************************
 //
@@ -415,9 +415,7 @@
 
 // Field: [19:18] XOSC_FREQ
 //
-// Reserved for future use. Software should not rely on the value of a
-// reserved. Writing any other value than the reset/default value may result in
-// undefined behavior.
+// Selects high precision HF oscillator (activated when using the radio).
 // ENUMs:
 // 24M                      24 MHz XOSC_HF
 // 48M                      48 MHz XOSC_HF
@@ -788,16 +786,16 @@
 #define CCFG_CCFG_TAP_DAP_0_CPU_DAP_ENABLE_M                        0x00FF0000
 #define CCFG_CCFG_TAP_DAP_0_CPU_DAP_ENABLE_S                                16
 
-// Field:  [15:8] PRCM_TAP_ENABLE
+// Field:  [15:8] PWRPROF_TAP_ENABLE
 //
-// Enable PRCM TAP.
-// 0xC5: PRCM TAP access is enabled during power-up/system-reset by ROM boot FW
-// if enabled by corresponding configuration value in FCFG1 defined by TI.
-// Any other value: PRCM TAP access will remain disabled out of
+// Enable PWRPROF TAP.
+// 0xC5: PWRPROF TAP access is enabled during power-up/system-reset by ROM boot
+// FW if enabled by corresponding configuration value in FCFG1 defined by TI.
+// Any other value: PWRPROF TAP access will remain disabled out of
 // power-up/system-reset.
-#define CCFG_CCFG_TAP_DAP_0_PRCM_TAP_ENABLE_W                                8
-#define CCFG_CCFG_TAP_DAP_0_PRCM_TAP_ENABLE_M                       0x0000FF00
-#define CCFG_CCFG_TAP_DAP_0_PRCM_TAP_ENABLE_S                                8
+#define CCFG_CCFG_TAP_DAP_0_PWRPROF_TAP_ENABLE_W                             8
+#define CCFG_CCFG_TAP_DAP_0_PWRPROF_TAP_ENABLE_M                    0x0000FF00
+#define CCFG_CCFG_TAP_DAP_0_PWRPROF_TAP_ENABLE_S                             8
 
 // Field:   [7:0] TEST_TAP_ENABLE
 //
@@ -837,16 +835,16 @@
 #define CCFG_CCFG_TAP_DAP_1_PBIST1_TAP_ENABLE_M                     0x0000FF00
 #define CCFG_CCFG_TAP_DAP_1_PBIST1_TAP_ENABLE_S                              8
 
-// Field:   [7:0] WUC_TAP_ENABLE
+// Field:   [7:0] AON_TAP_ENABLE
 //
-// Enable WUC TAP
-// 0xC5: WUC TAP access is enabled during power-up/system-reset by ROM boot FW
+// Enable AON TAP
+// 0xC5: AON TAP access is enabled during power-up/system-reset by ROM boot FW
 // if enabled by corresponding configuration value in FCFG1 defined by TI.
-// Any other value: WUC TAP access will remain disabled out of
+// Any other value: AON TAP access will remain disabled out of
 // power-up/system-reset.
-#define CCFG_CCFG_TAP_DAP_1_WUC_TAP_ENABLE_W                                 8
-#define CCFG_CCFG_TAP_DAP_1_WUC_TAP_ENABLE_M                        0x000000FF
-#define CCFG_CCFG_TAP_DAP_1_WUC_TAP_ENABLE_S                                 0
+#define CCFG_CCFG_TAP_DAP_1_AON_TAP_ENABLE_W                                 8
+#define CCFG_CCFG_TAP_DAP_1_AON_TAP_ENABLE_M                        0x000000FF
+#define CCFG_CCFG_TAP_DAP_1_AON_TAP_ENABLE_S                                 0
 
 //*****************************************************************************
 //
@@ -855,9 +853,11 @@
 //*****************************************************************************
 // Field:  [31:0] IMAGE_VALID
 //
-// This field must have a value of 0x00000000 in order for enabling the boot
-// sequence to transfer control to a flash image.
-// A non-zero value forces the boot sequence to call the boot loader.
+// This field must have the address value of the start of the flash vector
+// table in order to enable the boot FW in ROM to transfer control to a flash
+// image.
+// Any illegal vector table start address value will force the boot FW in ROM
+// to transfer control to the serial boot loader in ROM.
 #define CCFG_IMAGE_VALID_CONF_IMAGE_VALID_W                                 32
 #define CCFG_IMAGE_VALID_CONF_IMAGE_VALID_M                         0xFFFFFFFF
 #define CCFG_IMAGE_VALID_CONF_IMAGE_VALID_S                                  0

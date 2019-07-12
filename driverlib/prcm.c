@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       prcm.c
-*  Revised:        2016-08-15 10:30:38 +0200 (Mon, 15 Aug 2016)
-*  Revision:       47006
+*  Revised:        2018-10-18 17:33:32 +0200 (Thu, 18 Oct 2018)
+*  Revision:       52954
 *
 *  Description:    Driver for the PRCM.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 *
 ******************************************************************************/
 
-#include <driverlib/prcm.h>
+#include "prcm.h"
 
 //*****************************************************************************
 //
@@ -53,6 +53,10 @@
     #define PRCMAudioClockConfigSet         NOROM_PRCMAudioClockConfigSet
     #undef  PRCMAudioClockConfigSetOverride
     #define PRCMAudioClockConfigSetOverride NOROM_PRCMAudioClockConfigSetOverride
+    #undef  PRCMAudioClockInternalSource
+    #define PRCMAudioClockInternalSource    NOROM_PRCMAudioClockInternalSource
+    #undef  PRCMAudioClockExternalSource
+    #define PRCMAudioClockExternalSource    NOROM_PRCMAudioClockExternalSource
     #undef  PRCMPowerDomainOn
     #define PRCMPowerDomainOn               NOROM_PRCMPowerDomainOn
     #undef  PRCMPowerDomainOff
@@ -78,8 +82,8 @@
 
 //*****************************************************************************
 //
-// Arrays that maps the "peripheral set" number (which is stored in the
-// third nibble of the PRCM_PERIPH_* defines) to the PRCM register that
+// Arrays that maps the "peripheral set" number (which is stored in
+// bits[11:8] of the PRCM_PERIPH_* defines) to the PRCM register that
 // contains the relevant bit for that peripheral.
 //
 //*****************************************************************************
@@ -87,37 +91,37 @@
 // Run mode registers
 static const uint32_t g_pui32RCGCRegs[] =
 {
-    PRCM_O_GPTCLKGR,
-    PRCM_O_SSICLKGR,
-    PRCM_O_UARTCLKGR,
-    PRCM_O_I2CCLKGR,
-    PRCM_O_SECDMACLKGR,
-    PRCM_O_GPIOCLKGR,
-    PRCM_O_I2SCLKGR
+    PRCM_O_GPTCLKGR     , // Index 0
+    PRCM_O_SSICLKGR     , // Index 1
+    PRCM_O_UARTCLKGR    , // Index 2
+    PRCM_O_I2CCLKGR     , // Index 3
+    PRCM_O_SECDMACLKGR  , // Index 4
+    PRCM_O_GPIOCLKGR    , // Index 5
+    PRCM_O_I2SCLKGR       // Index 6
 };
 
 // Sleep mode registers
 static const uint32_t g_pui32SCGCRegs[] =
 {
-    PRCM_O_GPTCLKGS,
-    PRCM_O_SSICLKGS,
-    PRCM_O_UARTCLKGS,
-    PRCM_O_I2CCLKGS,
-    PRCM_O_SECDMACLKGS,
-    PRCM_O_GPIOCLKGS,
-    PRCM_O_I2SCLKGS
+    PRCM_O_GPTCLKGS     , // Index 0
+    PRCM_O_SSICLKGS     , // Index 1
+    PRCM_O_UARTCLKGS    , // Index 2
+    PRCM_O_I2CCLKGS     , // Index 3
+    PRCM_O_SECDMACLKGS  , // Index 4
+    PRCM_O_GPIOCLKGS    , // Index 5
+    PRCM_O_I2SCLKGS       // Index 6
 };
 
 // Deep sleep mode registers
 static const uint32_t g_pui32DCGCRegs[] =
 {
-    PRCM_O_GPTCLKGDS,
-    PRCM_O_SSICLKGDS,
-    PRCM_O_UARTCLKGDS,
-    PRCM_O_I2CCLKGDS,
-    PRCM_O_SECDMACLKGDS,
-    PRCM_O_GPIOCLKGDS,
-    PRCM_O_I2SCLKGDS
+    PRCM_O_GPTCLKGDS    , // Index 0
+    PRCM_O_SSICLKGDS    , // Index 1
+    PRCM_O_UARTCLKGDS   , // Index 2
+    PRCM_O_I2CCLKGDS    , // Index 3
+    PRCM_O_SECDMACLKGDS , // Index 4
+    PRCM_O_GPIOCLKGDS   , // Index 5
+    PRCM_O_I2SCLKGDS      // Index 6
 };
 
 //*****************************************************************************
@@ -132,12 +136,12 @@ static const uint32_t g_pui32DCGCRegs[] =
 // This macro extracts the peripheral instance number and generates bit mask
 //
 //*****************************************************************************
-#define PRCM_PERIPH_MASKBIT(a) (0x00000001 << ((a) & 0xf))
+#define PRCM_PERIPH_MASKBIT(a) (0x00000001 << ((a) & 0x1f))
 
 
 //*****************************************************************************
 //
-//! Configure the infrastructure clock.
+// Configure the infrastructure clock.
 //
 //*****************************************************************************
 void
@@ -145,9 +149,7 @@ PRCMInfClockConfigureSet(uint32_t ui32ClkDiv, uint32_t ui32PowerMode)
 {
     uint32_t ui32Divisor;
 
-    //
     // Check the arguments.
-    //
     ASSERT((ui32ClkDiv == PRCM_CLOCK_DIV_1) ||
            (ui32ClkDiv == PRCM_CLOCK_DIV_2) ||
            (ui32ClkDiv == PRCM_CLOCK_DIV_8) ||
@@ -158,9 +160,7 @@ PRCMInfClockConfigureSet(uint32_t ui32ClkDiv, uint32_t ui32PowerMode)
 
     ui32Divisor = 0;
 
-    //
     // Find the correct division factor.
-    //
     if(ui32ClkDiv == PRCM_CLOCK_DIV_1)
     {
         ui32Divisor = 0x0;
@@ -178,9 +178,7 @@ PRCMInfClockConfigureSet(uint32_t ui32ClkDiv, uint32_t ui32PowerMode)
         ui32Divisor = 0x3;
     }
 
-    //
     // Determine the correct power mode set the division factor accordingly.
-    //
     if(ui32PowerMode == PRCM_RUN_MODE)
     {
         HWREG(PRCM_BASE + PRCM_O_INFRCLKDIVR) = ui32Divisor;
@@ -197,7 +195,7 @@ PRCMInfClockConfigureSet(uint32_t ui32ClkDiv, uint32_t ui32PowerMode)
 
 //*****************************************************************************
 //
-//! Use this function to get the infrastructure clock configuration
+// Use this function to get the infrastructure clock configuration
 //
 //*****************************************************************************
 uint32_t
@@ -206,9 +204,7 @@ PRCMInfClockConfigureGet(uint32_t ui32PowerMode)
     uint32_t ui32ClkDiv;
     uint32_t ui32Divisor;
 
-    //
     // Check the arguments.
-    //
     ASSERT((ui32PowerMode == PRCM_RUN_MODE) ||
            (ui32PowerMode == PRCM_SLEEP_MODE) ||
            (ui32PowerMode == PRCM_DEEP_SLEEP_MODE));
@@ -216,9 +212,7 @@ PRCMInfClockConfigureGet(uint32_t ui32PowerMode)
     ui32ClkDiv = 0;
     ui32Divisor = 0;
 
-    //
     // Determine the correct power mode.
-    //
     if(ui32PowerMode == PRCM_RUN_MODE)
     {
         ui32ClkDiv = HWREG(PRCM_BASE + PRCM_O_INFRCLKDIVR);
@@ -232,9 +226,7 @@ PRCMInfClockConfigureGet(uint32_t ui32PowerMode)
         ui32ClkDiv = HWREG(PRCM_BASE + PRCM_O_INFRCLKDIVDS);
     }
 
-    //
     // Find the correct division factor.
-    //
     if(ui32ClkDiv == 0x0)
     {
         ui32Divisor = PRCM_CLOCK_DIV_1;
@@ -252,16 +244,14 @@ PRCMInfClockConfigureGet(uint32_t ui32PowerMode)
         ui32Divisor = PRCM_CLOCK_DIV_32;
     }
 
-    //
     // Return the clock division factor.
-    //
     return ui32Divisor;
 }
 
 
 //*****************************************************************************
 //
-//! Configure the audio clock generation
+// Configure the audio clock generation
 //
 //*****************************************************************************
 void
@@ -272,9 +262,7 @@ PRCMAudioClockConfigSet(uint32_t ui32ClkConfig, uint32_t ui32SampleRate)
     uint32_t ui32BitDiv;
     uint32_t ui32WordDiv;
 
-    //
     // Check the arguments.
-    //
     ASSERT(!(ui32ClkConfig & (PRCM_I2SCLKCTL_WCLK_PHASE_M | PRCM_I2SCLKCTL_SMPL_ON_POSEDGE_M)));
     ASSERT((ui32SampleRate == I2S_SAMPLE_RATE_16K) ||
            (ui32SampleRate == I2S_SAMPLE_RATE_24K) ||
@@ -285,14 +273,10 @@ PRCMAudioClockConfigSet(uint32_t ui32ClkConfig, uint32_t ui32SampleRate)
     ui32BitDiv = 0;
     ui32WordDiv = 0;
 
-    //
     // Make sure the audio clock generation is disabled before reconfiguring.
-    //
     PRCMAudioClockDisable();
 
-    //
     // Define the clock division factors for the audio interface.
-    //
     switch(ui32SampleRate)
     {
     case I2S_SAMPLE_RATE_16K :
@@ -317,25 +301,19 @@ PRCMAudioClockConfigSet(uint32_t ui32ClkConfig, uint32_t ui32SampleRate)
         break;
     }
 
-    //
     // Make sure to compensate the Frame clock division factor if using single
     // phase format.
-    //
     if((ui32ClkConfig & PRCM_I2SCLKCTL_WCLK_PHASE_M) == PRCM_WCLK_SINGLE_PHASE)
     {
         ui32WordDiv -= 1;
     }
 
-    //
     // Write the clock division factors.
-    //
     HWREG(PRCM_BASE + PRCM_O_I2SMCLKDIV) = ui32MstDiv;
     HWREG(PRCM_BASE + PRCM_O_I2SBCLKDIV) = ui32BitDiv;
     HWREG(PRCM_BASE + PRCM_O_I2SWCLKDIV) = ui32WordDiv;
 
-    //
     // Configure the Word clock format and polarity.
-    //
     ui32Reg = HWREG(PRCM_BASE + PRCM_O_I2SCLKCTL) & ~(PRCM_I2SCLKCTL_WCLK_PHASE_M |
               PRCM_I2SCLKCTL_SMPL_ON_POSEDGE_M);
     HWREG(PRCM_BASE + PRCM_O_I2SCLKCTL) = ui32Reg | ui32ClkConfig;
@@ -343,7 +321,7 @@ PRCMAudioClockConfigSet(uint32_t ui32ClkConfig, uint32_t ui32SampleRate)
 
 //*****************************************************************************
 //
-//! Configure the audio clock generation with manual setting of clock divider.
+// Configure the audio clock generation with manual setting of clock divider.
 //
 //*****************************************************************************
 void
@@ -352,35 +330,25 @@ PRCMAudioClockConfigSetOverride(uint32_t ui32ClkConfig, uint32_t ui32MstDiv,
 {
     uint32_t ui32Reg;
 
-    //
     // Check the arguments.
-    //
     ASSERT(!(ui32ClkConfig & (PRCM_I2SCLKCTL_WCLK_PHASE_M | PRCM_I2SCLKCTL_SMPL_ON_POSEDGE_M)));
 
-    //
     // Make sure the audio clock generation is disabled before reconfiguring.
-    //
     PRCMAudioClockDisable();
 
-    //
     // Make sure to compensate the Frame clock division factor if using single
     // phase format.
-    //
     if((ui32ClkConfig & PRCM_I2SCLKCTL_WCLK_PHASE_M) == PRCM_WCLK_SINGLE_PHASE)
     {
         ui32WordDiv -= 1;
     }
 
-    //
     // Write the clock division factors.
-    //
     HWREG(PRCM_BASE + PRCM_O_I2SMCLKDIV) = ui32MstDiv;
     HWREG(PRCM_BASE + PRCM_O_I2SBCLKDIV) = ui32BitDiv;
     HWREG(PRCM_BASE + PRCM_O_I2SWCLKDIV) = ui32WordDiv;
 
-    //
     // Configure the Word clock format and polarity.
-    //
     ui32Reg = HWREG(PRCM_BASE + PRCM_O_I2SCLKCTL) & ~(PRCM_I2SCLKCTL_WCLK_PHASE_M |
               PRCM_I2SCLKCTL_SMPL_ON_POSEDGE_M);
     HWREG(PRCM_BASE + PRCM_O_I2SCLKCTL) = ui32Reg | ui32ClkConfig;
@@ -388,28 +356,81 @@ PRCMAudioClockConfigSetOverride(uint32_t ui32ClkConfig, uint32_t ui32MstDiv,
 
 //*****************************************************************************
 //
-//! Turn power on in power domains in the MCU domain
+// Configure the audio clocks for I2S module
+//
+//*****************************************************************************
+void
+PRCMAudioClockConfigOverride(uint8_t  ui8SamplingEdge,
+                             uint8_t  ui8WCLKPhase,
+                             uint32_t ui32MstDiv,
+                             uint32_t ui32BitDiv,
+                             uint32_t ui32WordDiv)
+{
+    // Check the arguments.
+    ASSERT(    ui8BitsPerSample == PRCM_WCLK_SINGLE_PHASE
+            || ui8BitsPerSample == PRCM_WCLK_DUAL_PHASE
+            || ui8BitsPerSample == PRCM_WCLK_USER_DEF);
+
+    // Make sure the audio clock generation is disabled before reconfiguring.
+    PRCMAudioClockDisable();
+
+    // Make sure to compensate the Frame clock division factor if using single
+    // phase format.
+    if((ui8WCLKPhase) == PRCM_WCLK_SINGLE_PHASE)
+    {
+        ui32WordDiv -= 1;
+    }
+
+    // Write the clock division factors.
+    HWREG(PRCM_BASE + PRCM_O_I2SMCLKDIV) = ui32MstDiv;
+    HWREG(PRCM_BASE + PRCM_O_I2SBCLKDIV) = ui32BitDiv;
+    HWREG(PRCM_BASE + PRCM_O_I2SWCLKDIV) = ui32WordDiv;
+
+    // Configure the Word clock format and polarity and enable it.
+    HWREG(PRCM_BASE + PRCM_O_I2SCLKCTL) =  (ui8SamplingEdge  << PRCM_I2SCLKCTL_SMPL_ON_POSEDGE_S) |
+                                           (ui8WCLKPhase     << PRCM_I2SCLKCTL_WCLK_PHASE_S     ) |
+                                           (1                << PRCM_I2SCLKCTL_EN_S             );
+}
+
+//*****************************************************************************
+//
+// Configure the clocks as "internally generated".
+//
+//*****************************************************************************
+void PRCMAudioClockInternalSource(void)
+{
+    HWREGBITW(PRCM_BASE + PRCM_O_I2SBCLKSEL, PRCM_I2SBCLKSEL_SRC_BITN)     = 1;
+}
+
+//*****************************************************************************
+//
+// Configure the clocks as "externally generated".
+//
+//*****************************************************************************
+void PRCMAudioClockExternalSource(void)
+{
+    HWREGBITW(PRCM_BASE + PRCM_O_I2SBCLKSEL, PRCM_I2SBCLKSEL_SRC_BITN)     = 0;
+}
+
+//*****************************************************************************
+//
+// Turn power on in power domains in the MCU domain
 //
 //*****************************************************************************
 void
 PRCMPowerDomainOn(uint32_t ui32Domains)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32Domains & PRCM_DOMAIN_RFCORE) ||
            (ui32Domains & PRCM_DOMAIN_SERIAL) ||
            (ui32Domains & PRCM_DOMAIN_PERIPH) ||
            (ui32Domains & PRCM_DOMAIN_CPU) ||
            (ui32Domains & PRCM_DOMAIN_VIMS));
 
-    //
     // Assert the request to power on the right domains.
-    //
     if(ui32Domains & PRCM_DOMAIN_RFCORE)
     {
         HWREG(PRCM_BASE + PRCM_O_PDCTL0RFC   ) = 1;
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1RFC   ) = 1;
     }
     if(ui32Domains & PRCM_DOMAIN_SERIAL)
     {
@@ -431,28 +452,23 @@ PRCMPowerDomainOn(uint32_t ui32Domains)
 
 //*****************************************************************************
 //
-//! Turn off a specific power domain
+// Turn off a specific power domain
 //
 //*****************************************************************************
 void
 PRCMPowerDomainOff(uint32_t ui32Domains)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32Domains & PRCM_DOMAIN_RFCORE) ||
            (ui32Domains & PRCM_DOMAIN_SERIAL) ||
            (ui32Domains & PRCM_DOMAIN_PERIPH) ||
            (ui32Domains & PRCM_DOMAIN_CPU) ||
            (ui32Domains & PRCM_DOMAIN_VIMS));
 
-    //
     // Assert the request to power off the right domains.
-    //
     if(ui32Domains & PRCM_DOMAIN_RFCORE)
     {
         HWREG(PRCM_BASE + PRCM_O_PDCTL0RFC   ) = 0;
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1RFC   ) = 0;
     }
     if(ui32Domains & PRCM_DOMAIN_SERIAL)
     {
@@ -464,7 +480,10 @@ PRCMPowerDomainOff(uint32_t ui32Domains)
     }
     if(ui32Domains & PRCM_DOMAIN_VIMS)
     {
-        HWREG(PRCM_BASE + PRCM_O_PDCTL1VIMS  ) = 0;
+        // Write bits ui32Domains[17:16] to the VIMS_MODE alias register.
+        // PRCM_DOMAIN_VIMS sets VIMS_MODE=0b00, PRCM_DOMAIN_VIMS_OFF_NO_WAKEUP sets VIMS_MODE=0b10.
+        ASSERT(!(ui32Domains & 0x00010000));
+        HWREG(PRCM_BASE + PRCM_O_PDCTL1VIMS  ) = ( ui32Domains >> 16 ) & 3;
     }
     if(ui32Domains & PRCM_DOMAIN_CPU)
     {
@@ -474,127 +493,103 @@ PRCMPowerDomainOff(uint32_t ui32Domains)
 
 //*****************************************************************************
 //
-//! Enables a peripheral in Run mode
+// Enables a peripheral in Run mode
 //
 //*****************************************************************************
 void
 PRCMPeripheralRunEnable(uint32_t ui32Peripheral)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(PRCMPeripheralValid(ui32Peripheral));
 
-    //
     // Enable module in Run Mode.
-    //
     HWREG(PRCM_BASE + g_pui32RCGCRegs[PRCM_PERIPH_INDEX(ui32Peripheral)]) |=
         PRCM_PERIPH_MASKBIT(ui32Peripheral);
 }
 
 //*****************************************************************************
 //
-//! Disables a peripheral in Run mode
+// Disables a peripheral in Run mode
 //
 //*****************************************************************************
 void
 PRCMPeripheralRunDisable(uint32_t ui32Peripheral)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(PRCMPeripheralValid(ui32Peripheral));
 
-    //
     // Disable module in Run Mode.
-    //
     HWREG(PRCM_BASE + g_pui32RCGCRegs[PRCM_PERIPH_INDEX(ui32Peripheral)]) &=
         ~PRCM_PERIPH_MASKBIT(ui32Peripheral);
 }
 
 //*****************************************************************************
 //
-//! Enables a peripheral in sleep mode
+// Enables a peripheral in sleep mode
 //
 //*****************************************************************************
 void
 PRCMPeripheralSleepEnable(uint32_t ui32Peripheral)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(PRCMPeripheralValid(ui32Peripheral));
 
-    //
     // Enable this peripheral in sleep mode.
-    //
     HWREG(PRCM_BASE + g_pui32SCGCRegs[PRCM_PERIPH_INDEX(ui32Peripheral)]) |=
         PRCM_PERIPH_MASKBIT(ui32Peripheral);
 }
 
 //*****************************************************************************
 //
-//! Disables a peripheral in sleep mode
+// Disables a peripheral in sleep mode
 //
 //*****************************************************************************
 void
 PRCMPeripheralSleepDisable(uint32_t ui32Peripheral)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(PRCMPeripheralValid(ui32Peripheral));
 
-    //
     // Disable this peripheral in sleep mode
-    //
     HWREG(PRCM_BASE + g_pui32SCGCRegs[PRCM_PERIPH_INDEX(ui32Peripheral)]) &=
         ~PRCM_PERIPH_MASKBIT(ui32Peripheral);
 }
 
 //*****************************************************************************
 //
-//! Enables a peripheral in deep-sleep mode
+// Enables a peripheral in deep-sleep mode
 //
 //*****************************************************************************
 void
 PRCMPeripheralDeepSleepEnable(uint32_t ui32Peripheral)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(PRCMPeripheralValid(ui32Peripheral));
 
-    //
     // Enable this peripheral in deep-sleep mode.
-    //
     HWREG(PRCM_BASE + g_pui32DCGCRegs[PRCM_PERIPH_INDEX(ui32Peripheral)]) |=
         PRCM_PERIPH_MASKBIT(ui32Peripheral);
 }
 
 //*****************************************************************************
 //
-//! Disables a peripheral in deep-sleep mode
+// Disables a peripheral in deep-sleep mode
 //
 //*****************************************************************************
 void
 PRCMPeripheralDeepSleepDisable(uint32_t ui32Peripheral)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(PRCMPeripheralValid(ui32Peripheral));
 
-    //
     // Disable this peripheral in Deep Sleep mode.
-    //
     HWREG(PRCM_BASE + g_pui32DCGCRegs[PRCM_PERIPH_INDEX(ui32Peripheral)]) &=
         ~PRCM_PERIPH_MASKBIT(ui32Peripheral);
 }
 
 //*****************************************************************************
 //
-//! Get the status for a specific power domain
+// Get the status for a specific power domain
 //
 //*****************************************************************************
 uint32_t
@@ -604,9 +599,7 @@ PRCMPowerDomainStatus(uint32_t ui32Domains)
     uint32_t ui32StatusRegister0;
     uint32_t ui32StatusRegister1;
 
-    //
     // Check the arguments.
-    //
     ASSERT((ui32Domains & (PRCM_DOMAIN_RFCORE |
                            PRCM_DOMAIN_SERIAL |
                            PRCM_DOMAIN_PERIPH)));
@@ -615,9 +608,7 @@ PRCMPowerDomainStatus(uint32_t ui32Domains)
     ui32StatusRegister0 = HWREG(PRCM_BASE + PRCM_O_PDSTAT0);
     ui32StatusRegister1 = HWREG(PRCM_BASE + PRCM_O_PDSTAT1);
 
-    //
     // Return the correct power status.
-    //
     if(ui32Domains & PRCM_DOMAIN_RFCORE)
     {
        bStatus = bStatus &&
@@ -633,32 +624,24 @@ PRCMPowerDomainStatus(uint32_t ui32Domains)
         bStatus = bStatus && (ui32StatusRegister0 & PRCM_PDSTAT0_PERIPH_ON);
     }
 
-    //
     // Return the status.
-    //
     return (bStatus ? PRCM_DOMAIN_POWER_ON : PRCM_DOMAIN_POWER_OFF);
 }
 
 //*****************************************************************************
 //
-//! Put the processor into deep-sleep mode
+// Put the processor into deep-sleep mode
 //
 //*****************************************************************************
 void
 PRCMDeepSleep(void)
 {
-    //
     // Enable deep-sleep.
-    //
     HWREG(NVIC_SYS_CTRL) |= NVIC_SYS_CTRL_SLEEPDEEP;
 
-    //
     // Wait for an interrupt.
-    //
     CPUwfi();
 
-    //
     // Disable deep-sleep so that a future sleep will work correctly.
-    //
     HWREG(NVIC_SYS_CTRL) &= ~(NVIC_SYS_CTRL_SLEEPDEEP);
 }

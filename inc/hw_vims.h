@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_vims_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -189,8 +189,6 @@
 // VIMS mode request.
 // Write accesses to this field will be blocked while STAT.MODE_CHANGING is set
 // to 1.
-// Note: Transaction from CACHE mode to GPRAM mode should be done through OFF
-// mode to minimize flash block delay.
 // ENUMs:
 // OFF                      VIMS Off mode
 // CACHE                    VIMS Cache mode

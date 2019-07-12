@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       crypto.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2018-01-12 18:46:31 +0100 (Fri, 12 Jan 2018)
+*  Revision:       51161
 *
 *  Description:    AES header file.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,13 +61,13 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ints.h>
-#include <inc/hw_crypto.h>
-#include <driverlib/debug.h>
-#include <driverlib/interrupt.h>
-#include <driverlib/cpu.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ints.h"
+#include "../inc/hw_crypto.h"
+#include "debug.h"
+#include "interrupt.h"
+#include "cpu.h"
 
 //*****************************************************************************
 //
@@ -234,8 +234,8 @@ extern uint32_t CRYPTOAesLoadKey(uint32_t *pui32AesKey,
 //
 //! \brief Start an AES-CBC operation (encryption or decryption).
 //!
-//! The function starts an AES CBC mode encypt or decrypt operation.
-//! End operation can be deteced by enabling interrupt or by polling
+//! The function starts an AES CBC mode encrypt or decrypt operation.
+//! End operation can be detected by enabling interrupt or by polling
 //! CRYPTOAesCbcStatus(). Result of operation is returned by CRYPTOAesCbcStatus().
 //!
 //! \param pui32MsgIn is a pointer to the input data.
@@ -351,10 +351,8 @@ extern uint32_t CRYPTOAesEcbStatus(void);
 __STATIC_INLINE void
 CRYPTOAesEcbFinish(void)
 {
-    //
     // Result has already been copied to the output buffer by DMA.
     // Disable master control/DMA clock and clear the operating mode.
-    //
     HWREG(CRYPTO_BASE + CRYPTO_O_ALGSEL) = 0x00000000;
     HWREG(CRYPTO_BASE + CRYPTO_O_AESCTL) = 0x00000000;
 }
@@ -374,10 +372,8 @@ CRYPTOAesEcbFinish(void)
 __STATIC_INLINE void
 CRYPTOAesCbcFinish(void)
 {
-    //
     // Result has already been copied to the output buffer by DMA.
     // Disable master control/DMA clock and clear the operating mode.
-    //
     HWREG(CRYPTO_BASE + CRYPTO_O_ALGSEL) = 0x00000000;
     HWREG(CRYPTO_BASE + CRYPTO_O_AESCTL) = 0x00000000;
 }
@@ -390,7 +386,7 @@ CRYPTOAesCbcFinish(void)
 //! location in which the key is stored.
 //!
 //! \param bEncrypt determines whether to run encryption or not.
-//! \param ui32AuthLength is the the length of the authentication field -
+//! \param ui32AuthLength is the length of the authentication field -
 //! 0, 2, 4, 6, 8, 10, 12, 14 or 16 octets.
 //! \param pui32Nonce is a pointer to 13-byte or 12-byte Nonce (Number used once).
 //! \param pui32PlainText is a pointer to the octet string input message.
@@ -471,7 +467,7 @@ extern uint32_t CRYPTOCcmAuthEncryptResultGet(uint32_t ui32TagLength,
 //! location in which the key is stored.
 //!
 //! \param bDecrypt determines whether to run decryption or not.
-//! \param ui32AuthLength is the the length of the authentication field -
+//! \param ui32AuthLength is the length of the authentication field -
 //! 0, 2, 4, 6, 8, 10, 12, 14 or 16 octets.
 //! \param pui32Nonce is a pointer to 13-byte or 12-byte Nonce (Number used once).
 //! \param pui32CipherText is a pointer to the octet string encrypted message.
@@ -524,7 +520,7 @@ extern uint32_t CRYPTOCcmInvAuthDecryptStatus(void);
 //
 //! \brief Get the result of the CCM operation.
 //!
-//! \param ui32AuthLength is the the length of the authentication field -
+//! \param ui32AuthLength is the length of the authentication field -
 //! 0, 2, 4, 6, 8, 10, 12, 14 or 16 octets.
 //! \param pui32CipherText is a pointer to the octet string encrypted message.
 //! \param ui32CipherTextLength is the length of the encrypted message.
@@ -557,9 +553,7 @@ extern uint32_t CRYPTOCcmInvAuthDecryptResultGet(uint32_t ui32AuthLength,
 __STATIC_INLINE uint32_t
 CRYPTODmaStatus(void)
 {
-    //
     // Return the value of the status register.
-    //
     return (HWREG(CRYPTO_BASE + CRYPTO_O_DMASTAT));
 }
 
@@ -611,20 +605,14 @@ extern void CRYPTODmaDisable(uint32_t ui32Channels);
 __STATIC_INLINE void
 CRYPTOIntEnable(uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32IntFlags & CRYPTO_DMA_IN_DONE) |
            (ui32IntFlags & CRYPTO_RESULT_RDY));
 
-    //
     // Using level interrupt.
-    //
     HWREG(CRYPTO_BASE + CRYPTO_O_IRQTYPE) = CRYPTO_IRQTYPE_LEVEL;
 
-    //
     // Enable the specified interrupts.
-    //
     HWREG(CRYPTO_BASE + CRYPTO_O_IRQEN) |= ui32IntFlags;
 }
 
@@ -646,15 +634,11 @@ CRYPTOIntEnable(uint32_t ui32IntFlags)
 __STATIC_INLINE void
 CRYPTOIntDisable(uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32IntFlags & CRYPTO_DMA_IN_DONE) |
            (ui32IntFlags & CRYPTO_RESULT_RDY));
 
-    //
     // Disable the specified interrupts.
-    //
     HWREG(CRYPTO_BASE + CRYPTO_O_IRQEN) &= ~ui32IntFlags;
 }
 
@@ -680,10 +664,8 @@ CRYPTOIntStatus(bool bMasked)
 {
     uint32_t ui32Mask;
 
-    //
     // Return either the interrupt status or the raw interrupt status as
     // requested.
-    //
     if(bMasked)
     {
         ui32Mask = HWREG(CRYPTO_BASE + CRYPTO_O_IRQEN);
@@ -728,26 +710,25 @@ CRYPTOIntStatus(bool bMasked)
 __STATIC_INLINE void
 CRYPTOIntClear(uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32IntFlags & CRYPTO_DMA_IN_DONE) |
            (ui32IntFlags & CRYPTO_RESULT_RDY));
 
-    //
     // Clear the requested interrupt sources,
-    //
     HWREG(CRYPTO_BASE + CRYPTO_O_IRQCLR) = ui32IntFlags;
 }
 
 //*****************************************************************************
 //
-//! \brief Registers an interrupt handler for a Crypto interrupt.
+//! \brief Registers an interrupt handler for a Crypto interrupt in the dynamic interrupt table.
 //!
-//! This function does the actual registering of the interrupt handler.  This
-//! function enables the global interrupt in the interrupt controller; specific
-//! UART interrupts must be enabled via \ref CRYPTOIntEnable(). It is the interrupt
-//! handler's responsibility to clear the interrupt source.
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
+//!
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
+//!
+//! Specific UART interrupts must be enabled via \ref CRYPTOIntEnable(). It is the
+//! interrupt handler's responsibility to clear the interrupt source.
 //!
 //! \param pfnHandler is a pointer to the function to be called when the
 //! UART interrupt occurs.
@@ -761,20 +742,16 @@ CRYPTOIntClear(uint32_t ui32IntFlags)
 __STATIC_INLINE void
 CRYPTOIntRegister(void (*pfnHandler)(void))
 {
-    //
     // Register the interrupt handler.
-    //
     IntRegister(INT_CRYPTO_RESULT_AVAIL_IRQ, pfnHandler);
 
-    //
     // Enable the UART interrupt.
-    //
     IntEnable(INT_CRYPTO_RESULT_AVAIL_IRQ);
 }
 
 //*****************************************************************************
 //
-//! \brief Unregisters an interrupt handler for a Crypto interrupt.
+//! \brief Unregisters an interrupt handler for a Crypto interrupt in the dynamic interrupt table.
 //!
 //! This function does the actual unregistering of the interrupt handler. It
 //! clears the handler to be called when a Crypto interrupt occurs. This
@@ -790,14 +767,10 @@ CRYPTOIntRegister(void (*pfnHandler)(void))
 __STATIC_INLINE void
 CRYPTOIntUnregister(void)
 {
-    //
     // Disable the interrupt.
-    //
     IntDisable(INT_CRYPTO_RESULT_AVAIL_IRQ);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(INT_CRYPTO_RESULT_AVAIL_IRQ);
 }
 
@@ -808,7 +781,7 @@ CRYPTOIntUnregister(void)
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_CRYPTOAesLoadKey
         #undef  CRYPTOAesLoadKey
         #define CRYPTOAesLoadKey                ROM_CRYPTOAesLoadKey

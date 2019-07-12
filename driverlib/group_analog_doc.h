@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       group_analog_doc.h
-*  Revised:        2016-03-30 13:03:59 +0200 (Wed, 30 Mar 2016)
-*  Revision:       45971
+*  Revised:        2016-08-30 14:34:13 +0200 (Tue, 30 Aug 2016)
+*  Revision:       47080
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -67,8 +67,6 @@
 //!   bus compared to 16-bit read bus in DDI. Hence a 32-bit read from an ADI register is translated into 8
 //!   transactions in the ADI protocol.
 //! - One transaction on the ADI/DDI protocol takes several clock cycles for the master to complete.
-//! - Access to AUX ADI/DDI requires use of a semaphore. This is handled automatically by DriverLib which uses
-//!   \ref AuxAdiDdiSafeWrite() and \ref AuxAdiDdiSafeRead() whenever AUX is accessed.
 //! - ADI slave registers are 8-bit wide.
 //! - DDI slave registers are 32-bit wide.
 //! - ADI/DDI master supports multiple data width accesses seen from the system CPU

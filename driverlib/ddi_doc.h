@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       ddi_doc.h
-*  Revised:        2016-03-30 13:03:59 +0200 (Wed, 30 Mar 2016)
-*  Revision:       45971
+*  Revised:        2016-08-30 14:34:13 +0200 (Tue, 30 Aug 2016)
+*  Revision:       47080
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -63,8 +63,5 @@
 //!   - \ref DDI16BitRead()
 //!   - \ref DDI16BitfieldRead()
 //!
-//! AUX access using semaphores (used by both ADI and DDI APIs when necessary):
-//! - \ref AuxAdiDdiSafeRead()
-//! - \ref AuxAdiDdiSafeWrite()
 //!
 //! @}

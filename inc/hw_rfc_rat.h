@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_rfc_rat_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -89,8 +89,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH0VAL_VAL_W                                             32
 #define RFC_RAT_RATCH0VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH0VAL_VAL_S                                              0
@@ -102,8 +103,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH1VAL_VAL_W                                             32
 #define RFC_RAT_RATCH1VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH1VAL_VAL_S                                              0
@@ -115,8 +117,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH2VAL_VAL_W                                             32
 #define RFC_RAT_RATCH2VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH2VAL_VAL_S                                              0
@@ -128,8 +131,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH3VAL_VAL_W                                             32
 #define RFC_RAT_RATCH3VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH3VAL_VAL_S                                              0
@@ -141,8 +145,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH4VAL_VAL_W                                             32
 #define RFC_RAT_RATCH4VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH4VAL_VAL_S                                              0
@@ -154,8 +159,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH5VAL_VAL_W                                             32
 #define RFC_RAT_RATCH5VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH5VAL_VAL_S                                              0
@@ -167,8 +173,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH6VAL_VAL_W                                             32
 #define RFC_RAT_RATCH6VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH6VAL_VAL_S                                              0
@@ -180,8 +187,9 @@
 //*****************************************************************************
 // Field:  [31:0] VAL
 //
-// Capture/compare value. The system CPU can safely read this register, but it
-// is recommended to use the CPE API commands to configure it for compare mode.
+// Capture/compare value. Only writable when the channel is configured for
+// compare mode. In compare mode, a write to this register will auto-arm the
+// channel.
 #define RFC_RAT_RATCH7VAL_VAL_W                                             32
 #define RFC_RAT_RATCH7VAL_VAL_M                                     0xFFFFFFFF
 #define RFC_RAT_RATCH7VAL_VAL_S                                              0

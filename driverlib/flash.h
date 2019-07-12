@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       flash.h
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2017-11-02 16:09:32 +0100 (Thu, 02 Nov 2017)
+*  Revision:       50166
 *
 *  Description:    Defines and prototypes for the Flash driver.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,14 +61,14 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_flash.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ints.h>
-#include <inc/hw_aon_sysctl.h>
-#include <inc/hw_fcfg1.h>
-#include <driverlib/interrupt.h>
-#include <driverlib/debug.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_flash.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ints.h"
+#include "../inc/hw_aon_pmctl.h"
+#include "../inc/hw_fcfg1.h"
+#include "interrupt.h"
+#include "debug.h"
 
 //*****************************************************************************
 //
@@ -151,7 +151,7 @@ extern "C"
 
 //*****************************************************************************
 //
-// Define for the clock frequencey input to the flash module in number of MHz
+// Define for the clock frequency input to the flash module in number of MHz
 //
 //*****************************************************************************
 #define FLASH_MODULE_CLK_FREQ  48
@@ -194,7 +194,7 @@ typedef enum
 
 //*****************************************************************************
 //
-// Defines for the bank grace periode and pump grace periode
+// Defines for the bank grace period and pump grace period
 //
 //*****************************************************************************
 #define FLASH_BAGP             0x14
@@ -254,9 +254,7 @@ FlashSectorSizeGet(void)
                              FLASH_FCFG_B0_SSIZE0_B0_SECT_SIZE_M) >>
                             FLASH_FCFG_B0_SSIZE0_B0_SECT_SIZE_S;
 
-    //
     // Return flash sector size in number of bytes.
-    //
     return(ui32SectorSizeInKbyte * 1024);
 }
 
@@ -274,16 +272,12 @@ FlashSizeGet(void)
 {
     uint32_t ui32NoOfSectors;
 
-    //
     // Get number of flash sectors
-    //
     ui32NoOfSectors = (HWREG(FLASH_BASE + FLASH_O_FLASH_SIZE) &
                        FLASH_FLASH_SIZE_SECTORS_M) >>
                       FLASH_FLASH_SIZE_SECTORS_S;
 
-    //
     // Return flash size in number of bytes
-    //
     return(ui32NoOfSectors * FlashSectorSizeGet());
 }
 
@@ -293,7 +287,7 @@ FlashSizeGet(void)
 //!
 //! This function will set the specified power mode.
 //!
-//! Any access to the bank causes a reload of the specified bank grace periode
+//! Any access to the bank causes a reload of the specified bank grace period
 //! input value into the bank down counter. After the last access to the
 //! flash bank, the down counter delays from 0 to 255 prescaled HCLK clock
 //! cycles before putting the bank into one of the fallback power modes as
@@ -301,13 +295,13 @@ FlashSizeGet(void)
 //! fallback mode is not \ref FLASH_PWR_ACTIVE_MODE.
 //!
 //! Note: The prescaled clock used for the down counter is a clock divided by
-//! 16 from input HCLK. The \c ui32BankGracePeriode parameter is ignored if
+//! 16 from input HCLK. The \c ui32BankGracePeriod parameter is ignored if
 //! \c ui32PowerMode is equal to \ref FLASH_PWR_ACTIVE_MODE.
-//! Any access to flash memory causes the pump grace periode down counter to
-//! reload with value of \c ui32PumpGracePeriode. After the bank has gone to sleep,
+//! Any access to flash memory causes the pump grace period down counter to
+//! reload with value of \c ui32PumpGracePeriod. After the bank has gone to sleep,
 //! the down counter delays this number of prescaled HCLK clock cycles before
 //! entering one of the charge pump fallback power modes as determined by
-//! \c ui32PowerMode. The prescaled clock used for the pump grace periode down
+//! \c ui32PowerMode. The prescaled clock used for the pump grace period down
 //! counter is a clock divided by 16 from input HCLK. This parameter is ignored
 //! if \c ui32PowerMode is equal to \ref FLASH_PWR_ACTIVE_MODE.
 //!
@@ -320,17 +314,17 @@ FlashSizeGet(void)
 //! - \ref FLASH_PWR_ACTIVE_MODE
 //! - \ref FLASH_PWR_OFF_MODE
 //! - \ref FLASH_PWR_DEEP_STDBY_MODE
-//! \param ui32BankGracePeriode is the starting count value for the bank grace
-//! periode down counter.
-//! \param ui32PumpGracePeriode is the starting count value for the pump grace
-//! periode down counter.
+//! \param ui32BankGracePeriod is the starting count value for the bank grace
+//! period down counter.
+//! \param ui32PumpGracePeriod is the starting count value for the pump grace
+//! period down counter.
 //!
 //! \return None
 //
 //*****************************************************************************
 extern void FlashPowerModeSet(uint32_t ui32PowerMode,
-                              uint32_t ui32BankGracePeriode,
-                              uint32_t ui32PumpGracePeriode);
+                              uint32_t ui32BankGracePeriod,
+                              uint32_t ui32PumpGracePeriod);
 
 //*****************************************************************************
 //
@@ -467,12 +461,15 @@ FlashCheckFsmForReady(void)
 
 //*****************************************************************************
 //
-//! \brief Registers an interrupt handler for the flash interrupt.
+//! \brief Registers an interrupt handler for the flash interrupt in the dynamic interrupt table.
 //!
-//! This function does the actual registering of the interrupt handler. This
-//! function enables the global interrupt in the interrupt controller; specific
-//! FLASH interrupts must be enabled via \ref FlashIntEnable(). It is the interrupt
-//! handler's responsibility to clear the interrupt source.
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
+//!
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
+//!
+//! Specific FLASH interrupts must be enabled via \ref FlashIntEnable(). It is the
+//! interrupt handler's responsibility to clear the interrupt source.
 //!
 //! \param pfnHandler is a pointer to the function to be called when the flash
 //! interrupt occurs.
@@ -486,20 +483,16 @@ FlashCheckFsmForReady(void)
 __STATIC_INLINE void
 FlashIntRegister(void (*pfnHandler)(void))
 {
-    //
     // Register the interrupt handler.
-    //
     IntRegister(INT_FLASH, pfnHandler);
 
-    //
     // Enable the flash interrupt.
-    //
     IntEnable(INT_FLASH);
 }
 
 //*****************************************************************************
 //
-//! \brief Unregisters the interrupt handler for the flash interrupt.
+//! \brief Unregisters the interrupt handler for the flash interrupt in the dynamic interrupt table.
 //!
 //! This function does the actual unregistering of the interrupt handler. It
 //! clears the handler to be called when a FLASH interrupt occurs. This
@@ -515,14 +508,10 @@ FlashIntRegister(void (*pfnHandler)(void))
 __STATIC_INLINE void
 FlashIntUnregister(void)
 {
-    //
     // Disable the interrupts.
-    //
     IntDisable(INT_FLASH);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(INT_FLASH);
 }
 
@@ -587,17 +576,13 @@ FlashIntStatus(void)
 
     ui32IntFlags = 0;
 
-    //
     // Check if FSM_DONE interrupt status is set.
-    //
     if(HWREG(FLASH_BASE + FLASH_O_FEDACSTAT) & FLASH_FEDACSTAT_FSM_DONE)
     {
         ui32IntFlags = FLASH_INT_FSM_DONE;
     }
 
-    //
     // Check if RVF_INT interrupt status is set.
-    //
     if(HWREG(FLASH_BASE + FLASH_O_FEDACSTAT) & FLASH_FEDACSTAT_RVF_INT)
     {
         ui32IntFlags |= FLASH_INT_RV;
@@ -654,9 +639,7 @@ FlashIntClear(uint32_t ui32IntFlags)
         ui32TempVal |= FLASH_FEDACSTAT_RVF_INT;
     }
 
-    //
     // Clear the flash interrupt source.
-    //
     HWREG(FLASH_BASE + FLASH_O_FEDACSTAT) = ui32TempVal;
 }
 
@@ -672,9 +655,10 @@ FlashIntClear(uint32_t ui32IntFlags)
 //! must have valid values at all times. These values affect the configuration
 //! of the device during boot.
 //!
-//! \note Please note that code can not execute in flash while any part of the flash
-//! is being programmed or erased. This function must only be executed from ROM
-//! or SRAM.
+//! \warning Please note that code can not execute in flash while any part of the flash
+//! is being programmed or erased. The application must disable interrupts that have
+//! interrupt routines in flash. This function calls a ROM function which handles the
+//! actual program operation.
 //!
 //! \param ui32SectorAddress is the starting address in flash of the sector to be
 //! erased.
@@ -690,22 +674,30 @@ extern uint32_t FlashSectorErase(uint32_t ui32SectorAddress);
 
 //*****************************************************************************
 //
-//! \brief Programs unprotected main bank flash sectors.
+//! \brief Programs unprotected flash sectors in the main bank.
 //!
-//! This function will program a sequence of bytes into the on-chip flash.
+//! This function programs a sequence of bytes into the on-chip flash.
 //! Programming each location consists of the result of an AND operation
 //! of the new data and the existing data; in other words bits that contain
 //! 1 can remain 1 or be changed to 0, but bits that are 0 cannot be changed
-//! to 1.  Therefore, a byte can be programmed multiple times as long as these
+//! to 1. Therefore, a byte can be programmed multiple times as long as these
 //! rules are followed; if a program operation attempts to change a 0 bit to
 //! a 1 bit, that bit will not have its value changed.
 //!
-//! This function will not return until the data has been programmed or an
-//! programming error has occurred.
+//! This function does not return until the data has been programmed or a
+//! programming error occurs.
 //!
-//! \note Please note that code can not execute in flash while any part of the flash
-//! is being programmed or erased. This function must only be executed from ROM
-//! or SRAM.
+//! \note It is recommended to disable cache and line buffer before programming the
+//! flash. Cache and line buffer are not automatically updated if a flash program
+//! causes a mismatch between new flash content and old content in cache and
+//! line buffer. Remember to enable cache and line buffer when the program
+//! operation completes. See \ref VIMSModeSafeSet(), \ref VIMSLineBufDisable(),
+//! and \ref VIMSLineBufEnable() for more information.
+//!
+//! \warning Please note that code can not execute in flash while any part of the flash
+//! is being programmed or erased. The application must disable interrupts that have
+//! interrupt routines in flash. This function calls a ROM function which handles the
+//! actual program operation.
 //!
 //! The \c pui8DataBuffer pointer can not point to flash.
 //!
@@ -766,7 +758,7 @@ extern void FlashDisableSectorsForWrite(void);
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_FlashPowerModeSet
         #undef  FlashPowerModeSet
         #define FlashPowerModeSet               ROM_FlashPowerModeSet

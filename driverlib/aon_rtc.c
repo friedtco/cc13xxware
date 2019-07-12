@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       aon_rtc.c
-*  Revised:        2016-08-15 13:37:26 +0200 (Mon, 15 Aug 2016)
-*  Revision:       47015
+*  Revised:        2017-06-05 12:13:49 +0200 (Mon, 05 Jun 2017)
+*  Revision:       49096
 *
 *  Description:    Driver for the AON RTC.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,8 +36,8 @@
 *
 ******************************************************************************/
 
-#include <driverlib/aon_rtc.h>
-#include <driverlib/cpu.h>
+#include "aon_rtc.h"
+#include "cpu.h"
 
 //*****************************************************************************
 //
@@ -46,37 +46,10 @@
 //
 //*****************************************************************************
 #if !defined(DOXYGEN)
-    #undef  AONRTCCurrentCompareValueGet
-    #define AONRTCCurrentCompareValueGet    NOROM_AONRTCCurrentCompareValueGet
     #undef  AONRTCCurrent64BitValueGet
     #define AONRTCCurrent64BitValueGet      NOROM_AONRTCCurrent64BitValueGet
 #endif
 
-
-//*****************************************************************************
-//
-// Get the current value of the RTC counter in a format compatible to the compare registers.
-//
-//*****************************************************************************
-uint32_t
-AONRTCCurrentCompareValueGet( void )
-{
-    uint32_t   ui32CurrentSec    ;
-    uint32_t   ui32CurrentSubSec ;
-    uint32_t   ui32SecondSecRead ;
-
-    //
-    // Reading SEC both before and after SUBSEC in order to detect if SEC incremented while reading SUBSEC
-    // If SEC incremented, we can't be sure which SEC the SUBSEC belongs to, so repeating the sequence then.
-    //
-    do {
-        ui32CurrentSec    = HWREG( AON_RTC_BASE + AON_RTC_O_SEC    );
-        ui32CurrentSubSec = HWREG( AON_RTC_BASE + AON_RTC_O_SUBSEC );
-        ui32SecondSecRead = HWREG( AON_RTC_BASE + AON_RTC_O_SEC    );
-    } while ( ui32CurrentSec != ui32SecondSecRead );
-
-    return (( ui32CurrentSec << 16 ) | ( ui32CurrentSubSec >> 16 ));
-}
 
 //*****************************************************************************
 //
@@ -92,10 +65,8 @@ AONRTCCurrent64BitValueGet( void )
     } currentRtc                    ;
     uint32_t      ui32SecondSecRead ;
 
-    //
     // Reading SEC both before and after SUBSEC in order to detect if SEC incremented while reading SUBSEC
     // If SEC incremented, we can't be sure which SEC the SUBSEC belongs to, so repeating the sequence then.
-    //
     do {
         currentRtc.secAndSubSec[ 1 ] = HWREG( AON_RTC_BASE + AON_RTC_O_SEC    );
         currentRtc.secAndSubSec[ 0 ] = HWREG( AON_RTC_BASE + AON_RTC_O_SUBSEC );

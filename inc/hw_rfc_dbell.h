@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_rfc_dbell_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -220,10 +220,8 @@
 
 // Field:     [5] MDMSOFT
 //
-// Modem synchronization word detection interrupt flag. This interrupt will be
-// raised by modem when the synchronization word is received. The CPE may
-// decide to reject the packet based on its header (protocol specific). Write
-// zero to clear flag. Write to one has no effect.
+// Modem software defined interrupt flag. Write zero to clear flag. Write to
+// one has no effect.
 #define RFC_DBELL_RFHWIFG_MDMSOFT                                   0x00000020
 #define RFC_DBELL_RFHWIFG_MDMSOFT_BITN                                       5
 #define RFC_DBELL_RFHWIFG_MDMSOFT_M                                 0x00000020
@@ -587,21 +585,22 @@
 #define RFC_DBELL_RFCPEIFG_IRQ14_M                                  0x00004000
 #define RFC_DBELL_RFCPEIFG_IRQ14_S                                          14
 
-// Field:    [13] IRQ13
+// Field:    [13] FG_COMMAND_STARTED
 //
-// Interrupt flag 13. Write zero to clear flag. Write to one has no effect.
-#define RFC_DBELL_RFCPEIFG_IRQ13                                    0x00002000
-#define RFC_DBELL_RFCPEIFG_IRQ13_BITN                                       13
-#define RFC_DBELL_RFCPEIFG_IRQ13_M                                  0x00002000
-#define RFC_DBELL_RFCPEIFG_IRQ13_S                                          13
+// Interrupt flag 13. IEEE 802.15.4 mode only: A foreground radio operation
+// command has gone into active state.
+#define RFC_DBELL_RFCPEIFG_FG_COMMAND_STARTED                       0x00002000
+#define RFC_DBELL_RFCPEIFG_FG_COMMAND_STARTED_BITN                          13
+#define RFC_DBELL_RFCPEIFG_FG_COMMAND_STARTED_M                     0x00002000
+#define RFC_DBELL_RFCPEIFG_FG_COMMAND_STARTED_S                             13
 
-// Field:    [12] IRQ12
+// Field:    [12] COMMAND_STARTED
 //
-// Interrupt flag 12. Write zero to clear flag. Write to one has no effect.
-#define RFC_DBELL_RFCPEIFG_IRQ12                                    0x00001000
-#define RFC_DBELL_RFCPEIFG_IRQ12_BITN                                       12
-#define RFC_DBELL_RFCPEIFG_IRQ12_M                                  0x00001000
-#define RFC_DBELL_RFCPEIFG_IRQ12_S                                          12
+// Interrupt flag 12. A radio operation command has gone into active state.
+#define RFC_DBELL_RFCPEIFG_COMMAND_STARTED                          0x00001000
+#define RFC_DBELL_RFCPEIFG_COMMAND_STARTED_BITN                             12
+#define RFC_DBELL_RFCPEIFG_COMMAND_STARTED_M                        0x00001000
+#define RFC_DBELL_RFCPEIFG_COMMAND_STARTED_S                                12
 
 // Field:    [11] TX_BUFFER_CHANGED
 //
@@ -867,21 +866,21 @@
 #define RFC_DBELL_RFCPEIEN_IRQ14_M                                  0x00004000
 #define RFC_DBELL_RFCPEIEN_IRQ14_S                                          14
 
-// Field:    [13] IRQ13
+// Field:    [13] FG_COMMAND_STARTED
 //
-// Interrupt enable for RFCPEIFG.IRQ13.
-#define RFC_DBELL_RFCPEIEN_IRQ13                                    0x00002000
-#define RFC_DBELL_RFCPEIEN_IRQ13_BITN                                       13
-#define RFC_DBELL_RFCPEIEN_IRQ13_M                                  0x00002000
-#define RFC_DBELL_RFCPEIEN_IRQ13_S                                          13
+// Interrupt enable for RFCPEIFG.FG_COMMAND_STARTED.
+#define RFC_DBELL_RFCPEIEN_FG_COMMAND_STARTED                       0x00002000
+#define RFC_DBELL_RFCPEIEN_FG_COMMAND_STARTED_BITN                          13
+#define RFC_DBELL_RFCPEIEN_FG_COMMAND_STARTED_M                     0x00002000
+#define RFC_DBELL_RFCPEIEN_FG_COMMAND_STARTED_S                             13
 
-// Field:    [12] IRQ12
+// Field:    [12] COMMAND_STARTED
 //
-// Interrupt enable for RFCPEIFG.IRQ12.
-#define RFC_DBELL_RFCPEIEN_IRQ12                                    0x00001000
-#define RFC_DBELL_RFCPEIEN_IRQ12_BITN                                       12
-#define RFC_DBELL_RFCPEIEN_IRQ12_M                                  0x00001000
-#define RFC_DBELL_RFCPEIEN_IRQ12_S                                          12
+// Interrupt enable for RFCPEIFG.COMMAND_STARTED.
+#define RFC_DBELL_RFCPEIEN_COMMAND_STARTED                          0x00001000
+#define RFC_DBELL_RFCPEIEN_COMMAND_STARTED_BITN                             12
+#define RFC_DBELL_RFCPEIEN_COMMAND_STARTED_M                        0x00001000
+#define RFC_DBELL_RFCPEIEN_COMMAND_STARTED_S                                12
 
 // Field:    [11] TX_BUFFER_CHANGED
 //
@@ -1266,35 +1265,37 @@
 #define RFC_DBELL_RFCPEISL_IRQ14_CPE1                               0x00004000
 #define RFC_DBELL_RFCPEISL_IRQ14_CPE0                               0x00000000
 
-// Field:    [13] IRQ13
+// Field:    [13] FG_COMMAND_STARTED
 //
-// Select which CPU interrupt vector the RFCPEIFG.IRQ13 interrupt should use.
+// Select which CPU interrupt vector the RFCPEIFG.FG_COMMAND_STARTED interrupt
+// should use.
 // ENUMs:
 // CPE1                     Associate this interrupt line with INT_RF_CPE1
 //                          interrupt vector
 // CPE0                     Associate this interrupt line with INT_RF_CPE0
 //                          interrupt vector
-#define RFC_DBELL_RFCPEISL_IRQ13                                    0x00002000
-#define RFC_DBELL_RFCPEISL_IRQ13_BITN                                       13
-#define RFC_DBELL_RFCPEISL_IRQ13_M                                  0x00002000
-#define RFC_DBELL_RFCPEISL_IRQ13_S                                          13
-#define RFC_DBELL_RFCPEISL_IRQ13_CPE1                               0x00002000
-#define RFC_DBELL_RFCPEISL_IRQ13_CPE0                               0x00000000
+#define RFC_DBELL_RFCPEISL_FG_COMMAND_STARTED                       0x00002000
+#define RFC_DBELL_RFCPEISL_FG_COMMAND_STARTED_BITN                          13
+#define RFC_DBELL_RFCPEISL_FG_COMMAND_STARTED_M                     0x00002000
+#define RFC_DBELL_RFCPEISL_FG_COMMAND_STARTED_S                             13
+#define RFC_DBELL_RFCPEISL_FG_COMMAND_STARTED_CPE1                  0x00002000
+#define RFC_DBELL_RFCPEISL_FG_COMMAND_STARTED_CPE0                  0x00000000
 
-// Field:    [12] IRQ12
+// Field:    [12] COMMAND_STARTED
 //
-// Select which CPU interrupt vector the RFCPEIFG.IRQ12 interrupt should use.
+// Select which CPU interrupt vector the RFCPEIFG.COMMAND_STARTED interrupt
+// should use.
 // ENUMs:
 // CPE1                     Associate this interrupt line with INT_RF_CPE1
 //                          interrupt vector
 // CPE0                     Associate this interrupt line with INT_RF_CPE0
 //                          interrupt vector
-#define RFC_DBELL_RFCPEISL_IRQ12                                    0x00001000
-#define RFC_DBELL_RFCPEISL_IRQ12_BITN                                       12
-#define RFC_DBELL_RFCPEISL_IRQ12_M                                  0x00001000
-#define RFC_DBELL_RFCPEISL_IRQ12_S                                          12
-#define RFC_DBELL_RFCPEISL_IRQ12_CPE1                               0x00001000
-#define RFC_DBELL_RFCPEISL_IRQ12_CPE0                               0x00000000
+#define RFC_DBELL_RFCPEISL_COMMAND_STARTED                          0x00001000
+#define RFC_DBELL_RFCPEISL_COMMAND_STARTED_BITN                             12
+#define RFC_DBELL_RFCPEISL_COMMAND_STARTED_M                        0x00001000
+#define RFC_DBELL_RFCPEISL_COMMAND_STARTED_S                                12
+#define RFC_DBELL_RFCPEISL_COMMAND_STARTED_CPE1                     0x00001000
+#define RFC_DBELL_RFCPEISL_COMMAND_STARTED_CPE0                     0x00000000
 
 // Field:    [11] TX_BUFFER_CHANGED
 //

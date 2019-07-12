@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       ssi.c
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-04-26 18:27:45 +0200 (Wed, 26 Apr 2017)
+*  Revision:       48852
 *
 *  Description:    Driver for Synchronous Serial Interface
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 *
 ******************************************************************************/
 
-#include <driverlib/ssi.h>
+#include "ssi.h"
 
 //*****************************************************************************
 //
@@ -63,7 +63,7 @@
 
 //*****************************************************************************
 //
-//! Configures the synchronous serial port
+// Configures the synchronous serial port
 //
 //*****************************************************************************
 void
@@ -77,9 +77,7 @@ SSIConfigSetExpClk(uint32_t ui32Base, uint32_t ui32SSIClk,
     uint32_t ui32SCR;
     uint32_t ui32SPH_SPO;
 
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
     ASSERT((ui32Protocol == SSI_FRF_MOTO_MODE_0) ||
            (ui32Protocol == SSI_FRF_MOTO_MODE_1) ||
@@ -95,16 +93,12 @@ SSIConfigSetExpClk(uint32_t ui32Base, uint32_t ui32SSIClk,
     ASSERT((ui32SSIClk / ui32BitRate) <= (254 * 256));
     ASSERT((ui32DataWidth >= 4) && (ui32DataWidth <= 16));
 
-    //
     // Set the mode.
-    //
     ui32RegVal = (ui32Mode == SSI_MODE_SLAVE_OD) ? SSI_CR1_SOD : 0;
     ui32RegVal |= (ui32Mode == SSI_MODE_MASTER) ? 0 : SSI_CR1_MS;
     HWREG(ui32Base + SSI_O_CR1) = ui32RegVal;
 
-    //
     // Set the clock predivider.
-    //
     ui32MaxBitRate = ui32SSIClk / ui32BitRate;
     ui32PreDiv = 0;
     do
@@ -115,9 +109,7 @@ SSIConfigSetExpClk(uint32_t ui32Base, uint32_t ui32SSIClk,
     while(ui32SCR > 255);
     HWREG(ui32Base + SSI_O_CPSR) = ui32PreDiv;
 
-    //
     // Set protocol and clock rate.
-    //
     ui32SPH_SPO = (ui32Protocol & 3) << 6;
     ui32Protocol &= SSI_CR0_FRF_M;
     ui32RegVal = (ui32SCR << 8) | ui32SPH_SPO | ui32Protocol | (ui32DataWidth - 1);
@@ -126,22 +118,18 @@ SSIConfigSetExpClk(uint32_t ui32Base, uint32_t ui32SSIClk,
 
 //*****************************************************************************
 //
-//! Puts a data element into the SSI transmit FIFO
+// Puts a data element into the SSI transmit FIFO
 //
 //*****************************************************************************
 int32_t
 SSIDataPutNonBlocking(uint32_t ui32Base, uint32_t ui32Data)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
     ASSERT((ui32Data & (0xfffffffe << (HWREG(ui32Base + SSI_O_CR0) &
                                        SSI_CR0_DSS_M))) == 0);
 
-    //
     // Check for space to write.
-    //
     if(HWREG(ui32Base + SSI_O_SR) & SSI_SR_TNF)
     {
         HWREG(ui32Base + SSI_O_DR) = ui32Data;
@@ -153,94 +141,60 @@ SSIDataPutNonBlocking(uint32_t ui32Base, uint32_t ui32Data)
     }
 }
 
-
 //*****************************************************************************
 //
-//! Puts a data element into the SSI transmit FIFO
+// Puts a data element into the SSI transmit FIFO
 //
 //*****************************************************************************
 void
 SSIDataPut(uint32_t ui32Base, uint32_t ui32Data)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
     ASSERT((ui32Data & (0xfffffffe << (HWREG(ui32Base + SSI_O_CR0) &
                                        SSI_CR0_DSS_M))) == 0);
 
-    //
     // Wait until there is space.
-    //
     while(!(HWREG(ui32Base + SSI_O_SR) & SSI_SR_TNF))
     {
     }
 
-    //
     // Write the data to the SSI.
-    //
     HWREG(ui32Base + SSI_O_DR) = ui32Data;
 }
 
 //*****************************************************************************
 //
-//! Gets a data element from the SSI receive FIFO
+// Gets a data element from the SSI receive FIFO
 //
 //*****************************************************************************
 void
 SSIDataGet(uint32_t ui32Base, uint32_t *pui32Data)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Wait until there is data to be read.
-    //
     while(!(HWREG(ui32Base + SSI_O_SR) & SSI_SR_RNE))
     {
     }
 
-    //
     // Read data from SSI.
-    //
     *pui32Data = HWREG(ui32Base + SSI_O_DR);
 }
 
 //*****************************************************************************
 //
-//! Gets a data element from the SSI receive FIFO
-//!
-//! \param ui32Base specifies the SSI module base address.
-//! \param pui32Data is a pointer to a storage location for data that was
-//! received over the SSI interface.
-//!
-//! This function gets received data from the receive FIFO of the specified SSI
-//! module and places that data into the location specified by the \e ui32Data
-//! parameter. If there is no data in the FIFO, then this function  returns a
-//! zero.
-//!
-//! \note Only the lower N bits of the value written to \e pui32Data contain
-//! valid data, where N is the data width as configured by \sa
-//! SSIConfigSetExpClk(). For example, if the interface is configured for
-//! 8-bit data width, only the lower 8 bits of the value written to \e pui32Data
-//! contain valid data.
-//!
-//! \return Returns the number of elements read from the SSI receive FIFO.
+// Gets a data element from the SSI receive FIFO
 //
 //*****************************************************************************
 int32_t
 SSIDataGetNonBlocking(uint32_t ui32Base, uint32_t *pui32Data)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Check for data to read.
-    //
     if(HWREG(ui32Base + SSI_O_SR) & SSI_SR_RNE)
     {
         *pui32Data = HWREG(ui32Base + SSI_O_DR);
@@ -254,22 +208,7 @@ SSIDataGetNonBlocking(uint32_t ui32Base, uint32_t *pui32Data)
 
 //*****************************************************************************
 //
-//! Registers an interrupt handler for the synchronous serial port
-//!
-//! \param ui32Base specifies the SSI module base address.
-//! \param pfnHandler is a pointer to the function to be called when the
-//! synchronous serial port interrupt occurs.
-//!
-//! This sets the handler to be called when an SSI interrupt
-//! occurs. This will enable the global interrupt in the interrupt controller;
-//! specific SSI interrupts must be enabled via SSIIntEnable(). If necessary,
-//! it is the interrupt handler's responsibility to clear the interrupt source
-//! via SSIIntClear().
-//!
-//! \sa IntRegister() for important information about registering interrupt
-//! handlers.
-//!
-//! \return None
+// Registers an interrupt handler for the synchronous serial port
 //
 //*****************************************************************************
 void
@@ -277,41 +216,22 @@ SSIIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
 {
     uint32_t ui32Int;
 
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Determine the interrupt number based on the SSI port.
-    //
     ui32Int = (ui32Base == SSI0_BASE) ? INT_SSI0_COMB : INT_SSI1_COMB;
 
-    //
     // Register the interrupt handler.
-    //
     IntRegister(ui32Int, pfnHandler);
 
-    //
     // Enable the synchronous serial port interrupt.
-    //
     IntEnable(ui32Int);
 }
 
 //*****************************************************************************
 //
-//! Unregisters an interrupt handler for the synchronous serial port
-//!
-//! \param ui32Base specifies the SSI module base address.
-//!
-//! This function will clear the handler to be called when a SSI
-//! interrupt occurs. This will also mask off the interrupt in the interrupt
-//! controller so that the interrupt handler no longer is called.
-//!
-//! \sa IntRegister() for important information about registering interrupt
-//! handlers.
-//!
-//! \return None
+// Unregisters an interrupt handler for the synchronous serial port
 //
 //*****************************************************************************
 void
@@ -319,23 +239,15 @@ SSIIntUnregister(uint32_t ui32Base)
 {
     uint32_t ui32Int;
 
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Determine the interrupt number based on the SSI port.
-    //
     ui32Int = (ui32Base == SSI0_BASE) ? INT_SSI0_COMB : INT_SSI1_COMB;
 
-    //
     // Disable the interrupt.
-    //
     IntDisable(ui32Int);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(ui32Int);
 }

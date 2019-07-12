@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_aon_ioc_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 
 // SCLK_LF External Output Control
 #define AON_IOC_O_CLK32KCTL                                         0x00000010
+
+// TCK IO Pin Control
+#define AON_IOC_O_TCKCTL                                            0x00000014
 
 //*****************************************************************************
 //
@@ -129,13 +132,27 @@
 //*****************************************************************************
 // Field:     [0] OE_N
 //
-// 0: Output enable active. SCLK_LF output on IO pin that has PORT_ID (e.g.
-// IOC:IOCFG0.PORT_ID) set to AON_CLK32K.
+// 0: Output enable active. SCLK_LF output on IO pin that has PORT_ID (for
+// example IOC:IOCFG0.PORT_ID) set to AON_CLK32K.
 // 1: Output enable not active
 #define AON_IOC_CLK32KCTL_OE_N                                      0x00000001
 #define AON_IOC_CLK32KCTL_OE_N_BITN                                          0
 #define AON_IOC_CLK32KCTL_OE_N_M                                    0x00000001
 #define AON_IOC_CLK32KCTL_OE_N_S                                             0
+
+//*****************************************************************************
+//
+// Register: AON_IOC_O_TCKCTL
+//
+//*****************************************************************************
+// Field:     [0] EN
+//
+// 0: Input driver for TCK disabled.
+// 1: Input driver for TCK enabled.
+#define AON_IOC_TCKCTL_EN                                           0x00000001
+#define AON_IOC_TCKCTL_EN_BITN                                               0
+#define AON_IOC_TCKCTL_EN_M                                         0x00000001
+#define AON_IOC_TCKCTL_EN_S                                                  0
 
 
 #endif // __AON_IOC__

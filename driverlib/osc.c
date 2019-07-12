@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       osc.c
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2019-02-14 09:35:31 +0100 (Thu, 14 Feb 2019)
+*  Revision:       54539
 *
 *  Description:    Driver for setting up the system Oscillators
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,12 +36,13 @@
 *
 ******************************************************************************/
 
-#include <inc/hw_types.h>
-#include <inc/hw_ccfg.h>
-#include <inc/hw_fcfg1.h>
-#include <driverlib/aon_batmon.h>
-#include <driverlib/aon_rtc.h>
-#include <driverlib/osc.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_ccfg.h"
+#include "../inc/hw_fcfg1.h"
+#include "aon_batmon.h"
+#include "aon_rtc.h"
+#include "osc.h"
+#include "setup_rom.h"
 
 //*****************************************************************************
 //
@@ -66,11 +67,31 @@
     #define OSCHF_DebugGetCrystalAmplitude  NOROM_OSCHF_DebugGetCrystalAmplitude
     #undef  OSCHF_DebugGetExpectedAverageCrystalAmplitude
     #define OSCHF_DebugGetExpectedAverageCrystalAmplitude NOROM_OSCHF_DebugGetExpectedAverageCrystalAmplitude
+    #undef  OSC_HPOSC_Debug_InitFreqOffsetParams
+    #define OSC_HPOSC_Debug_InitFreqOffsetParams NOROM_OSC_HPOSC_Debug_InitFreqOffsetParams
+    #undef  OSC_HPOSCInitializeFrequencyOffsetParameters
+    #define OSC_HPOSCInitializeFrequencyOffsetParameters NOROM_OSC_HPOSCInitializeFrequencyOffsetParameters
     #undef  OSC_HPOSCRelativeFrequencyOffsetGet
     #define OSC_HPOSCRelativeFrequencyOffsetGet NOROM_OSC_HPOSCRelativeFrequencyOffsetGet
+    #undef  OSC_AdjustXoscHfCapArray
+    #define OSC_AdjustXoscHfCapArray        NOROM_OSC_AdjustXoscHfCapArray
     #undef  OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert
     #define OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert NOROM_OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert
+    #undef  OSC_HPOSCRtcCompensate
+    #define OSC_HPOSCRtcCompensate          NOROM_OSC_HPOSCRtcCompensate
 #endif
+
+//*****************************************************************************
+//
+// Global HPOSC curve fitting polynomials
+// Parameters found/calculated when calling function
+// OSC_HPOSCInitializeFrequencyOffsetParameters()
+// (or OSC_HPOSC_Debug_InitFreqOffsetParams() used for debugging only)
+// These global variables must be updated before using HPOSC
+//
+//*****************************************************************************
+
+static   int16_t  _hpOscPolynomials[ 4 ];
 
 //*****************************************************************************
 //
@@ -91,7 +112,6 @@ typedef struct {
 
 static OscHfGlobals_t oscHfGlobals;
 
-
 //*****************************************************************************
 //
 //  Configure the oscillator input to the a source clock.
@@ -100,50 +120,28 @@ static OscHfGlobals_t oscHfGlobals;
 void
 OSCClockSourceSet(uint32_t ui32SrcClk, uint32_t ui32Osc)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32SrcClk & OSC_SRC_CLK_LF) ||
-           (ui32SrcClk & OSC_SRC_CLK_MF) ||
            (ui32SrcClk & OSC_SRC_CLK_HF));
     ASSERT((ui32Osc == OSC_RCOSC_HF) ||
            (ui32Osc == OSC_RCOSC_LF) ||
            (ui32Osc == OSC_XOSC_HF) ||
            (ui32Osc == OSC_XOSC_LF));
 
-    //
     // Request the high frequency source clock (using 24 MHz XTAL)
-    //
     if(ui32SrcClk & OSC_SRC_CLK_HF)
     {
-        //
         // Enable the HF XTAL as HF clock source
-        //
         DDI16BitfieldWrite(AUX_DDI0_OSC_BASE, DDI_0_OSC_O_CTL0,
                            DDI_0_OSC_CTL0_SCLK_HF_SRC_SEL_M,
                            DDI_0_OSC_CTL0_SCLK_HF_SRC_SEL_S,
                            ui32Osc);
     }
 
-    //
-    // Configure the medium frequency source clock
-    //
-    if(ui32SrcClk & OSC_SRC_CLK_MF)
-    {
-        DDI16BitfieldWrite(AUX_DDI0_OSC_BASE, DDI_0_OSC_O_CTL0,
-                           DDI_0_OSC_CTL0_SCLK_MF_SRC_SEL_M,
-                           DDI_0_OSC_CTL0_SCLK_MF_SRC_SEL_S,
-                           ui32Osc);
-    }
-
-    //
     // Configure the low frequency source clock.
-    //
     if(ui32SrcClk & OSC_SRC_CLK_LF)
     {
-        //
         // Change the clock source.
-        //
         DDI16BitfieldWrite(AUX_DDI0_OSC_BASE, DDI_0_OSC_O_CTL0,
                            DDI_0_OSC_CTL0_SCLK_LF_SRC_SEL_M,
                            DDI_0_OSC_CTL0_SCLK_LF_SRC_SEL_S,
@@ -161,15 +159,11 @@ OSCClockSourceGet(uint32_t ui32SrcClk)
 {
     uint32_t ui32ClockSource;
 
-    //
     // Check the arguments.
-    //
     ASSERT((ui32SrcClk & OSC_SRC_CLK_LF) ||
            (ui32SrcClk & OSC_SRC_CLK_HF));
 
-    //
     // Return the source for the selected clock.
-    //
     if(ui32SrcClk == OSC_SRC_CLK_LF)
     {
         ui32ClockSource = DDI16BitfieldRead(AUX_DDI0_OSC_BASE, DDI_0_OSC_O_STAT0,
@@ -242,7 +236,11 @@ OSCHF_GetStartupTime( uint32_t timeUntilWakeupInMs )
 void
 OSCHF_TurnOnXosc( void )
 {
-   OSCClockSourceSet( OSC_SRC_CLK_HF | OSC_SRC_CLK_MF, OSC_XOSC_HF );
+#if ( defined( ROM_OSCClockSourceSet ))
+   ROM_OSCClockSourceSet( OSC_SRC_CLK_HF, OSC_XOSC_HF );
+#else
+   OSCClockSourceSet( OSC_SRC_CLK_HF, OSC_XOSC_HF );
+#endif
    oscHfGlobals.timeXoscOn_CV  = AONRTCCurrentCompareValueGet();
 }
 
@@ -258,16 +256,19 @@ OSCHF_AttemptToSwitchToXosc( void )
    uint32_t startupTimeInUs;
    uint32_t prevLimmit25InUs;
 
-   if ( OSCClockSourceGet( OSC_SRC_CLK_HF ) == OSC_XOSC_HF ) {
+#if ( defined( ROM_OSCClockSourceGet ))
+   if ( ROM_OSCClockSourceGet( OSC_SRC_CLK_HF ) == OSC_XOSC_HF )
+#else
+   if ( OSCClockSourceGet( OSC_SRC_CLK_HF ) == OSC_XOSC_HF )
+#endif
+   {
       // Already on XOSC - nothing to do
       return ( 1 );
    }
    if ( OSCHfSourceReady()) {
       OSCHfSourceSwitch();
 
-      //
       // Store startup time, but limit to 25 percent reduction each time.
-      //
       oscHfGlobals.timeXoscStable_CV  = AONRTCCurrentCompareValueGet();
       startupTimeInUs   = RTC_CV_TO_US( oscHfGlobals.timeXoscStable_CV - oscHfGlobals.timeXoscOn_CV );
       prevLimmit25InUs  = oscHfGlobals.previousStartupTimeInUs;
@@ -290,21 +291,168 @@ OSCHF_AttemptToSwitchToXosc( void )
 void
 OSCHF_SwitchToRcOscTurnOffXosc( void )
 {
-   //
-   // Set SCLK_HF and SCLK_MF to RCOSC_HF without checking
-   // Doing this anyway to keep HF and MF in sync
-   //
-   OSCClockSourceSet( OSC_SRC_CLK_HF | OSC_SRC_CLK_MF, OSC_RCOSC_HF );
+#if ( defined( ROM_OSCClockSourceSet ))
+   ROM_OSCClockSourceSet( OSC_SRC_CLK_HF, OSC_RCOSC_HF );
+#else
+   OSCClockSourceSet( OSC_SRC_CLK_HF, OSC_RCOSC_HF );
+#endif
 
-   //
    // Do the switching if not already running on RCOSC_HF
-   //
-   if ( OSCClockSourceGet( OSC_SRC_CLK_HF ) != OSC_RCOSC_HF ) {
+#if ( defined( ROM_OSCClockSourceGet ))
+   if ( ROM_OSCClockSourceGet( OSC_SRC_CLK_HF ) != OSC_RCOSC_HF )
+#else
+   if ( OSCClockSourceGet( OSC_SRC_CLK_HF ) != OSC_RCOSC_HF )
+#endif
+   {
       OSCHfSourceSwitch();
    }
 
    oscHfGlobals.timeXoscOff_CV  = AONRTCCurrentCompareValueGet();
    oscHfGlobals.tempXoscOff     = AONBatMonTemperatureGetDegC();
+}
+
+//*****************************************************************************
+//
+// Adjust the XOSC HF cap array relative to the factory setting
+//
+//*****************************************************************************
+void
+OSC_AdjustXoscHfCapArray( int32_t capArrDelta )
+{
+   // read the MODE_CONF register in CCFG
+   uint32_t ccfg_ModeConfReg = HWREG( CCFG_BASE + CCFG_O_MODE_CONF );
+   // Clear CAP_MODE and the CAPARRAY_DELATA field
+   ccfg_ModeConfReg &= ~( CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA_M | CCFG_MODE_CONF_XOSC_CAP_MOD_M );
+   // Insert new delta value
+   ccfg_ModeConfReg |= ((((uint32_t)capArrDelta) << CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA_S ) & CCFG_MODE_CONF_XOSC_CAPARRAY_DELTA_M );
+   // Update the HW register with the new delta value
+   DDI32RegWrite(AUX_DDI0_OSC_BASE, DDI_0_OSC_O_ANABYPASSVAL1, SetupGetTrimForAnabypassValue1( ccfg_ModeConfReg ));
+}
+
+//*****************************************************************************
+//
+// Initialize the frequency offset curve fitting parameters
+// These are either picked diretly from FCFG1:FREQ_OFFSET & FCFG1:MISC_CONF_2 or
+// calculated based on the FCFG1:HPOSC_MEAS_x parameters.
+//
+//*****************************************************************************
+
+// Using the following hardcoded constants (Using temporary constants for now)
+#define  D1OFFSET_p25C    -24
+#define  D2OFFSET_p85C    -36
+#define  D3OFFSET_m40C     18
+#define  P3_POLYNOMIAL    -47
+#define  N_INSERTIONS       3
+
+typedef struct {
+   int32_t  dFreq    ;
+   int32_t  temp     ;
+} insertion_t ;
+
+static void
+InitializeMeasurmentSet( insertion_t * pInsertion, uint32_t registerAddress, int32_t deltaOffset, int32_t p3PolOffset )
+{
+   // Doing the following adjustment to the deltaFrequence before finding the polynomials P0, P1, P2
+   // Dx = Dx + DxOFFSET - ((P3*Tx^3)/2^18)
+   uint32_t insertionData  = HWREG( registerAddress );
+   pInsertion->dFreq = (((int32_t)( insertionData << ( 32 - FCFG1_HPOSC_MEAS_1_HPOSC_D1_W - FCFG1_HPOSC_MEAS_1_HPOSC_D1_S )))
+                                                  >> ( 32 - FCFG1_HPOSC_MEAS_1_HPOSC_D1_W ));
+   pInsertion->temp  = (((int32_t)( insertionData << ( 32 - FCFG1_HPOSC_MEAS_1_HPOSC_T1_W - FCFG1_HPOSC_MEAS_1_HPOSC_T1_S )))
+                                                  >> ( 32 - FCFG1_HPOSC_MEAS_1_HPOSC_T1_W ));
+   pInsertion->dFreq = pInsertion->dFreq + deltaOffset - (( p3PolOffset * pInsertion->temp * pInsertion->temp * pInsertion->temp ) >> 18 );
+}
+
+static void
+FindPolynomialsAndUpdateGlobals( insertion_t * pMeasurment )
+{
+   uint32_t loopCount      ;
+   int32_t  polynomial_0   ;
+   int32_t  polynomial_1   ;
+   int32_t  polynomial_2   ;
+
+   int32_t  Syi_     = 0   ;
+   int32_t  Sxi_     = 0   ;
+   int32_t  Sxi2_    = 0   ;
+   int32_t  Sxiyi_   = 0   ;
+   int32_t  Sxi2yi_  = 0   ;
+   int32_t  Sxi3_    = 0   ;
+   int32_t  Sxi4_    = 0   ;
+
+   for ( loopCount = 0 ; loopCount < N_INSERTIONS ; loopCount++ ) {
+      int32_t  x     ;
+      int32_t  x2    ;
+      int32_t  y     ;
+
+      x  = pMeasurment[ loopCount ].temp   ;
+      x2 = ( x * x );
+      y  = pMeasurment[ loopCount ].dFreq  ;
+
+      Syi_     += ( y         );
+      Sxi_     += ( x         );
+      Sxi2_    += ( x2        );
+      Sxiyi_   += ( x  * y    );
+      Sxi2yi_  += ( x2 * y    );
+      Sxi3_    += ( x2 * x    );
+      Sxi4_    += ( x2 * x2   );
+   }
+
+   int32_t  Sxx_     = ( Sxi2_   * N_INSERTIONS ) - ( Sxi_  * Sxi_  );
+   int32_t  Sxy_     = ( Sxiyi_  * N_INSERTIONS ) - ( Sxi_  * Syi_  );
+   int32_t  Sxx2_    = ( Sxi3_   * N_INSERTIONS ) - ( Sxi_  * Sxi2_ );
+   int32_t  Sx2y_    = ( Sxi2yi_ * N_INSERTIONS ) - ( Sxi2_ * Syi_  );
+   int32_t  Sx2x2_   = ( Sxi4_   * N_INSERTIONS ) - ( Sxi2_ * Sxi2_ );
+
+   int32_t  divisor = ((((int64_t) Sxx_ * Sx2x2_ ) - ((int64_t) Sxx2_ * Sxx2_ )) + (1<<9)) >> 10 ;
+   if ( divisor == 0 ) {
+      polynomial_2 = 0 ;
+      polynomial_1 = 0 ;
+   } else {
+      polynomial_2 = (((int64_t) Sx2y_ * Sxx_   ) - ((int64_t) Sxy_  * Sxx2_ )) / divisor ;
+      polynomial_1 = (((int64_t) Sxy_  * Sx2x2_ ) - ((int64_t) Sx2y_ * Sxx2_ )) / divisor ;
+   }
+   polynomial_0 = ( Syi_ - (((( polynomial_1 * Sxi_ ) + ( polynomial_2 * Sxi2_ )) + (1<<9)) >> 10 )) / N_INSERTIONS ;
+   polynomial_1 = ( polynomial_1 + (1<<6)) >> 7 ;
+
+   _hpOscPolynomials[ 0 ] = polynomial_0  ;
+   _hpOscPolynomials[ 1 ] = polynomial_1  ;
+   _hpOscPolynomials[ 2 ] = polynomial_2  ;
+   _hpOscPolynomials[ 3 ] = P3_POLYNOMIAL ;
+}
+
+//*****************************************************************************
+// Degub function to calculate the HPOSC polynomials for experimental data sets.
+//*****************************************************************************
+void
+OSC_HPOSC_Debug_InitFreqOffsetParams( HposcDebugData_t * pDebugData )
+{
+   // Calculate the curve fitting parameters from temp insertion measurements
+   // But first adjust the measurements with constants found in characterization
+   insertion_t  pMeasurment[ 3 ];
+
+   InitializeMeasurmentSet( &pMeasurment[ 0 ], (uint32_t)&pDebugData->meas_1, pDebugData->offsetD1, pDebugData->polyP3 );
+   InitializeMeasurmentSet( &pMeasurment[ 1 ], (uint32_t)&pDebugData->meas_2, pDebugData->offsetD2, pDebugData->polyP3 );
+   InitializeMeasurmentSet( &pMeasurment[ 2 ], (uint32_t)&pDebugData->meas_3, pDebugData->offsetD3, pDebugData->polyP3 );
+
+   FindPolynomialsAndUpdateGlobals( pMeasurment );
+}
+
+//*****************************************************************************
+// The general HPOSC initialization function - Must always be called before using HPOSC
+//*****************************************************************************
+void
+OSC_HPOSCInitializeFrequencyOffsetParameters( void )
+{
+   {
+      // Calculate the curve fitting parameters from temp insertion measurements
+      // But first adjust the measurements with constants found in characterization
+      insertion_t  pMeasurment[ 3 ];
+
+      InitializeMeasurmentSet( &pMeasurment[ 0 ], FCFG1_BASE + FCFG1_O_HPOSC_MEAS_1, D1OFFSET_p25C, P3_POLYNOMIAL );
+      InitializeMeasurmentSet( &pMeasurment[ 1 ], FCFG1_BASE + FCFG1_O_HPOSC_MEAS_2, D2OFFSET_p85C, P3_POLYNOMIAL );
+      InitializeMeasurmentSet( &pMeasurment[ 2 ], FCFG1_BASE + FCFG1_O_HPOSC_MEAS_3, D3OFFSET_m40C, P3_POLYNOMIAL );
+
+      FindPolynomialsAndUpdateGlobals( pMeasurment );
+   }
 }
 
 //*****************************************************************************
@@ -316,17 +464,11 @@ int32_t
 OSC_HPOSCRelativeFrequencyOffsetGet( int32_t tempDegC )
 {
    // Estimate HPOSC frequency, using temperature and curve fitting parameters
-   uint32_t fitParams = HWREG(FCFG1_BASE + FCFG1_O_FREQ_OFFSET);
-   // Extract the P0,P1,P2 params, and sign extend them via shifting up/down
-   int32_t paramP0 = ((((int32_t) fitParams) << (32 - FCFG1_FREQ_OFFSET_HPOSC_COMP_P0_W - FCFG1_FREQ_OFFSET_HPOSC_COMP_P0_S))
-                                             >> (32 - FCFG1_FREQ_OFFSET_HPOSC_COMP_P0_W));
-   int32_t paramP1 = ((((int32_t) fitParams) << (32 - FCFG1_FREQ_OFFSET_HPOSC_COMP_P1_W - FCFG1_FREQ_OFFSET_HPOSC_COMP_P1_S))
-                                             >> (32 - FCFG1_FREQ_OFFSET_HPOSC_COMP_P1_W));
-   int32_t paramP2 = ((((int32_t) fitParams) << (32 - FCFG1_FREQ_OFFSET_HPOSC_COMP_P2_W - FCFG1_FREQ_OFFSET_HPOSC_COMP_P2_S))
-                                             >> (32 - FCFG1_FREQ_OFFSET_HPOSC_COMP_P2_W));
-   int32_t paramP3 = ((((int32_t) HWREG(FCFG1_BASE + FCFG1_O_MISC_CONF_2))
-                                             << (32 - FCFG1_MISC_CONF_2_HPOSC_COMP_P3_W - FCFG1_MISC_CONF_2_HPOSC_COMP_P3_S))
-                                             >> (32 - FCFG1_MISC_CONF_2_HPOSC_COMP_P3_W));
+
+   int32_t paramP0 = _hpOscPolynomials[ 0 ];
+   int32_t paramP1 = _hpOscPolynomials[ 1 ];
+   int32_t paramP2 = _hpOscPolynomials[ 2 ];
+   int32_t paramP3 = _hpOscPolynomials[ 3 ];
 
    // Now we can find the HPOSC freq offset, given as a signed variable d, expressed by:
    //
@@ -393,6 +535,41 @@ OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert( int32_t HPOSC_RelFreqOffs
 
 //*****************************************************************************
 //
+// Compensate the RTC increment based on the relative frequency offset of HPOSC
+//
+//*****************************************************************************
+void
+OSC_HPOSCRtcCompensate( int32_t relFreqOffset )
+{
+    uint32_t rtcSubSecInc;
+    uint32_t lfClkFrequency;
+    uint32_t hfFreq;
+    int64_t  calcFactor;
+
+    // Calculate SCLK_HF frequency, defined as:
+    // hfFreq = 48000000 * (1 + relFreqOffset/(2^22))
+    if( relFreqOffset >= 0 )
+    {
+        calcFactor = ( ( 48000000 * (int64_t)relFreqOffset ) + 0x200000 ) / 0x400000;
+    }
+    else
+    {
+        calcFactor = ( ( 48000000 * (int64_t)relFreqOffset ) - 0x200000 ) / 0x400000;
+    }
+    hfFreq = 48000000 + calcFactor;
+
+    // Calculate SCLK_LF frequency, defined as SCLK_LF_FREQ = SCLK_HF_FREQ / 1536
+    lfClkFrequency = ( hfFreq + 768 ) / 1536;
+
+    // Calculate SUBSECINC, defined as: SUBSECINC = 2^38 / SCLK_LF_FREQ
+    rtcSubSecInc = 0x4000000000 / lfClkFrequency;
+
+    /* Update SUBSECINC value */
+    SetupSetAonRtcSubSecInc(rtcSubSecInc);
+}
+
+//*****************************************************************************
+//
 // Get crystal amplitude (assuming crystal is running).
 //
 //*****************************************************************************
@@ -404,7 +581,6 @@ OSCHF_DebugGetCrystalAmplitude( void )
    uint32_t deltaTime      ;
    uint32_t ampValue       ;
 
-   //
    // The specified method is as follows:
    // 1. Set minimum interval between oscillator amplitude calibrations.
    //    (Done by setting PER_M=0 and PER_E=1)
@@ -413,9 +589,8 @@ OSCHF_DebugGetCrystalAmplitude( void )
    // 3. Read out the crystal amplitude value from the peek detector.
    // 4. Restore original oscillator amplitude calibrations interval.
    // 5. Return crystal amplitude value converted to millivolt.
-   //
-   oscCfgRegCopy = HWREG( AON_WUC_BASE + AON_WUC_O_OSCCFG );
-   HWREG( AON_WUC_BASE + AON_WUC_O_OSCCFG ) = ( 1 << AON_WUC_OSCCFG_PER_E_S );
+   oscCfgRegCopy = HWREG( AON_PMCTL_BASE + AON_PMCTL_O_OSCCFG );
+   HWREG( AON_PMCTL_BASE + AON_PMCTL_O_OSCCFG ) = ( 1 << AON_PMCTL_OSCCFG_PER_E_S );
    startTime = AONRTCCurrentCompareValueGet();
    do {
       deltaTime = AONRTCCurrentCompareValueGet() - startTime;
@@ -423,7 +598,7 @@ OSCHF_DebugGetCrystalAmplitude( void )
    ampValue = ( HWREG( AUX_DDI0_OSC_BASE + DDI_0_OSC_O_STAT1 ) &
       DDI_0_OSC_STAT1_HPM_UPDATE_AMP_M ) >>
       DDI_0_OSC_STAT1_HPM_UPDATE_AMP_S ;
-   HWREG( AON_WUC_BASE + AON_WUC_O_OSCCFG ) = oscCfgRegCopy;
+   HWREG( AON_PMCTL_BASE + AON_PMCTL_O_OSCCFG ) = oscCfgRegCopy;
 
    return ( ampValue * 15 );
 }

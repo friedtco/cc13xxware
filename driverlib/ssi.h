@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       ssi.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-05-23 12:08:52 +0200 (Tue, 23 May 2017)
+*  Revision:       49048
 *
 *  Description:    Defines and macros for the SSI.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,12 +61,12 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_ints.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_types.h>
-#include <inc/hw_ssi.h>
-#include <driverlib/debug.h>
-#include <driverlib/interrupt.h>
+#include "../inc/hw_ints.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_types.h"
+#include "../inc/hw_ssi.h"
+#include "debug.h"
+#include "interrupt.h"
 
 //*****************************************************************************
 //
@@ -241,14 +241,10 @@ extern void SSIConfigSetExpClk(uint32_t ui32Base, uint32_t ui32SSIClk,
 __STATIC_INLINE void
 SSIEnable(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Read-modify-write the enable bit.
-    //
     HWREG(ui32Base + SSI_O_CR1) |= SSI_CR1_SSE;
 }
 
@@ -266,14 +262,10 @@ SSIEnable(uint32_t ui32Base)
 __STATIC_INLINE void
 SSIDisable(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Read-modify-write the enable bit.
-    //
     HWREG(ui32Base + SSI_O_CR1) &= ~(SSI_CR1_SSE);
 }
 
@@ -384,14 +376,10 @@ extern int32_t SSIDataGetNonBlocking(uint32_t ui32Base, uint32_t *pui32Data);
 __STATIC_INLINE bool
 SSIBusy(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Determine if the SSI is busy.
-    //
     return((HWREG(ui32Base + SSI_O_SR) & SSI_SR_BSY) ? true : false);
 }
 
@@ -415,24 +403,23 @@ SSIBusy(uint32_t ui32Base)
 __STATIC_INLINE uint32_t
 SSIStatus(uint32_t ui32Base)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Return the status
-    //
     return (HWREG(ui32Base + SSI_O_SR) & SSI_STATUS_MASK);
 }
 
 //*****************************************************************************
 //
-//! \brief Registers an interrupt handler for the synchronous serial port.
+//! \brief Registers an interrupt handler for the Synchronous Serial Interface in the dynamic interrupt table.
 //!
-//! This sets the handler to be called when an SSI interrupt
-//! occurs. This will enable the global interrupt in the interrupt controller;
-//! specific SSI interrupts must be enabled via \ref SSIIntEnable(). If necessary,
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
+//!
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
+//!
+//! Specific SSI interrupts must be enabled via \ref SSIIntEnable(). If necessary,
 //! it is the interrupt handler's responsibility to clear the interrupt source
 //! via \ref SSIIntClear().
 //!
@@ -450,7 +437,7 @@ extern void SSIIntRegister(uint32_t ui32Base, void (*pfnHandler)(void));
 
 //*****************************************************************************
 //
-//! \brief Unregisters an interrupt handler for the synchronous serial port.
+//! \brief Unregisters an interrupt handler for the Synchronous Serial Interface in the dynamic interrupt table.
 //!
 //! This function will clear the handler to be called when a SSI
 //! interrupt occurs. This will also mask off the interrupt in the interrupt
@@ -487,14 +474,10 @@ extern void SSIIntUnregister(uint32_t ui32Base);
 __STATIC_INLINE void
 SSIIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Enable the specified interrupts.
-    //
     HWREG(ui32Base + SSI_O_IMSC) |= ui32IntFlags;
 }
 
@@ -517,14 +500,10 @@ SSIIntEnable(uint32_t ui32Base, uint32_t ui32IntFlags)
 __STATIC_INLINE void
 SSIIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Disable the specified interrupts.
-    //
     HWREG(ui32Base + SSI_O_IMSC) &= ~(ui32IntFlags);
 }
 
@@ -563,14 +542,10 @@ SSIIntDisable(uint32_t ui32Base, uint32_t ui32IntFlags)
 __STATIC_INLINE void
 SSIIntClear(uint32_t ui32Base, uint32_t ui32IntFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Clear the requested interrupt sources.
-    //
     HWREG(ui32Base + SSI_O_ICR) = ui32IntFlags;
 }
 
@@ -597,15 +572,11 @@ SSIIntClear(uint32_t ui32Base, uint32_t ui32IntFlags)
 __STATIC_INLINE uint32_t
 SSIIntStatus(uint32_t ui32Base, bool bMasked)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Return either the interrupt status or the raw interrupt status as
     // requested.
-    //
     if(bMasked)
     {
         return(HWREG(ui32Base + SSI_O_MIS));
@@ -638,14 +609,10 @@ SSIIntStatus(uint32_t ui32Base, bool bMasked)
 __STATIC_INLINE void
 SSIDMAEnable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Set the requested bits in the SSI DMA control register.
-    //
     HWREG(ui32Base + SSI_O_DMACR) |= ui32DMAFlags;
 }
 
@@ -668,14 +635,10 @@ SSIDMAEnable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 __STATIC_INLINE void
 SSIDMADisable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(SSIBaseValid(ui32Base));
 
-    //
     // Clear the requested bits in the SSI DMA control register.
-    //
     HWREG(ui32Base + SSI_O_DMACR) &= ~ui32DMAFlags;
 }
 
@@ -686,7 +649,7 @@ SSIDMADisable(uint32_t ui32Base, uint32_t ui32DMAFlags)
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_SSIConfigSetExpClk
         #undef  SSIConfigSetExpClk
         #define SSIConfigSetExpClk              ROM_SSIConfigSetExpClk

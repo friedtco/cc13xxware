@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       rf_data_entry.h
-*  Revised:        $ $
-*  Revision:       $ $
+*  Revised:        2018-01-15 06:15:14 +0100 (Mon, 15 Jan 2018)
+*  Revision:       18170
 *
 *  Description:    Definition of API for data exchange
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -40,10 +40,16 @@
 #define __DATA_ENTRY_H
 
 #ifndef __RFC_STRUCT
-#ifdef __GNUC__
-#define __RFC_STRUCT __attribute__ ((aligned (4)))
-#else
 #define __RFC_STRUCT
+#endif
+
+#ifndef __RFC_STRUCT_ATTR
+#if defined(__GNUC__)
+#define __RFC_STRUCT_ATTR __attribute__ ((aligned (4)))
+#elif defined(__TI_ARM__)
+#define __RFC_STRUCT_ATTR __attribute__ ((__packed__,aligned (4)))
+#else
+#define __RFC_STRUCT_ATTR
 #endif
 #endif
 
@@ -54,7 +60,7 @@
 //! @{
 
 #include <stdint.h>
-#include <driverlib/rf_mailbox.h>
+#include "rf_mailbox.h"
 
 typedef struct __RFC_STRUCT rfc_dataEntry_s rfc_dataEntry_t;
 typedef struct __RFC_STRUCT rfc_dataEntryGeneral_s rfc_dataEntryGeneral_t;
@@ -83,7 +89,7 @@ struct __RFC_STRUCT rfc_dataEntry_s {
    } config;
    uint16_t length;                     //!< \brief For pointer entries: Number of bytes in the data buffer pointed to<br>
                                         //!<        For other entries: Number of bytes following this length field
-};
+} __RFC_STRUCT_ATTR;
 
 //! @}
 
@@ -111,7 +117,7 @@ struct __RFC_STRUCT rfc_dataEntryGeneral_s {
    uint16_t length;                     //!< \brief For pointer entries: Number of bytes in the data buffer pointed to<br>
                                         //!<        For other entries: Number of bytes following this length field
    uint8_t data;                        //!<        First byte of the data array to be received or transmitted
-};
+} __RFC_STRUCT_ATTR;
 
 //! @}
 
@@ -141,7 +147,7 @@ struct __RFC_STRUCT rfc_dataEntryMulti_s {
    uint16_t numElements;                //!<        Number of entry elements committed in the entry
    uint16_t nextIndex;                  //!<        Index to the byte after the last byte of the last entry element committed by the radio CPU
    uint8_t rxData;                      //!<        First byte of the data array of received data entry elements
-};
+} __RFC_STRUCT_ATTR;
 
 //! @}
 
@@ -169,7 +175,7 @@ struct __RFC_STRUCT rfc_dataEntryPointer_s {
    uint16_t length;                     //!< \brief For pointer entries: Number of bytes in the data buffer pointed to<br>
                                         //!<        For other entries: Number of bytes following this length field
    uint8_t* pData;                      //!<        Pointer to data buffer of data to be received ro transmitted
-};
+} __RFC_STRUCT_ATTR;
 
 //! @}
 
@@ -204,7 +210,7 @@ struct __RFC_STRUCT rfc_dataEntryPartial_s {
    } pktStatus;
    uint16_t nextIndex;                  //!<        Index to the byte after the last byte of the last entry element committed by the radio CPU
    uint8_t rxData;                      //!<        First byte of the data array of received data entry elements
-};
+} __RFC_STRUCT_ATTR;
 
 //! @}
 

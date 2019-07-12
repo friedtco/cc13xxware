@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_flash_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -376,6 +376,9 @@
 // Internal
 #define FLASH_O_FSM_BSLP1                                           0x000022F4
 
+// FMC FSM Enable 128-bit Wide Programming
+#define FLASH_O_FSM_PGM128                                          0x000022F8
+
 // Internal
 #define FLASH_O_FCFG_BANK                                           0x00002400
 
@@ -437,15 +440,15 @@
 #define FLASH_STAT_EFUSE_TIMEOUT_M                                  0x00004000
 #define FLASH_STAT_EFUSE_TIMEOUT_S                                          14
 
-// Field:    [13] EFUSE_CRC_ERROR
+// Field:    [13] SPRS_BYTE_NOT_OK
 //
-// Efuse scanning resulted in scan chain CRC error.
-// 0 : No CRC error
-// 1 : CRC Error
-#define FLASH_STAT_EFUSE_CRC_ERROR                                  0x00002000
-#define FLASH_STAT_EFUSE_CRC_ERROR_BITN                                     13
-#define FLASH_STAT_EFUSE_CRC_ERROR_M                                0x00002000
-#define FLASH_STAT_EFUSE_CRC_ERROR_S                                        13
+// Efuse scanning resulted in scan chain Sparse byte error.
+// 0 : No Sparse error
+// 1 : Sparse Error
+#define FLASH_STAT_SPRS_BYTE_NOT_OK                                 0x00002000
+#define FLASH_STAT_SPRS_BYTE_NOT_OK_BITN                                    13
+#define FLASH_STAT_SPRS_BYTE_NOT_OK_M                               0x00002000
+#define FLASH_STAT_SPRS_BYTE_NOT_OK_S                                       13
 
 // Field:  [12:8] EFUSE_ERRCODE
 //
@@ -552,11 +555,11 @@
 // Register: FLASH_O_SYSCODE_START
 //
 //*****************************************************************************
-// Field:   [4:0] SYSCODE_START
+// Field:   [5:0] SYSCODE_START
 //
 // Internal. Only to be used through TI provided API.
-#define FLASH_SYSCODE_START_SYSCODE_START_W                                  5
-#define FLASH_SYSCODE_START_SYSCODE_START_M                         0x0000001F
+#define FLASH_SYSCODE_START_SYSCODE_START_W                                  6
+#define FLASH_SYSCODE_START_SYSCODE_START_M                         0x0000003F
 #define FLASH_SYSCODE_START_SYSCODE_START_S                                  0
 
 //*****************************************************************************
@@ -3062,6 +3065,26 @@
 #define FLASH_FSM_BSLP1_FSM_BSL1_W                                          32
 #define FLASH_FSM_BSLP1_FSM_BSL1_M                                  0xFFFFFFFF
 #define FLASH_FSM_BSLP1_FSM_BSL1_S                                           0
+
+//*****************************************************************************
+//
+// Register: FLASH_O_FSM_PGM128
+//
+//*****************************************************************************
+// Field:     [0] EN_PGM128
+//
+// 1: Enables 128-bit wide programming.  This mode requires programming supply
+// voltage to be greater than 2.5v at the Flash Pump.  The primary use case for
+// this mode is manufacturing test for test time reduction.
+//
+// 0: 64-bit wide programming.  Valid at any programming voltage.  A 128-bit
+// word is divided into two 64-bit words for programming. [default]
+//
+// This register is write protected with the FSM_WR_ENA register.
+#define FLASH_FSM_PGM128_EN_PGM128                                  0x00000001
+#define FLASH_FSM_PGM128_EN_PGM128_BITN                                      0
+#define FLASH_FSM_PGM128_EN_PGM128_M                                0x00000001
+#define FLASH_FSM_PGM128_EN_PGM128_S                                         0
 
 //*****************************************************************************
 //

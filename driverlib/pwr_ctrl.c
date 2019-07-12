@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       pwr_ctrl.c
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2017-06-05 12:13:49 +0200 (Mon, 05 Jun 2017)
+*  Revision:       49096
 *
 *  Description:    Power Control driver.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 *
 ******************************************************************************/
 
-#include <driverlib/pwr_ctrl.h>
+#include "pwr_ctrl.h"
 
 //*****************************************************************************
 //
@@ -52,30 +52,26 @@
 
 //*****************************************************************************
 //
-//! Set (Request) the main power source
+// Set (Request) the main power source
 //
 //*****************************************************************************
 void
 PowerCtrlSourceSet(uint32_t ui32PowerConfig)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32PowerConfig == PWRCTRL_PWRSRC_DCDC) ||
            (ui32PowerConfig == PWRCTRL_PWRSRC_GLDO) ||
            (ui32PowerConfig == PWRCTRL_PWRSRC_ULDO));
 
-    //
     // Configure the power.
-    //
     if(ui32PowerConfig == PWRCTRL_PWRSRC_DCDC) {
-        HWREG(AON_SYSCTL_BASE + AON_SYSCTL_O_PWRCTL) |=
-            (AON_SYSCTL_PWRCTL_DCDC_EN | AON_SYSCTL_PWRCTL_DCDC_ACTIVE);
+        HWREG(AON_PMCTL_BASE + AON_PMCTL_O_PWRCTL) |=
+            (AON_PMCTL_PWRCTL_DCDC_EN | AON_PMCTL_PWRCTL_DCDC_ACTIVE);
     }
     else if (ui32PowerConfig == PWRCTRL_PWRSRC_GLDO)
     {
-        HWREG(AON_SYSCTL_BASE + AON_SYSCTL_O_PWRCTL) &=
-            ~(AON_SYSCTL_PWRCTL_DCDC_EN | AON_SYSCTL_PWRCTL_DCDC_ACTIVE);
+        HWREG(AON_PMCTL_BASE + AON_PMCTL_O_PWRCTL) &=
+            ~(AON_PMCTL_PWRCTL_DCDC_EN | AON_PMCTL_PWRCTL_DCDC_ACTIVE);
     }
     else
     {

@@ -1,12 +1,12 @@
 /******************************************************************************
 *  Filename:       rom_crypto.h
-*  Revised:        2015-07-16 12:12:04 +0200 (Thu, 16 Jul 2015)
-*  Revision:       44151
+*  Revised:        2018-09-17 09:24:56 +0200 (Mon, 17 Sep 2018)
+*  Revision:       52624
 *
-*  Description:    This header file is the API to the AES, ECC and SHA256
-*                  functions built into ROM on the CC26xx.
+*  Description:    This header file is the API to the crypto functions
+*                  built into ROM on the CC13xx/CC26xx.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -53,119 +53,6 @@
 extern "C"
 {
 #endif
-
-///////////////////////////////////* AES-128 *//////////////////////////////////
-
-//*****************************************************************************
-/*!
- * \brief Use a random 128 bit key to encrypt data with the AES.
- *
- * \param text    Pointer to data to encrypt.
- * \param textLen Length of text.
- * \param aesKey  Pointer to 128 bit key used to encrypt text.
- *
- * \return None
- */
-//*****************************************************************************
-extern void AES_ECB_EncryptData(uint8_t *text, uint16_t textLen, uint8_t *aesKey);
-
-//*****************************************************************************
-/*!
- * \brief Use a random 128 bit key to decrypt data with the AES.
- *
- * \param text    Pointer to data to decrypt.
- * \param textLen Length of text.
- * \param aesKey  Pointer to 128 bit key used to decrypt. This is the same key
- *                that was used to originally encrypt this data.
- *
- * \return None
- */
-//*****************************************************************************
-extern void AES_ECB_DecryptData(uint8_t *text, uint16_t textLen, uint8_t *aesKey);
-
-//*****************************************************************************
-/*!
- * \brief Authenticate and optionally encrypt message plainText.
- *
- * \param encryptFlag  Encryption flag.
- * - set to \c true for authentication with encryption.
- * - set to \c false for authentication only.
- * \param MACLen       Length of MAC in bytes.
- * \param nonce        Pointer to random nonce. Nonce length = 15 - ccmLVal.
- * \param plainText    Pointer to text to encrypt, input and output.
- * \param textLen      Length of text to encrypt.
- * \param addDataBuf   Pointer to additional data for authentication
- * \param addBufLen    Additional authentication buffer length.
- * \param aesKey       Pointer to the AES key or key expansion buffer.
- * \param MAC          Pointer to 16 byte Message Authentication Code output buffer.
- * \param ccmLVal      CCM L value to be used. Values {2,3}.
- *
- * \return Zero when successful.
- */
-//*****************************************************************************
-extern int8_t AES_CCM_EncryptData(uint8_t encryptFlag, uint8_t MACLen, uint8_t *nonce,
-                                  uint8_t *plainText, uint16_t textLen,
-                                  uint8_t *addDataBuf, uint16_t addBufLen,
-                                  uint8_t *aesKey, uint8_t *MAC, uint8_t ccmLVal);
-
-//*****************************************************************************
-/*!
- * \brief Authenticate and optionally decrypt message cipherText.
- *
- * \param decryptFlag Decryption flag.
- * - \c true for authentication with decryption.
- * - \c false for authentication only.
- * \param MACLen      Length of MAC in bytes.
- * \param nonce       Pointer to random nonce. Nonce length = 15 - ccmLVal.
- * \param cipherText  Pointer to text to decrypt, input and output.
- * \param textLen     Length of text to decrypt.
- * \param addDataBuf  Pointer to additional data for authentication
- * \param addBufLen   Additional authentication buffer length.
- * \param aesKey      Pointer to the AES key or key expansion buffer.
- * \param MAC         Pointer to 16 byte Message Authentication Code output buffer.
- * \param ccmLVal     CCM L value to be used. Values {2,3}.
- *
- * \return Zero when Successful.
- */
-//*****************************************************************************
-extern int8_t AES_CCM_DecryptData(uint8_t decryptFlag, uint8_t MACLen, uint8_t *nonce,
-                                  uint8_t *cipherText, uint16_t textLen,
-                                  uint8_t *addDataBuf, uint16_t addBufLen,
-                                  uint8_t *aesKey, uint8_t *MAC, uint8_t ccmLVal);
-
-//*****************************************************************************
-/*!
- * \brief Encrypt plaintext using the AES key, nonce and initialization vector.
- *
- * \param plainText  Pointer to text to encrypt.
- * \param textLen    Length of text.
- * \param aesKey     Pointer to 128 bit key used to encrypt text.
- * \param nonce      Pointer to 4 byte nonce.
- * \param initVector Pointer to 8 byte random initialization vector.
- *
- * \return None
- */
-//*****************************************************************************
-extern uint8_t AES_CTR_EncryptData(uint8_t *plainText, uint16_t textLen,
-                                   uint8_t *aesKey, uint8_t *nonce,
-                                   uint8_t *initVector);
-
-//*****************************************************************************
-/*!
- * \brief Decrypt ciphertext using the AES key, nonce and initialization vector.
- *
- * \param cipherText Pointer to text to decrypt
- * \param textLen    Length of text.
- * \param aesKey     Pointer to 128 bit key used to encrypt text.
- * \param nonce      Pointer to 4 byte nonce.
- * \param initVector Pointer to 8 byte random initialization vector.
- *
- * \return None
- */
-//*****************************************************************************
-extern uint8_t AES_CTR_DecryptData(uint8_t *cipherText, uint16_t textLen,
-                                   uint8_t *aesKey, uint8_t *nonce,
-                                   uint8_t *initVector);
 
 ////////////////////////////////////* ECC */////////////////////////////////////
 
@@ -309,78 +196,6 @@ extern uint8_t ECC_ECDH_computeSharedSecret(uint32_t *privateKey,
                                             uint32_t *sharedSecret_x,
                                             uint32_t *sharedSecret_y);
 
-
-///////////////////////////////////* SHA-256 *//////////////////////////////////
-
-//! \brief A SHA256_memory_t variable of this type must be allocated before running any
-//!        SHA256 functions.
-typedef struct
-{
-  uint32_t state[8];
-  uint32_t textLen[2];
-  uint32_t W[16];
-} SHA256_memory_t;
-
-//*****************************************************************************
-/*!
- * \brief Perform SHA256 on the the input data.
- *
- * The input and output buffer can point to the same memory.
- * This is the equivalent of calling \ref SHA256_initialize(),
- * \ref SHA256_execute() and \ref SHA256_output() sequentially.
- *
- * \param memory  Pointer to memory for operations, input.
- * \param pBufIn  Pointer to input buffer, input.
- * \param bufLen  Length of input.
- * \param pBufOut Pointer to output buffer, output.
- *
- * \return Status
- */
-//*****************************************************************************
-extern uint8_t SHA256_runFullAlgorithm(SHA256_memory_t *memory, uint8_t *pBufIn,
-                                       uint32_t bufLen, uint8_t *pBufOut);
-
-//*****************************************************************************
-/*!
- * \brief Intializes the SHA256 engine.
- *
- * This function must be called once before all other SHA256 functions other than
- * \ref SHA256_runFullAlgorithm().
- *
- * \param workZone Pointer to memory for operations, input.
- *
- * \return Status
- */
-//*****************************************************************************
-extern uint8_t SHA256_initialize(SHA256_memory_t *workZone);
-
-//*****************************************************************************
-/*!
- * \brief Perform SHA256.
- *
- * Must call \ref SHA256_output() to receive output from this operation.
- *
- * \param config Pointer to memory for operations, input.
- * \param pBufIn Pointer to input text, input.
- * \param bufLen Length of input, input.
- *
- * \return Status
- */
-//*****************************************************************************
-extern uint8_t SHA256_execute(SHA256_memory_t *config, uint8_t *pBufIn,
-                              uint32_t bufLen);
-
-//*****************************************************************************
-/*!
- * \brief Complete the process by passing the modified data back.
- *
- * \param memory  Pointer to memory for operations, input.
- * \param pBufOut Pointer to output buffer, output. Buffer must be at least 32 bytes long.
- *
- * \return Status
- */
-//*****************************************************************************
-extern uint8_t SHA256_output(SHA256_memory_t *memory, uint8_t *pBufOut);
 
 #ifdef __cplusplus
 }

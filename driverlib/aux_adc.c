@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       aux_adc.c
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2017-11-20 14:31:35 +0100 (Mon, 20 Nov 2017)
+*  Revision:       50315
 *
 *  Description:    Driver for the AUX Time to Digital Converter interface.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,12 +36,12 @@
 *
 ******************************************************************************/
 
-#include <driverlib/aux_adc.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_aux_wuc.h>
-#include <inc/hw_fcfg1.h>
-#include <driverlib/adi.h>
-#include <driverlib/event.h>
+#include "aux_adc.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_aux_sysif.h"
+#include "../inc/hw_fcfg1.h"
+#include "adi.h"
+#include "event.h"
 
 //*****************************************************************************
 //
@@ -80,7 +80,7 @@
 
 //*****************************************************************************
 //
-//! \brief Disables the ADC
+// Disables the ADC
 //
 //*****************************************************************************
 void
@@ -95,8 +95,12 @@ AUXADCDisable(void)
     // Ensure that scaling is enabled by default before next use of the ADC
     ADI8BitsClear(AUX_ADI4_BASE, ADI_4_AUX_O_ADC1, ADI_4_AUX_ADC1_SCALE_DIS_M);
 
+    // Flush the FIFO before disabling the clocks
+    HWREGBITW(AUX_ANAIF_BASE + AUX_ANAIF_O_ADCCTL, 1) = 1; // CMD: EN(1) -> FLUSH(3)
+    HWREGBITW(AUX_ANAIF_BASE + AUX_ANAIF_O_ADCCTL, 1) = 0; // CMD: FLUSH(3) -> EN(1)
+
     // Disable the ADC clock (no need to wait since IOB_WUC_ADCCLKCTL_ACK goes low immediately)
-    HWREG(AUX_WUC_BASE + AUX_WUC_O_ADCCLKCTL) = 0;
+    HWREG(AUX_SYSIF_BASE + AUX_SYSIF_O_ADCCLKCTL) = 0;
 
     // Disable the ADC data interface
     HWREG(AUX_ANAIF_BASE + AUX_ANAIF_O_ADCCTL) = 0;
@@ -116,13 +120,13 @@ AUXADCEnableAsync(uint32_t refSource, uint32_t trigger)
     ADI8BitsSet(AUX_ADI4_BASE, ADI_4_AUX_O_ADCREF0, refSource | ADI_4_AUX_ADCREF0_EN_M);
 
     // Enable the ADC clock
-    HWREG(AUX_WUC_BASE + AUX_WUC_O_ADCCLKCTL) = AUX_WUC_ADCCLKCTL_REQ_M;
-    while (!(HWREG(AUX_WUC_BASE + AUX_WUC_O_ADCCLKCTL) & AUX_WUC_ADCCLKCTL_ACK_M));
+    HWREG(AUX_SYSIF_BASE + AUX_SYSIF_O_ADCCLKCTL) = AUX_SYSIF_ADCCLKCTL_REQ_M;
+    while (!(HWREG(AUX_SYSIF_BASE + AUX_SYSIF_O_ADCCLKCTL) & AUX_SYSIF_ADCCLKCTL_ACK_M));
 
     // Enable the ADC data interface
     if (trigger == AUXADC_TRIGGER_MANUAL) {
         // Manual trigger: No need to configure event routing from GPT
-        HWREG(AUX_ANAIF_BASE + AUX_ANAIF_O_ADCCTL) = AUX_ANAIF_ADCCTL_START_SRC_NO_EVENT0 | AUX_ANAIF_ADCCTL_CMD_EN;
+        HWREG(AUX_ANAIF_BASE + AUX_ANAIF_O_ADCCTL) = AUX_ANAIF_ADCCTL_START_SRC_NO_EVENT | AUX_ANAIF_ADCCTL_CMD_EN;
     } else {
         // GPT trigger: Configure event routing via MCU_EV to the AUX domain
         HWREG(EVENT_BASE + EVENT_O_AUXSEL0) = trigger;
@@ -154,13 +158,13 @@ AUXADCEnableSync(uint32_t refSource, uint32_t sampleTime, uint32_t trigger)
     ADI8BitsSet(AUX_ADI4_BASE, ADI_4_AUX_O_ADCREF0, adcref0);
 
     // Enable the ADC clock
-    HWREG(AUX_WUC_BASE + AUX_WUC_O_ADCCLKCTL) = AUX_WUC_ADCCLKCTL_REQ_M;
-    while (!(HWREG(AUX_WUC_BASE + AUX_WUC_O_ADCCLKCTL) & AUX_WUC_ADCCLKCTL_ACK_M));
+    HWREG(AUX_SYSIF_BASE + AUX_SYSIF_O_ADCCLKCTL) = AUX_SYSIF_ADCCLKCTL_REQ_M;
+    while (!(HWREG(AUX_SYSIF_BASE + AUX_SYSIF_O_ADCCLKCTL) & AUX_SYSIF_ADCCLKCTL_ACK_M));
 
     // Enable the ADC data interface
     if (trigger == AUXADC_TRIGGER_MANUAL) {
         // Manual trigger: No need to configure event routing from GPT
-        HWREG(AUX_ANAIF_BASE + AUX_ANAIF_O_ADCCTL) = AUX_ANAIF_ADCCTL_START_SRC_NO_EVENT0 | AUX_ANAIF_ADCCTL_CMD_EN;
+        HWREG(AUX_ANAIF_BASE + AUX_ANAIF_O_ADCCTL) = AUX_ANAIF_ADCCTL_START_SRC_NO_EVENT | AUX_ANAIF_ADCCTL_CMD_EN;
     } else {
         // GPT trigger: Configure event routing via MCU_EV to the AUX domain
         HWREG(EVENT_BASE + EVENT_O_AUXSEL0) = trigger;

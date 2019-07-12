@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_ccfg_simple_struct_h
-*  Revised:        2016-03-14 09:20:59 +0100 (Mon, 14 Mar 2016)
-*  Revision:       45924
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -46,28 +46,28 @@
 //*****************************************************************************
 typedef struct
 {                                              //  Mapped to address
-    uint32_t   CCFG_EXT_LF_CLK               ; // 0x50003FA8
-    uint32_t   CCFG_MODE_CONF_1              ; // 0x50003FAC
-    uint32_t   CCFG_SIZE_AND_DIS_FLAGS       ; // 0x50003FB0
-    uint32_t   CCFG_MODE_CONF                ; // 0x50003FB4
-    uint32_t   CCFG_VOLT_LOAD_0              ; // 0x50003FB8
-    uint32_t   CCFG_VOLT_LOAD_1              ; // 0x50003FBC
-    uint32_t   CCFG_RTC_OFFSET               ; // 0x50003FC0
-    uint32_t   CCFG_FREQ_OFFSET              ; // 0x50003FC4
-    uint32_t   CCFG_IEEE_MAC_0               ; // 0x50003FC8
-    uint32_t   CCFG_IEEE_MAC_1               ; // 0x50003FCC
-    uint32_t   CCFG_IEEE_BLE_0               ; // 0x50003FD0
-    uint32_t   CCFG_IEEE_BLE_1               ; // 0x50003FD4
-    uint32_t   CCFG_BL_CONFIG                ; // 0x50003FD8
-    uint32_t   CCFG_ERASE_CONF               ; // 0x50003FDC
-    uint32_t   CCFG_CCFG_TI_OPTIONS          ; // 0x50003FE0
-    uint32_t   CCFG_CCFG_TAP_DAP_0           ; // 0x50003FE4
-    uint32_t   CCFG_CCFG_TAP_DAP_1           ; // 0x50003FE8
-    uint32_t   CCFG_IMAGE_VALID_CONF         ; // 0x50003FEC
-    uint32_t   CCFG_CCFG_PROT_31_0           ; // 0x50003FF0
-    uint32_t   CCFG_CCFG_PROT_63_32          ; // 0x50003FF4
-    uint32_t   CCFG_CCFG_PROT_95_64          ; // 0x50003FF8
-    uint32_t   CCFG_CCFG_PROT_127_96         ; // 0x50003FFC
+    uint32_t   CCFG_EXT_LF_CLK               ; // 0x50004FA8
+    uint32_t   CCFG_MODE_CONF_1              ; // 0x50004FAC
+    uint32_t   CCFG_SIZE_AND_DIS_FLAGS       ; // 0x50004FB0
+    uint32_t   CCFG_MODE_CONF                ; // 0x50004FB4
+    uint32_t   CCFG_VOLT_LOAD_0              ; // 0x50004FB8
+    uint32_t   CCFG_VOLT_LOAD_1              ; // 0x50004FBC
+    uint32_t   CCFG_RTC_OFFSET               ; // 0x50004FC0
+    uint32_t   CCFG_FREQ_OFFSET              ; // 0x50004FC4
+    uint32_t   CCFG_IEEE_MAC_0               ; // 0x50004FC8
+    uint32_t   CCFG_IEEE_MAC_1               ; // 0x50004FCC
+    uint32_t   CCFG_IEEE_BLE_0               ; // 0x50004FD0
+    uint32_t   CCFG_IEEE_BLE_1               ; // 0x50004FD4
+    uint32_t   CCFG_BL_CONFIG                ; // 0x50004FD8
+    uint32_t   CCFG_ERASE_CONF               ; // 0x50004FDC
+    uint32_t   CCFG_CCFG_TI_OPTIONS          ; // 0x50004FE0
+    uint32_t   CCFG_CCFG_TAP_DAP_0           ; // 0x50004FE4
+    uint32_t   CCFG_CCFG_TAP_DAP_1           ; // 0x50004FE8
+    uint32_t   CCFG_IMAGE_VALID_CONF         ; // 0x50004FEC
+    uint32_t   CCFG_CCFG_PROT_31_0           ; // 0x50004FF0
+    uint32_t   CCFG_CCFG_PROT_63_32          ; // 0x50004FF4
+    uint32_t   CCFG_CCFG_PROT_95_64          ; // 0x50004FF8
+    uint32_t   CCFG_CCFG_PROT_127_96         ; // 0x50004FFC
 } ccfg_t;
 
 //*****************************************************************************

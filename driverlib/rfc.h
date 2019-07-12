@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       rfc.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2018-08-08 14:03:25 +0200 (Wed, 08 Aug 2018)
+*  Revision:       52338
 *
 *  Description:    Defines and prototypes for the RF Core.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -59,22 +59,34 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_rfc_pwr.h>
-#include <inc/hw_rfc_dbell.h>
-#include <driverlib/rf_common_cmd.h>
-#include <driverlib/rf_prop_cmd.h>
-#include <inc/hw_fcfg1.h>
-#include <inc/hw_adi_3_refsys.h>
-#include <inc/hw_adi.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_rfc_pwr.h"
+#include "../inc/hw_rfc_dbell.h"
+#include "../inc/hw_fcfg1.h"
+#include "../inc/hw_adi_3_refsys.h"
+#include "../inc/hw_adi.h"
+#include "rf_common_cmd.h"
+#include "rf_prop_cmd.h"
+#include "rf_ble_cmd.h"
 
+// Definition of RFTRIM container
 typedef struct {
    uint32_t configIfAdc;
    uint32_t configRfFrontend;
    uint32_t configSynth;
    uint32_t configMiscAdc;
 } rfTrim_t;
+
+// Definition of maximum search depth used by the RFCOverrideUpdate function
+#define RFC_MAX_SEARCH_DEPTH     5
+#define RFC_PA_TYPE_ADDRESS		 0x21000345
+#define RFC_PA_TYPE_MASK 		 0x04
+#define RFC_PA_GAIN_ADDRESS		 0x2100034C
+#define RFC_PA_GAIN_MASK		 0x003FFFFF
+#define RFC_FE_MODE_ESCAPE_VALUE 0xFF
+#define RFC_FE_OVERRIDE_ADDRESS  0x0703
+#define RFC_FE_OVERRIDE_MASK     0x0000FFFF
 
 //*****************************************************************************
 //
@@ -93,11 +105,11 @@ typedef struct {
     #define RFCCpeIntGetAndClear            NOROM_RFCCpeIntGetAndClear
     #define RFCDoorbellSendTo               NOROM_RFCDoorbellSendTo
     #define RFCSynthPowerDown               NOROM_RFCSynthPowerDown
-    #define RFCRfTrimRead                   NOROM_RFCRfTrimRead
-    #define RFCRfTrimSet                    NOROM_RFCRfTrimSet
-    #define RFCRTrim                        NOROM_RFCRTrim
-    #define RFCCPEPatchReset                NOROM_RFCCPEPatchReset
-    #define RFCAdi3VcoLdoVoltageMode        NOROM_RFCAdi3VcoLdoVoltageMode
+    #define RFCCpePatchReset                NOROM_RFCCpePatchReset
+    #define RFCOverrideSearch               NOROM_RFCOverrideSearch
+    #define RFCOverrideUpdate               NOROM_RFCOverrideUpdate
+    #define RFCHwIntGetAndClear             NOROM_RFCHwIntGetAndClear
+    #define RFCAnaDivTxOverride             NOROM_RFCAnaDivTxOverride
 #endif
 
 //*****************************************************************************
@@ -120,22 +132,12 @@ typedef struct {
 __STATIC_INLINE void
 RFCClockEnable(void)
 {
-    //
-    // Enable all clocks
-    //
-    HWREG(RFC_PWR_NONBUF_BASE + RFC_PWR_O_PWMCLKEN) =
-                                 RFC_PWR_PWMCLKEN_RFCTRC |
-                                 RFC_PWR_PWMCLKEN_FSCA |
-                                 RFC_PWR_PWMCLKEN_PHA |
-                                 RFC_PWR_PWMCLKEN_RAT |
-                                 RFC_PWR_PWMCLKEN_RFERAM |
-                                 RFC_PWR_PWMCLKEN_RFE |
-                                 RFC_PWR_PWMCLKEN_MDMRAM |
-                                 RFC_PWR_PWMCLKEN_MDM |
-                                 RFC_PWR_PWMCLKEN_CPERAM |
-                                 RFC_PWR_PWMCLKEN_CPE |
-                                 RFC_PWR_PWMCLKEN_RFC;
+    // Enable basic clocks to get the CPE run
+    HWREG(RFC_PWR_NONBUF_BASE + RFC_PWR_O_PWMCLKEN) = RFC_PWR_PWMCLKEN_CPERAM
+                                                    | RFC_PWR_PWMCLKEN_CPE
+                                                    | RFC_PWR_PWMCLKEN_RFC;
 }
+
 
 //*****************************************************************************
 //
@@ -146,7 +148,7 @@ RFCClockEnable(void)
 //! the radio can be ping'ed through the command interface.
 //!
 //! When disabling clocks it is the programmers responsibility that the
-//! RF core clocks can be safely gated. I.e. the RF core should be safely
+//! RF core clocks are safely gated. I.e. the RF core should be safely
 //! 'parked'.
 //!
 //! \return None
@@ -155,178 +157,177 @@ RFCClockEnable(void)
 __STATIC_INLINE void
 RFCClockDisable(void)
 {
-    //
     // Disable all clocks
-    //
     HWREG(RFC_PWR_NONBUF_BASE + RFC_PWR_O_PWMCLKEN) = 0x0;
 }
 
-//*****************************************************************************
-//
-//! Enable CPE0 interrupt
-//
-//*****************************************************************************
-__STATIC_INLINE void
-RFCCpe0IntEnable(uint32_t ui32Mask)
-{
-  //
-  // Multiplex RF Core interrupts to CPE0 IRQ.
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEISL) &= ~ui32Mask;
-
-  do
-  {
-    //
-    // Clear any pending interrupts.
-    //
-    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIFG) = 0x0;
-  }while(HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIFG) != 0x0);
-
-  //
-  //  Enable the masked interrupts
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIEN) |= ui32Mask;
-}
-
 
 //*****************************************************************************
 //
-//! Enable CPE1 interrupt
-//
-//*****************************************************************************
-__STATIC_INLINE void
-RFCCpe1IntEnable(uint32_t ui32Mask)
-{
-  //
-  // Multiplex RF Core interrupts to CPE1 IRQ.
-  //
-  HWREG( RFC_DBELL_BASE + RFC_DBELL_O_RFCPEISL) |= ui32Mask;
-
-  do
-  {
-    //
-    // Clear any pending interrupts.
-    //
-    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIFG) = 0x0;
-  }while(HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIFG) != 0x0);
-
-  //
-  //  Enable the masked interrupts
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIEN) |= ui32Mask;
-}
-
-
-//*****************************************************************************
-//
-//! This function is used to map only HW interrupts, and
-//! clears/unmasks them. These interrupts are then enabled.
-//
-//*****************************************************************************
-__STATIC_INLINE void
-RFCHwIntEnable(uint32_t ui32Mask)
-{
-  //
-  // Clear any pending interrupts.
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFHWIFG) = 0x0;
-
-  //
-  //  Enable the masked interrupts
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFHWIEN) |= ui32Mask;
-}
-
-
-//*****************************************************************************
-//
-//! Disable CPE interrupt
-//
-//*****************************************************************************
-__STATIC_INLINE void
-RFCCpeIntDisable(uint32_t ui32Mask)
-{
-  //
-  //  Disable the masked interrupts
-  //
-  HWREG( RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIEN ) &= ~ui32Mask;
-}
-
-
-//*****************************************************************************
-//
-//! Disable HW interrupt
-//
-//*****************************************************************************
-__STATIC_INLINE void
-RFCHwIntDisable(uint32_t ui32Mask)
-{
-  //
-  //  Disable the masked interrupts
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFHWIEN) &= ~ui32Mask;
-}
-
-
-//*****************************************************************************
-//
-//! Get and clear CPE interrupt flags
-//
-//*****************************************************************************
-extern uint32_t RFCCpeIntGetAndClear(void);
-
-
-//*****************************************************************************
-//
-//! Clear interrupt flags
+//! Clear HW interrupt flags
 //
 //*****************************************************************************
 __STATIC_INLINE void
 RFCCpeIntClear(uint32_t ui32Mask)
 {
-  do
-  {
-    //
-    // Clear interrupts that may now be pending
-    //
-    HWREG(RFC_DBELL_BASE+RFC_DBELL_O_RFCPEIFG) = ~ui32Mask;
-  }while (HWREG(RFC_DBELL_BASE+RFC_DBELL_O_RFCPEIFG) & ui32Mask);
+    // Clear the masked pending interrupts.
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIFG) = ~ui32Mask;
 }
 
 
 //*****************************************************************************
 //
-//! Clear interrupt flags
+//! Clear CPE interrupt flags.
 //
 //*****************************************************************************
 __STATIC_INLINE void
 RFCHwIntClear(uint32_t ui32Mask)
 {
-  //
-  // Clear pending interrupts.
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFHWIFG) = ~ui32Mask;
+    // Clear the masked pending interrupts.
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFHWIFG) = ~ui32Mask;
 }
 
 
 //*****************************************************************************
 //
-//! Clear interrupt flags
+//! Select interrupt sources to CPE0 (assign to INT_RFC_CPE_0 interrupt vector).
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCCpe0IntSelect(uint32_t ui32Mask)
+{
+    // Multiplex RF Core interrupts to CPE0 IRQ.
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEISL) &= ~ui32Mask;
+}
+
+
+//*****************************************************************************
+//
+//! Select interrupt sources to CPE1 (assign to INT_RFC_CPE_1 interrupt vector).
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCCpe1IntSelect(uint32_t ui32Mask)
+{
+    // Multiplex RF Core interrupts to CPE1 IRQ.
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEISL) |= ui32Mask;
+}
+
+
+//*****************************************************************************
+//
+//! Enable CPEx interrupt sources.
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCCpeIntEnable(uint32_t ui32Mask)
+{
+    // Enable CPE interrupts from RF Core.
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIEN) |= ui32Mask;
+}
+
+
+//*****************************************************************************
+//
+//! Select, clear, and enable interrupt sources to CPE0.
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCCpe0IntSelectClearEnable(uint32_t ui32Mask)
+{
+    // Multiplex RF Core interrupts to CPE0 IRQ.
+    RFCCpe0IntSelect(ui32Mask);
+
+    // Clear the masked interrupts.
+    RFCCpeIntClear(ui32Mask);
+
+    // Enable the masked interrupts.
+    RFCCpeIntEnable(ui32Mask);
+}
+
+
+//*****************************************************************************
+//
+//! Select, clear, and enable interrupt sources to CPE1.
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCCpe1IntSelectClearEnable(uint32_t ui32Mask)
+{
+    // Multiplex RF Core interrupts to CPE1 IRQ.
+    RFCCpe1IntSelect(ui32Mask);
+
+    // Clear the masked interrupts.
+    RFCCpeIntClear(ui32Mask);
+
+    // Enable the masked interrupts.
+    RFCCpeIntEnable(ui32Mask);
+}
+
+
+//*****************************************************************************
+//
+//! Enable HW interrupt sources.
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCHwIntEnable(uint32_t ui32Mask)
+{
+    // Enable the masked interrupts
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFHWIEN) |= ui32Mask;
+}
+
+
+//*****************************************************************************
+//
+//! Disable CPE interrupt sources.
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCCpeIntDisable(uint32_t ui32Mask)
+{
+    // Disable the masked interrupts
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFCPEIEN) &= ~ui32Mask;
+}
+
+
+//*****************************************************************************
+//
+//! Disable HW interrupt sources.
+//
+//*****************************************************************************
+__STATIC_INLINE void
+RFCHwIntDisable(uint32_t ui32Mask)
+{
+    // Disable the masked interrupts
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFHWIEN) &= ~ui32Mask;
+}
+
+
+//*****************************************************************************
+//
+//! Get and clear CPE interrupt flags.
+//
+//*****************************************************************************
+extern uint32_t RFCCpeIntGetAndClear(uint32_t ui32Mask);
+
+
+//*****************************************************************************
+//
+//! Clear ACK interrupt flag.
 //
 //*****************************************************************************
 __STATIC_INLINE void
 RFCAckIntClear(void)
 {
-  //
-  // Clear any pending interrupts.
-  //
-  HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFACKIFG) = 0x0;
+    // Clear any pending interrupts.
+    HWREG(RFC_DBELL_BASE + RFC_DBELL_O_RFACKIFG) = 0x0;
 }
 
 
 //*****************************************************************************
 //
-//! Send command to doorbell and wait for ack
+//! Send a radio operation to the doorbell and wait for an acknowledgment.
 //
 //*****************************************************************************
 extern uint32_t RFCDoorbellSendTo(uint32_t pOp);
@@ -334,7 +335,7 @@ extern uint32_t RFCDoorbellSendTo(uint32_t pOp);
 
 //*****************************************************************************
 //
-//! Turn off synth, NOTE: Radio will no longer respond to commands!
+//! This function implements a fast way to turn off the synthesizer.
 //
 //*****************************************************************************
 extern void RFCSynthPowerDown(void);
@@ -342,42 +343,65 @@ extern void RFCSynthPowerDown(void);
 
 //*****************************************************************************
 //
-//! Read RF trim from flash using CM3
+//! Reset previously patched CPE RAM to a state where it can be patched again.
 //
 //*****************************************************************************
-extern void RFCRfTrimRead(rfc_radioOp_t *pOpSetup, rfTrim_t* rfTrim);
+extern void RFCCpePatchReset(void);
 
 
 //*****************************************************************************
 //
-//! Write preloaded RF trim values to CM0
+// Function to search an override list for the provided pattern within the search depth.
 //
 //*****************************************************************************
-extern void RFCRfTrimSet(rfTrim_t* rfTrim);
+extern uint8_t RFCOverrideSearch(const uint32_t *pOverride, const uint32_t pattern, const uint32_t mask, const uint8_t searchDepth);
 
 
 //*****************************************************************************
 //
-//! Check Override RTrim vs FCFG RTrim
+//! Function to update override list
 //
 //*****************************************************************************
-extern void RFCRTrim(rfc_radioOp_t *pOpSetup);
+extern uint8_t RFCOverrideUpdate(rfc_radioOp_t *pOpSetup, uint32_t *pParams);
 
 
 //*****************************************************************************
 //
-//! Reset previously patched CPE RAM to a state where it can be patched again
+//! Get and clear HW interrupt flags.
 //
 //*****************************************************************************
-extern void RFCCPEPatchReset(void);
+extern uint32_t RFCHwIntGetAndClear(uint32_t ui32Mask);
 
 
 //*****************************************************************************
 //
-//! Function to set VCOLDO reference to voltage mode
+//! Get the type of currently selected PA.
 //
 //*****************************************************************************
-extern void RFCAdi3VcoLdoVoltageMode(bool bEnable);
+__STATIC_INLINE bool
+RFCGetPaType(void)
+{
+    return (bool)(HWREGB(RFC_PA_TYPE_ADDRESS) & RFC_PA_TYPE_MASK);
+}
+
+//*****************************************************************************
+//
+//! Get the gain of currently selected PA.
+//
+//*****************************************************************************
+__STATIC_INLINE uint32_t
+RFCGetPaGain(void)
+{
+    return (HWREG(RFC_PA_GAIN_ADDRESS) & RFC_PA_GAIN_MASK);
+}
+
+
+//*****************************************************************************
+//
+//! Function to calculate the proper override run-time for the High Gain PA.
+//
+//*****************************************************************************
+extern uint32_t RFCAnaDivTxOverride(uint8_t loDivider, uint8_t frontEndMode);
 
 
 //*****************************************************************************
@@ -387,7 +411,7 @@ extern void RFCAdi3VcoLdoVoltageMode(bool bEnable);
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_RFCCpeIntGetAndClear
         #undef  RFCCpeIntGetAndClear
         #define RFCCpeIntGetAndClear            ROM_RFCCpeIntGetAndClear
@@ -400,25 +424,25 @@ extern void RFCAdi3VcoLdoVoltageMode(bool bEnable);
         #undef  RFCSynthPowerDown
         #define RFCSynthPowerDown               ROM_RFCSynthPowerDown
     #endif
-    #ifdef ROM_RFCRfTrimRead
-        #undef  RFCRfTrimRead
-        #define RFCRfTrimRead                   ROM_RFCRfTrimRead
+    #ifdef ROM_RFCCpePatchReset
+        #undef  RFCCpePatchReset
+        #define RFCCpePatchReset                ROM_RFCCpePatchReset
     #endif
-    #ifdef ROM_RFCRfTrimSet
-        #undef  RFCRfTrimSet
-        #define RFCRfTrimSet                    ROM_RFCRfTrimSet
+    #ifdef ROM_RFCOverrideSearch
+        #undef  RFCOverrideSearch
+        #define RFCOverrideSearch               ROM_RFCOverrideSearch
     #endif
-    #ifdef ROM_RFCRTrim
-        #undef  RFCRTrim
-        #define RFCRTrim                        ROM_RFCRTrim
+    #ifdef ROM_RFCOverrideUpdate
+        #undef  RFCOverrideUpdate
+        #define RFCOverrideUpdate               ROM_RFCOverrideUpdate
     #endif
-    #ifdef ROM_RFCCPEPatchReset
-        #undef  RFCCPEPatchReset
-        #define RFCCPEPatchReset                ROM_RFCCPEPatchReset
+    #ifdef ROM_RFCHwIntGetAndClear
+        #undef  RFCHwIntGetAndClear
+        #define RFCHwIntGetAndClear             ROM_RFCHwIntGetAndClear
     #endif
-    #ifdef ROM_RFCAdi3VcoLdoVoltageMode
-        #undef  RFCAdi3VcoLdoVoltageMode
-        #define RFCAdi3VcoLdoVoltageMode        ROM_RFCAdi3VcoLdoVoltageMode
+    #ifdef ROM_RFCAnaDivTxOverride
+        #undef  RFCAnaDivTxOverride
+        #define RFCAnaDivTxOverride             ROM_RFCAnaDivTxOverride
     #endif
 #endif
 

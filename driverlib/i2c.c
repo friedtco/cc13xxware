@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       i2c.c
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-04-26 18:27:45 +0200 (Wed, 26 Apr 2017)
+*  Revision:       48852
 *
 *  Description:    Driver for the I2C module
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 *
 ******************************************************************************/
 
-#include <driverlib/i2c.h>
+#include "i2c.h"
 
 //*****************************************************************************
 //
@@ -57,7 +57,7 @@
 
 //*****************************************************************************
 //
-//! Initializes the I2C Master block
+// Initializes the I2C Master block
 //
 //*****************************************************************************
 void
@@ -67,19 +67,13 @@ I2CMasterInitExpClk(uint32_t ui32Base, uint32_t ui32I2CClk,
     uint32_t ui32SCLFreq;
     uint32_t ui32TPR;
 
-    //
     // Check the arguments.
-    //
     ASSERT(I2CBaseValid(ui32Base));
 
-    //
     // Must enable the device before doing anything else.
-    //
     I2CMasterEnable(I2C0_BASE);
 
-    //
     // Get the desired SCL speed.
-    //
     if(bFast == true)
     {
         ui32SCLFreq = 400000;
@@ -89,19 +83,17 @@ I2CMasterInitExpClk(uint32_t ui32Base, uint32_t ui32I2CClk,
         ui32SCLFreq = 100000;
     }
 
-    //
     // Compute the clock divider that achieves the fastest speed less than or
     // equal to the desired speed. The numerator is biased to favor a larger
     // clock divider so that the resulting clock is always less than or equal
     // to the desired clock, never greater.
-    //
     ui32TPR = ((ui32I2CClk + (2 * 10 * ui32SCLFreq) - 1) / (2 * 10 * ui32SCLFreq)) - 1;
     HWREG(I2C0_BASE + I2C_O_MTPR) = ui32TPR;
 }
 
 //*****************************************************************************
 //
-//! Gets the error status of the I2C Master module
+// Gets the error status of the I2C Master module
 //
 //*****************************************************************************
 uint32_t
@@ -109,28 +101,20 @@ I2CMasterErr(uint32_t ui32Base)
 {
     uint32_t ui32Err;
 
-    //
     // Check the arguments.
-    //
     ASSERT(I2CBaseValid(ui32Base));
 
-    //
     // Get the raw error state.
-    //
     ui32Err = HWREG(I2C0_BASE + I2C_O_MSTAT);
 
-    //
     // If the I2C master is busy, then all the other status bits are invalid,
     // and there is no error to report.
-    //
     if(ui32Err & I2C_MSTAT_BUSY)
     {
         return(I2C_MASTER_ERR_NONE);
     }
 
-    //
     // Check for errors.
-    //
     if(ui32Err & (I2C_MSTAT_ERR | I2C_MSTAT_ARBLST))
     {
         return(ui32Err & (I2C_MSTAT_ARBLST | I2C_MSTAT_DATACK_N | I2C_MSTAT_ADRACK_N));
@@ -143,7 +127,7 @@ I2CMasterErr(uint32_t ui32Base)
 
 //*****************************************************************************
 //
-//! Registers an interrupt handler for the I2C module
+// Registers an interrupt handler for the I2C module
 //
 //*****************************************************************************
 void
@@ -151,30 +135,22 @@ I2CIntRegister(uint32_t ui32Base, void (*pfnHandler)(void))
 {
     uint32_t ui32Int;
 
-    //
     // Check the arguments.
-    //
     ASSERT(I2CBaseValid(ui32Base));
 
-    //
     // Get the interrupt number.
-    //
     ui32Int = INT_I2C_IRQ;
 
-    //
     // Register the interrupt handler, returning an error if an error occurs.
-    //
     IntRegister(ui32Int, pfnHandler);
 
-    //
     // Enable the I2C interrupt.
-    //
     IntEnable(ui32Int);
 }
 
 //*****************************************************************************
 //
-//! Unregisters an interrupt handler for the I2C module
+// Unregisters an interrupt handler for the I2C module
 //
 //*****************************************************************************
 void
@@ -182,23 +158,15 @@ I2CIntUnregister(uint32_t ui32Base)
 {
     uint32_t ui32Int;
 
-    //
     // Check the arguments.
-    //
     ASSERT(I2CBaseValid(ui32Base));
 
-    //
     // Get the interrupt number.
-    //
     ui32Int = INT_I2C_IRQ;
 
-    //
     // Disable the interrupt.
-    //
     IntDisable(ui32Int);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(ui32Int);
 }

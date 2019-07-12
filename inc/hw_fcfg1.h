@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_fcfg1_h
-*  Revised:        2016-06-16 09:00:03 +0200 (Thu, 16 Jun 2016)
-*  Revision:       46679
+*  Revised:        2018-11-06 14:08:24 +0100 (Tue, 06 Nov 2018)
+*  Revision:       53237
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -50,79 +50,75 @@
 #define FCFG1_O_MISC_CONF_2                                         0x000000A4
 
 // Internal
-#define FCFG1_O_CONFIG_RF_FRONTEND_DIV5                             0x000000C4
+#define FCFG1_O_HPOSC_MEAS_5                                        0x000000B0
 
 // Internal
-#define FCFG1_O_CONFIG_RF_FRONTEND_DIV6                             0x000000C8
+#define FCFG1_O_HPOSC_MEAS_4                                        0x000000B4
 
 // Internal
-#define FCFG1_O_CONFIG_RF_FRONTEND_DIV10                            0x000000CC
+#define FCFG1_O_HPOSC_MEAS_3                                        0x000000B8
 
 // Internal
-#define FCFG1_O_CONFIG_RF_FRONTEND_DIV12                            0x000000D0
+#define FCFG1_O_HPOSC_MEAS_2                                        0x000000BC
 
 // Internal
-#define FCFG1_O_CONFIG_RF_FRONTEND_DIV15                            0x000000D4
+#define FCFG1_O_HPOSC_MEAS_1                                        0x000000C0
 
 // Internal
-#define FCFG1_O_CONFIG_RF_FRONTEND_DIV30                            0x000000D8
+#define FCFG1_O_CONFIG_CC26_FE                                      0x000000C4
 
 // Internal
-#define FCFG1_O_CONFIG_SYNTH_DIV5                                   0x000000DC
+#define FCFG1_O_CONFIG_CC13_FE                                      0x000000C8
 
 // Internal
-#define FCFG1_O_CONFIG_SYNTH_DIV6                                   0x000000E0
+#define FCFG1_O_CONFIG_RF_COMMON                                    0x000000CC
 
 // Internal
-#define FCFG1_O_CONFIG_SYNTH_DIV10                                  0x000000E4
+#define FCFG1_O_CONFIG_SYNTH_DIV2_CC26_2G4                          0x000000D0
 
 // Internal
-#define FCFG1_O_CONFIG_SYNTH_DIV12                                  0x000000E8
+#define FCFG1_O_CONFIG_SYNTH_DIV2_CC13_2G4                          0x000000D4
 
 // Internal
-#define FCFG1_O_CONFIG_SYNTH_DIV15                                  0x000000EC
+#define FCFG1_O_CONFIG_SYNTH_DIV2_CC26_1G                           0x000000D8
 
 // Internal
-#define FCFG1_O_CONFIG_SYNTH_DIV30                                  0x000000F0
+#define FCFG1_O_CONFIG_SYNTH_DIV2_CC13_1G                           0x000000DC
 
 // Internal
-#define FCFG1_O_CONFIG_MISC_ADC_DIV5                                0x000000F4
+#define FCFG1_O_CONFIG_SYNTH_DIV4_CC26                              0x000000E0
 
 // Internal
-#define FCFG1_O_CONFIG_MISC_ADC_DIV6                                0x000000F8
+#define FCFG1_O_CONFIG_SYNTH_DIV4_CC13                              0x000000E4
 
 // Internal
-#define FCFG1_O_CONFIG_MISC_ADC_DIV10                               0x000000FC
+#define FCFG1_O_CONFIG_SYNTH_DIV5                                   0x000000E8
 
 // Internal
-#define FCFG1_O_CONFIG_MISC_ADC_DIV12                               0x00000100
+#define FCFG1_O_CONFIG_SYNTH_DIV6_CC26                              0x000000EC
 
 // Internal
-#define FCFG1_O_CONFIG_MISC_ADC_DIV15                               0x00000104
+#define FCFG1_O_CONFIG_SYNTH_DIV6_CC13                              0x000000F0
 
 // Internal
-#define FCFG1_O_CONFIG_MISC_ADC_DIV30                               0x00000108
-
-// Shadow of EFUSE:DIE_ID_0
-#define FCFG1_O_SHDW_DIE_ID_0                                       0x00000118
-
-// Shadow of EFUSE:DIE_ID_1
-#define FCFG1_O_SHDW_DIE_ID_1                                       0x0000011C
-
-// Shadow of EFUSE:DIE_ID_2
-#define FCFG1_O_SHDW_DIE_ID_2                                       0x00000120
-
-// Shadow of EFUSE:DIE_ID_3
-#define FCFG1_O_SHDW_DIE_ID_3                                       0x00000124
+#define FCFG1_O_CONFIG_SYNTH_DIV10                                  0x000000F4
 
 // Internal
-#define FCFG1_O_SHDW_OSC_BIAS_LDO_TRIM                              0x00000138
+#define FCFG1_O_CONFIG_SYNTH_DIV12_CC26                             0x000000F8
 
 // Internal
-#define FCFG1_O_SHDW_ANA_TRIM                                       0x0000013C
+#define FCFG1_O_CONFIG_SYNTH_DIV12_CC13                             0x000000FC
 
+// Internal
+#define FCFG1_O_CONFIG_SYNTH_DIV15                                  0x00000100
+
+// Internal
+#define FCFG1_O_CONFIG_SYNTH_DIV30                                  0x00000104
+
+// Flash information
 #define FCFG1_O_FLASH_NUMBER                                        0x00000164
 
+// Flash information
 #define FCFG1_O_FLASH_COORDINATE                                    0x0000016C
 
 // Internal
@@ -170,9 +166,6 @@
 // Internal
 #define FCFG1_O_LDO_TRIM                                            0x000002B8
 
-// Internal
-#define FCFG1_O_BAT_RC_LDO_TRIM                                     0x000002BC
-
 // MAC BLE Address 0
 #define FCFG1_O_MAC_BLE_0                                           0x000002E8
 
@@ -194,9 +187,6 @@
 // Internal
 #define FCFG1_O_RCOSC_HF_TEMPCOMP                                   0x00000310
 
-// Internal
-#define FCFG1_O_TRIM_CAL_REVISION                                   0x00000314
-
 // IcePick Device Identification
 #define FCFG1_O_ICEPICK_DEVICE_ID                                   0x00000318
 
@@ -214,12 +204,6 @@
 
 // Internal
 #define FCFG1_O_CONFIG_OSC_TOP                                      0x00000350
-
-// Internal
-#define FCFG1_O_CONFIG_RF_FRONTEND                                  0x00000354
-
-// Internal
-#define FCFG1_O_CONFIG_SYNTH                                        0x00000358
 
 // AUX_ADC Gain in Absolute Reference Mode
 #define FCFG1_O_SOC_ADC_ABS_GAIN                                    0x0000035C
@@ -246,9 +230,6 @@
 #define FCFG1_O_ANABYPASS_VALUE2                                    0x0000037C
 
 // Internal
-#define FCFG1_O_CONFIG_MISC_ADC                                     0x00000380
-
-// Internal
 #define FCFG1_O_VOLT_TRIM                                           0x00000388
 
 // OSC Configuration
@@ -258,34 +239,46 @@
 #define FCFG1_O_FREQ_OFFSET                                         0x00000390
 
 // Internal
-#define FCFG1_O_CAP_TRIM                                            0x00000394
-
-// Internal
 #define FCFG1_O_MISC_OTP_DATA_1                                     0x00000398
 
-// Power Down Current Control 20C
-#define FCFG1_O_PWD_CURR_20C                                        0x0000039C
+// Shadow of EFUSE:DIE_ID_0 register
+#define FCFG1_O_SHDW_DIE_ID_0                                       0x000003D0
 
-// Power Down Current Control 35C
-#define FCFG1_O_PWD_CURR_35C                                        0x000003A0
+// Shadow of EFUSE:DIE_ID_1 register
+#define FCFG1_O_SHDW_DIE_ID_1                                       0x000003D4
 
-// Power Down Current Control 50C
-#define FCFG1_O_PWD_CURR_50C                                        0x000003A4
+// Shadow of EFUSE:DIE_ID_2 register
+#define FCFG1_O_SHDW_DIE_ID_2                                       0x000003D8
 
-// Power Down Current Control 65C
-#define FCFG1_O_PWD_CURR_65C                                        0x000003A8
+// Shadow of EFUSE:DIE_ID_3 register
+#define FCFG1_O_SHDW_DIE_ID_3                                       0x000003DC
 
-// Power Down Current Control 80C
-#define FCFG1_O_PWD_CURR_80C                                        0x000003AC
+// Internal
+#define FCFG1_O_SHDW_OSC_BIAS_LDO_TRIM                              0x000003F8
 
-// Power Down Current Control 95C
-#define FCFG1_O_PWD_CURR_95C                                        0x000003B0
+// Internal
+#define FCFG1_O_SHDW_ANA_TRIM                                       0x000003FC
 
-// Power Down Current Control 110C
-#define FCFG1_O_PWD_CURR_110C                                       0x000003B4
+// Internal
+#define FCFG1_O_DAC_BIAS_CNF                                        0x0000040C
 
-// Power Down Current Control 125C
-#define FCFG1_O_PWD_CURR_125C                                       0x000003B8
+// Internal
+#define FCFG1_O_TFW_PROBE                                           0x00000418
+
+// Internal
+#define FCFG1_O_TFW_FT                                              0x0000041C
+
+// Internal
+#define FCFG1_O_DAC_CAL0                                            0x00000420
+
+// Internal
+#define FCFG1_O_DAC_CAL1                                            0x00000424
+
+// Internal
+#define FCFG1_O_DAC_CAL2                                            0x00000428
+
+// Internal
+#define FCFG1_O_DAC_CAL3                                            0x0000042C
 
 //*****************************************************************************
 //
@@ -316,261 +309,545 @@
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CONFIG_RF_FRONTEND_DIV5
+// Register: FCFG1_O_HPOSC_MEAS_5
+//
+//*****************************************************************************
+// Field: [31:16] HPOSC_D5
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_5_HPOSC_D5_W                                       16
+#define FCFG1_HPOSC_MEAS_5_HPOSC_D5_M                               0xFFFF0000
+#define FCFG1_HPOSC_MEAS_5_HPOSC_D5_S                                       16
+
+// Field:  [15:8] HPOSC_T5
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_5_HPOSC_T5_W                                        8
+#define FCFG1_HPOSC_MEAS_5_HPOSC_T5_M                               0x0000FF00
+#define FCFG1_HPOSC_MEAS_5_HPOSC_T5_S                                        8
+
+// Field:   [7:0] HPOSC_DT5
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_5_HPOSC_DT5_W                                       8
+#define FCFG1_HPOSC_MEAS_5_HPOSC_DT5_M                              0x000000FF
+#define FCFG1_HPOSC_MEAS_5_HPOSC_DT5_S                                       0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_HPOSC_MEAS_4
+//
+//*****************************************************************************
+// Field: [31:16] HPOSC_D4
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_4_HPOSC_D4_W                                       16
+#define FCFG1_HPOSC_MEAS_4_HPOSC_D4_M                               0xFFFF0000
+#define FCFG1_HPOSC_MEAS_4_HPOSC_D4_S                                       16
+
+// Field:  [15:8] HPOSC_T4
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_4_HPOSC_T4_W                                        8
+#define FCFG1_HPOSC_MEAS_4_HPOSC_T4_M                               0x0000FF00
+#define FCFG1_HPOSC_MEAS_4_HPOSC_T4_S                                        8
+
+// Field:   [7:0] HPOSC_DT4
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_4_HPOSC_DT4_W                                       8
+#define FCFG1_HPOSC_MEAS_4_HPOSC_DT4_M                              0x000000FF
+#define FCFG1_HPOSC_MEAS_4_HPOSC_DT4_S                                       0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_HPOSC_MEAS_3
+//
+//*****************************************************************************
+// Field: [31:16] HPOSC_D3
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_3_HPOSC_D3_W                                       16
+#define FCFG1_HPOSC_MEAS_3_HPOSC_D3_M                               0xFFFF0000
+#define FCFG1_HPOSC_MEAS_3_HPOSC_D3_S                                       16
+
+// Field:  [15:8] HPOSC_T3
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_3_HPOSC_T3_W                                        8
+#define FCFG1_HPOSC_MEAS_3_HPOSC_T3_M                               0x0000FF00
+#define FCFG1_HPOSC_MEAS_3_HPOSC_T3_S                                        8
+
+// Field:   [7:0] HPOSC_DT3
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_3_HPOSC_DT3_W                                       8
+#define FCFG1_HPOSC_MEAS_3_HPOSC_DT3_M                              0x000000FF
+#define FCFG1_HPOSC_MEAS_3_HPOSC_DT3_S                                       0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_HPOSC_MEAS_2
+//
+//*****************************************************************************
+// Field: [31:16] HPOSC_D2
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_2_HPOSC_D2_W                                       16
+#define FCFG1_HPOSC_MEAS_2_HPOSC_D2_M                               0xFFFF0000
+#define FCFG1_HPOSC_MEAS_2_HPOSC_D2_S                                       16
+
+// Field:  [15:8] HPOSC_T2
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_2_HPOSC_T2_W                                        8
+#define FCFG1_HPOSC_MEAS_2_HPOSC_T2_M                               0x0000FF00
+#define FCFG1_HPOSC_MEAS_2_HPOSC_T2_S                                        8
+
+// Field:   [7:0] HPOSC_DT2
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_2_HPOSC_DT2_W                                       8
+#define FCFG1_HPOSC_MEAS_2_HPOSC_DT2_M                              0x000000FF
+#define FCFG1_HPOSC_MEAS_2_HPOSC_DT2_S                                       0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_HPOSC_MEAS_1
+//
+//*****************************************************************************
+// Field: [31:16] HPOSC_D1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_1_HPOSC_D1_W                                       16
+#define FCFG1_HPOSC_MEAS_1_HPOSC_D1_M                               0xFFFF0000
+#define FCFG1_HPOSC_MEAS_1_HPOSC_D1_S                                       16
+
+// Field:  [15:8] HPOSC_T1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_1_HPOSC_T1_W                                        8
+#define FCFG1_HPOSC_MEAS_1_HPOSC_T1_M                               0x0000FF00
+#define FCFG1_HPOSC_MEAS_1_HPOSC_T1_S                                        8
+
+// Field:   [7:0] HPOSC_DT1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_HPOSC_MEAS_1_HPOSC_DT1_W                                       8
+#define FCFG1_HPOSC_MEAS_1_HPOSC_DT1_M                              0x000000FF
+#define FCFG1_HPOSC_MEAS_1_HPOSC_DT1_S                                       0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_CC26_FE
 //
 //*****************************************************************************
 // Field: [31:28] IFAMP_IB
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_IFAMP_IB_W                             4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_IFAMP_IB_M                    0xF0000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_IFAMP_IB_S                            28
+#define FCFG1_CONFIG_CC26_FE_IFAMP_IB_W                                      4
+#define FCFG1_CONFIG_CC26_FE_IFAMP_IB_M                             0xF0000000
+#define FCFG1_CONFIG_CC26_FE_IFAMP_IB_S                                     28
 
 // Field: [27:24] LNA_IB
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_LNA_IB_W                               4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_LNA_IB_M                      0x0F000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_LNA_IB_S                              24
+#define FCFG1_CONFIG_CC26_FE_LNA_IB_W                                        4
+#define FCFG1_CONFIG_CC26_FE_LNA_IB_M                               0x0F000000
+#define FCFG1_CONFIG_CC26_FE_LNA_IB_S                                       24
 
 // Field: [23:19] IFAMP_TRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_IFAMP_TRIM_W                           5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_IFAMP_TRIM_M                  0x00F80000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_IFAMP_TRIM_S                          19
+#define FCFG1_CONFIG_CC26_FE_IFAMP_TRIM_W                                    5
+#define FCFG1_CONFIG_CC26_FE_IFAMP_TRIM_M                           0x00F80000
+#define FCFG1_CONFIG_CC26_FE_IFAMP_TRIM_S                                   19
 
 // Field: [18:14] CTL_PA0_TRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_CTL_PA0_TRIM_W                         5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_CTL_PA0_TRIM_M                0x0007C000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_CTL_PA0_TRIM_S                        14
+#define FCFG1_CONFIG_CC26_FE_CTL_PA0_TRIM_W                                  5
+#define FCFG1_CONFIG_CC26_FE_CTL_PA0_TRIM_M                         0x0007C000
+#define FCFG1_CONFIG_CC26_FE_CTL_PA0_TRIM_S                                 14
 
-// Field:   [6:0] RFLDO_TRIM_OUTPUT
+// Field:    [13] PATRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_RFLDO_TRIM_OUTPUT_W                    7
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_RFLDO_TRIM_OUTPUT_M           0x0000007F
-#define FCFG1_CONFIG_RF_FRONTEND_DIV5_RFLDO_TRIM_OUTPUT_S                    0
+#define FCFG1_CONFIG_CC26_FE_PATRIMCOMPLETE_N                       0x00002000
+#define FCFG1_CONFIG_CC26_FE_PATRIMCOMPLETE_N_BITN                          13
+#define FCFG1_CONFIG_CC26_FE_PATRIMCOMPLETE_N_M                     0x00002000
+#define FCFG1_CONFIG_CC26_FE_PATRIMCOMPLETE_N_S                             13
+
+// Field:    [12] RSSITRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_CC26_FE_RSSITRIMCOMPLETE_N                     0x00001000
+#define FCFG1_CONFIG_CC26_FE_RSSITRIMCOMPLETE_N_BITN                        12
+#define FCFG1_CONFIG_CC26_FE_RSSITRIMCOMPLETE_N_M                   0x00001000
+#define FCFG1_CONFIG_CC26_FE_RSSITRIMCOMPLETE_N_S                           12
+
+// Field:   [7:0] RSSI_OFFSET
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_CC26_FE_RSSI_OFFSET_W                                   8
+#define FCFG1_CONFIG_CC26_FE_RSSI_OFFSET_M                          0x000000FF
+#define FCFG1_CONFIG_CC26_FE_RSSI_OFFSET_S                                   0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CONFIG_RF_FRONTEND_DIV6
+// Register: FCFG1_O_CONFIG_CC13_FE
 //
 //*****************************************************************************
 // Field: [31:28] IFAMP_IB
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_IFAMP_IB_W                             4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_IFAMP_IB_M                    0xF0000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_IFAMP_IB_S                            28
+#define FCFG1_CONFIG_CC13_FE_IFAMP_IB_W                                      4
+#define FCFG1_CONFIG_CC13_FE_IFAMP_IB_M                             0xF0000000
+#define FCFG1_CONFIG_CC13_FE_IFAMP_IB_S                                     28
 
 // Field: [27:24] LNA_IB
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_LNA_IB_W                               4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_LNA_IB_M                      0x0F000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_LNA_IB_S                              24
+#define FCFG1_CONFIG_CC13_FE_LNA_IB_W                                        4
+#define FCFG1_CONFIG_CC13_FE_LNA_IB_M                               0x0F000000
+#define FCFG1_CONFIG_CC13_FE_LNA_IB_S                                       24
 
 // Field: [23:19] IFAMP_TRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_IFAMP_TRIM_W                           5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_IFAMP_TRIM_M                  0x00F80000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_IFAMP_TRIM_S                          19
+#define FCFG1_CONFIG_CC13_FE_IFAMP_TRIM_W                                    5
+#define FCFG1_CONFIG_CC13_FE_IFAMP_TRIM_M                           0x00F80000
+#define FCFG1_CONFIG_CC13_FE_IFAMP_TRIM_S                                   19
 
 // Field: [18:14] CTL_PA0_TRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_CTL_PA0_TRIM_W                         5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_CTL_PA0_TRIM_M                0x0007C000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_CTL_PA0_TRIM_S                        14
+#define FCFG1_CONFIG_CC13_FE_CTL_PA0_TRIM_W                                  5
+#define FCFG1_CONFIG_CC13_FE_CTL_PA0_TRIM_M                         0x0007C000
+#define FCFG1_CONFIG_CC13_FE_CTL_PA0_TRIM_S                                 14
 
-// Field:   [6:0] RFLDO_TRIM_OUTPUT
+// Field:    [13] PATRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_RFLDO_TRIM_OUTPUT_W                    7
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_RFLDO_TRIM_OUTPUT_M           0x0000007F
-#define FCFG1_CONFIG_RF_FRONTEND_DIV6_RFLDO_TRIM_OUTPUT_S                    0
+#define FCFG1_CONFIG_CC13_FE_PATRIMCOMPLETE_N                       0x00002000
+#define FCFG1_CONFIG_CC13_FE_PATRIMCOMPLETE_N_BITN                          13
+#define FCFG1_CONFIG_CC13_FE_PATRIMCOMPLETE_N_M                     0x00002000
+#define FCFG1_CONFIG_CC13_FE_PATRIMCOMPLETE_N_S                             13
 
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_RF_FRONTEND_DIV10
-//
-//*****************************************************************************
-// Field: [31:28] IFAMP_IB
+// Field:    [12] RSSITRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_IFAMP_IB_W                            4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_IFAMP_IB_M                   0xF0000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_IFAMP_IB_S                           28
+#define FCFG1_CONFIG_CC13_FE_RSSITRIMCOMPLETE_N                     0x00001000
+#define FCFG1_CONFIG_CC13_FE_RSSITRIMCOMPLETE_N_BITN                        12
+#define FCFG1_CONFIG_CC13_FE_RSSITRIMCOMPLETE_N_M                   0x00001000
+#define FCFG1_CONFIG_CC13_FE_RSSITRIMCOMPLETE_N_S                           12
 
-// Field: [27:24] LNA_IB
+// Field:   [7:0] RSSI_OFFSET
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_LNA_IB_W                              4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_LNA_IB_M                     0x0F000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_LNA_IB_S                             24
-
-// Field: [23:19] IFAMP_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_IFAMP_TRIM_W                          5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_IFAMP_TRIM_M                 0x00F80000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_IFAMP_TRIM_S                         19
-
-// Field: [18:14] CTL_PA0_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_CTL_PA0_TRIM_W                        5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_CTL_PA0_TRIM_M               0x0007C000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_CTL_PA0_TRIM_S                       14
-
-// Field:   [6:0] RFLDO_TRIM_OUTPUT
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_RFLDO_TRIM_OUTPUT_W                   7
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_RFLDO_TRIM_OUTPUT_M          0x0000007F
-#define FCFG1_CONFIG_RF_FRONTEND_DIV10_RFLDO_TRIM_OUTPUT_S                   0
+#define FCFG1_CONFIG_CC13_FE_RSSI_OFFSET_W                                   8
+#define FCFG1_CONFIG_CC13_FE_RSSI_OFFSET_M                          0x000000FF
+#define FCFG1_CONFIG_CC13_FE_RSSI_OFFSET_S                                   0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CONFIG_RF_FRONTEND_DIV12
+// Register: FCFG1_O_CONFIG_RF_COMMON
 //
 //*****************************************************************************
-// Field: [31:28] IFAMP_IB
+// Field:    [31] DISABLE_CORNER_CAP
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_IFAMP_IB_W                            4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_IFAMP_IB_M                   0xF0000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_IFAMP_IB_S                           28
+#define FCFG1_CONFIG_RF_COMMON_DISABLE_CORNER_CAP                   0x80000000
+#define FCFG1_CONFIG_RF_COMMON_DISABLE_CORNER_CAP_BITN                      31
+#define FCFG1_CONFIG_RF_COMMON_DISABLE_CORNER_CAP_M                 0x80000000
+#define FCFG1_CONFIG_RF_COMMON_DISABLE_CORNER_CAP_S                         31
 
-// Field: [27:24] LNA_IB
+// Field: [30:25] SLDO_TRIM_OUTPUT
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_LNA_IB_W                              4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_LNA_IB_M                     0x0F000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_LNA_IB_S                             24
+#define FCFG1_CONFIG_RF_COMMON_SLDO_TRIM_OUTPUT_W                            6
+#define FCFG1_CONFIG_RF_COMMON_SLDO_TRIM_OUTPUT_M                   0x7E000000
+#define FCFG1_CONFIG_RF_COMMON_SLDO_TRIM_OUTPUT_S                           25
 
-// Field: [23:19] IFAMP_TRIM
+// Field:    [21] PA20DBMTRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_IFAMP_TRIM_W                          5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_IFAMP_TRIM_M                 0x00F80000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_IFAMP_TRIM_S                         19
+#define FCFG1_CONFIG_RF_COMMON_PA20DBMTRIMCOMPLETE_N                0x00200000
+#define FCFG1_CONFIG_RF_COMMON_PA20DBMTRIMCOMPLETE_N_BITN                   21
+#define FCFG1_CONFIG_RF_COMMON_PA20DBMTRIMCOMPLETE_N_M              0x00200000
+#define FCFG1_CONFIG_RF_COMMON_PA20DBMTRIMCOMPLETE_N_S                      21
 
-// Field: [18:14] CTL_PA0_TRIM
+// Field: [20:16] CTL_PA_20DBM_TRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_CTL_PA0_TRIM_W                        5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_CTL_PA0_TRIM_M               0x0007C000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_CTL_PA0_TRIM_S                       14
+#define FCFG1_CONFIG_RF_COMMON_CTL_PA_20DBM_TRIM_W                           5
+#define FCFG1_CONFIG_RF_COMMON_CTL_PA_20DBM_TRIM_M                  0x001F0000
+#define FCFG1_CONFIG_RF_COMMON_CTL_PA_20DBM_TRIM_S                          16
 
-// Field:   [6:0] RFLDO_TRIM_OUTPUT
+// Field:  [15:9] RFLDO_TRIM_OUTPUT
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_RFLDO_TRIM_OUTPUT_W                   7
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_RFLDO_TRIM_OUTPUT_M          0x0000007F
-#define FCFG1_CONFIG_RF_FRONTEND_DIV12_RFLDO_TRIM_OUTPUT_S                   0
+#define FCFG1_CONFIG_RF_COMMON_RFLDO_TRIM_OUTPUT_W                           7
+#define FCFG1_CONFIG_RF_COMMON_RFLDO_TRIM_OUTPUT_M                  0x0000FE00
+#define FCFG1_CONFIG_RF_COMMON_RFLDO_TRIM_OUTPUT_S                           9
 
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_RF_FRONTEND_DIV15
-//
-//*****************************************************************************
-// Field: [31:28] IFAMP_IB
+// Field:   [8:6] QUANTCTLTHRES
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_IFAMP_IB_W                            4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_IFAMP_IB_M                   0xF0000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_IFAMP_IB_S                           28
+#define FCFG1_CONFIG_RF_COMMON_QUANTCTLTHRES_W                               3
+#define FCFG1_CONFIG_RF_COMMON_QUANTCTLTHRES_M                      0x000001C0
+#define FCFG1_CONFIG_RF_COMMON_QUANTCTLTHRES_S                               6
 
-// Field: [27:24] LNA_IB
+// Field:   [5:0] DACTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_LNA_IB_W                              4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_LNA_IB_M                     0x0F000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_LNA_IB_S                             24
-
-// Field: [23:19] IFAMP_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_IFAMP_TRIM_W                          5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_IFAMP_TRIM_M                 0x00F80000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_IFAMP_TRIM_S                         19
-
-// Field: [18:14] CTL_PA0_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_CTL_PA0_TRIM_W                        5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_CTL_PA0_TRIM_M               0x0007C000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_CTL_PA0_TRIM_S                       14
-
-// Field:   [6:0] RFLDO_TRIM_OUTPUT
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_RFLDO_TRIM_OUTPUT_W                   7
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_RFLDO_TRIM_OUTPUT_M          0x0000007F
-#define FCFG1_CONFIG_RF_FRONTEND_DIV15_RFLDO_TRIM_OUTPUT_S                   0
+#define FCFG1_CONFIG_RF_COMMON_DACTRIM_W                                     6
+#define FCFG1_CONFIG_RF_COMMON_DACTRIM_M                            0x0000003F
+#define FCFG1_CONFIG_RF_COMMON_DACTRIM_S                                     0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CONFIG_RF_FRONTEND_DIV30
+// Register: FCFG1_O_CONFIG_SYNTH_DIV2_CC26_2G4
 //
 //*****************************************************************************
-// Field: [31:28] IFAMP_IB
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_IFAMP_IB_W                            4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_IFAMP_IB_M                   0xF0000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_IFAMP_IB_S                           28
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_MIN_ALLOWED_RTRIM_W                 4
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_MIN_ALLOWED_RTRIM_M        0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_MIN_ALLOWED_RTRIM_S                28
 
-// Field: [27:24] LNA_IB
+// Field: [27:12] RFC_MDM_DEMIQMC0
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_LNA_IB_W                              4
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_LNA_IB_M                     0x0F000000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_LNA_IB_S                             24
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_RFC_MDM_DEMIQMC0_W                 16
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_RFC_MDM_DEMIQMC0_M         0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_RFC_MDM_DEMIQMC0_S                 12
 
-// Field: [23:19] IFAMP_TRIM
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_IFAMP_TRIM_W                          5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_IFAMP_TRIM_M                 0x00F80000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_IFAMP_TRIM_S                         19
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_LDOVCO_TRIM_OUTPUT_W                6
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_LDOVCO_TRIM_OUTPUT_M       0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_LDOVCO_TRIM_OUTPUT_S                6
 
-// Field: [18:14] CTL_PA0_TRIM
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_CTL_PA0_TRIM_W                        5
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_CTL_PA0_TRIM_M               0x0007C000
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_CTL_PA0_TRIM_S                       14
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
 
-// Field:   [6:0] RFLDO_TRIM_OUTPUT
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_SYNTH_DIV2_CC13_2G4
+//
+//*****************************************************************************
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_RFLDO_TRIM_OUTPUT_W                   7
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_RFLDO_TRIM_OUTPUT_M          0x0000007F
-#define FCFG1_CONFIG_RF_FRONTEND_DIV30_RFLDO_TRIM_OUTPUT_S                   0
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_MIN_ALLOWED_RTRIM_W                 4
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_MIN_ALLOWED_RTRIM_M        0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_MIN_ALLOWED_RTRIM_S                28
+
+// Field: [27:12] RFC_MDM_DEMIQMC0
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_RFC_MDM_DEMIQMC0_W                 16
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_RFC_MDM_DEMIQMC0_M         0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_RFC_MDM_DEMIQMC0_S                 12
+
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_LDOVCO_TRIM_OUTPUT_W                6
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_LDOVCO_TRIM_OUTPUT_M       0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_LDOVCO_TRIM_OUTPUT_S                6
+
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_2G4_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_SYNTH_DIV2_CC26_1G
+//
+//*****************************************************************************
+// Field: [31:28] MIN_ALLOWED_RTRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_MIN_ALLOWED_RTRIM_W                  4
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_MIN_ALLOWED_RTRIM_M         0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_MIN_ALLOWED_RTRIM_S                 28
+
+// Field: [27:12] RFC_MDM_DEMIQMC0
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_RFC_MDM_DEMIQMC0_W                  16
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_RFC_MDM_DEMIQMC0_M          0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_RFC_MDM_DEMIQMC0_S                  12
+
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_LDOVCO_TRIM_OUTPUT_W                 6
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_LDOVCO_TRIM_OUTPUT_M        0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_LDOVCO_TRIM_OUTPUT_S                 6
+
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC26_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_SYNTH_DIV2_CC13_1G
+//
+//*****************************************************************************
+// Field: [31:28] MIN_ALLOWED_RTRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_MIN_ALLOWED_RTRIM_W                  4
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_MIN_ALLOWED_RTRIM_M         0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_MIN_ALLOWED_RTRIM_S                 28
+
+// Field: [27:12] RFC_MDM_DEMIQMC0
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_RFC_MDM_DEMIQMC0_W                  16
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_RFC_MDM_DEMIQMC0_M          0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_RFC_MDM_DEMIQMC0_S                  12
+
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_LDOVCO_TRIM_OUTPUT_W                 6
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_LDOVCO_TRIM_OUTPUT_M        0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_LDOVCO_TRIM_OUTPUT_S                 6
+
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV2_CC13_1G_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_SYNTH_DIV4_CC26
+//
+//*****************************************************************************
+// Field: [31:28] MIN_ALLOWED_RTRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_MIN_ALLOWED_RTRIM_W                     4
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_MIN_ALLOWED_RTRIM_M            0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_MIN_ALLOWED_RTRIM_S                    28
+
+// Field: [27:12] RFC_MDM_DEMIQMC0
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_RFC_MDM_DEMIQMC0_W                     16
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_RFC_MDM_DEMIQMC0_M             0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_RFC_MDM_DEMIQMC0_S                     12
+
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_LDOVCO_TRIM_OUTPUT_W                    6
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_LDOVCO_TRIM_OUTPUT_M           0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_LDOVCO_TRIM_OUTPUT_S                    6
+
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV4_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_SYNTH_DIV4_CC13
+//
+//*****************************************************************************
+// Field: [31:28] MIN_ALLOWED_RTRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_MIN_ALLOWED_RTRIM_W                     4
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_MIN_ALLOWED_RTRIM_M            0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_MIN_ALLOWED_RTRIM_S                    28
+
+// Field: [27:12] RFC_MDM_DEMIQMC0
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_RFC_MDM_DEMIQMC0_W                     16
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_RFC_MDM_DEMIQMC0_M             0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_RFC_MDM_DEMIQMC0_S                     12
+
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_LDOVCO_TRIM_OUTPUT_W                    6
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_LDOVCO_TRIM_OUTPUT_M           0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_LDOVCO_TRIM_OUTPUT_S                    6
+
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV4_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
 
 //*****************************************************************************
 //
 // Register: FCFG1_O_CONFIG_SYNTH_DIV5
 //
 //*****************************************************************************
-// Field:    [28] DISABLE_CORNER_CAP
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV5_DISABLE_CORNER_CAP                  0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV5_DISABLE_CORNER_CAP_BITN                     28
-#define FCFG1_CONFIG_SYNTH_DIV5_DISABLE_CORNER_CAP_M                0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV5_DISABLE_CORNER_CAP_S                        28
+#define FCFG1_CONFIG_SYNTH_DIV5_MIN_ALLOWED_RTRIM_W                          4
+#define FCFG1_CONFIG_SYNTH_DIV5_MIN_ALLOWED_RTRIM_M                 0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV5_MIN_ALLOWED_RTRIM_S                         28
 
 // Field: [27:12] RFC_MDM_DEMIQMC0
 //
-// Trim value for RF Core.
-// Value is read by RF Core ROM FW during RF Core initialization.
+// Internal. Only to be used through TI provided API.
 #define FCFG1_CONFIG_SYNTH_DIV5_RFC_MDM_DEMIQMC0_W                          16
 #define FCFG1_CONFIG_SYNTH_DIV5_RFC_MDM_DEMIQMC0_M                  0x0FFFF000
 #define FCFG1_CONFIG_SYNTH_DIV5_RFC_MDM_DEMIQMC0_S                          12
@@ -582,65 +859,108 @@
 #define FCFG1_CONFIG_SYNTH_DIV5_LDOVCO_TRIM_OUTPUT_M                0x00000FC0
 #define FCFG1_CONFIG_SYNTH_DIV5_LDOVCO_TRIM_OUTPUT_S                         6
 
-// Field:   [5:0] SLDO_TRIM_OUTPUT
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV5_SLDO_TRIM_OUTPUT_W                           6
-#define FCFG1_CONFIG_SYNTH_DIV5_SLDO_TRIM_OUTPUT_M                  0x0000003F
-#define FCFG1_CONFIG_SYNTH_DIV5_SLDO_TRIM_OUTPUT_S                           0
+#define FCFG1_CONFIG_SYNTH_DIV5_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N     0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV5_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV5_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M    \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV5_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S    \
+                                                                             5
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CONFIG_SYNTH_DIV6
+// Register: FCFG1_O_CONFIG_SYNTH_DIV6_CC26
 //
 //*****************************************************************************
-// Field:    [28] DISABLE_CORNER_CAP
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV6_DISABLE_CORNER_CAP                  0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV6_DISABLE_CORNER_CAP_BITN                     28
-#define FCFG1_CONFIG_SYNTH_DIV6_DISABLE_CORNER_CAP_M                0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV6_DISABLE_CORNER_CAP_S                        28
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_MIN_ALLOWED_RTRIM_W                     4
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_MIN_ALLOWED_RTRIM_M            0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_MIN_ALLOWED_RTRIM_S                    28
 
 // Field: [27:12] RFC_MDM_DEMIQMC0
 //
-// Trim value for RF Core.
-// Value is read by RF Core ROM FW during RF Core initialization.
-#define FCFG1_CONFIG_SYNTH_DIV6_RFC_MDM_DEMIQMC0_W                          16
-#define FCFG1_CONFIG_SYNTH_DIV6_RFC_MDM_DEMIQMC0_M                  0x0FFFF000
-#define FCFG1_CONFIG_SYNTH_DIV6_RFC_MDM_DEMIQMC0_S                          12
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_RFC_MDM_DEMIQMC0_W                     16
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_RFC_MDM_DEMIQMC0_M             0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_RFC_MDM_DEMIQMC0_S                     12
 
 // Field:  [11:6] LDOVCO_TRIM_OUTPUT
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV6_LDOVCO_TRIM_OUTPUT_W                         6
-#define FCFG1_CONFIG_SYNTH_DIV6_LDOVCO_TRIM_OUTPUT_M                0x00000FC0
-#define FCFG1_CONFIG_SYNTH_DIV6_LDOVCO_TRIM_OUTPUT_S                         6
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_LDOVCO_TRIM_OUTPUT_W                    6
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_LDOVCO_TRIM_OUTPUT_M           0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_LDOVCO_TRIM_OUTPUT_S                    6
 
-// Field:   [5:0] SLDO_TRIM_OUTPUT
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV6_SLDO_TRIM_OUTPUT_W                           6
-#define FCFG1_CONFIG_SYNTH_DIV6_SLDO_TRIM_OUTPUT_M                  0x0000003F
-#define FCFG1_CONFIG_SYNTH_DIV6_SLDO_TRIM_OUTPUT_S                           0
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV6_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_SYNTH_DIV6_CC13
+//
+//*****************************************************************************
+// Field: [31:28] MIN_ALLOWED_RTRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_MIN_ALLOWED_RTRIM_W                     4
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_MIN_ALLOWED_RTRIM_M            0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_MIN_ALLOWED_RTRIM_S                    28
+
+// Field: [27:12] RFC_MDM_DEMIQMC0
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_RFC_MDM_DEMIQMC0_W                     16
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_RFC_MDM_DEMIQMC0_M             0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_RFC_MDM_DEMIQMC0_S                     12
+
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_LDOVCO_TRIM_OUTPUT_W                    6
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_LDOVCO_TRIM_OUTPUT_M           0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_LDOVCO_TRIM_OUTPUT_S                    6
+
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV6_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
 
 //*****************************************************************************
 //
 // Register: FCFG1_O_CONFIG_SYNTH_DIV10
 //
 //*****************************************************************************
-// Field:    [28] DISABLE_CORNER_CAP
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV10_DISABLE_CORNER_CAP                 0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV10_DISABLE_CORNER_CAP_BITN                    28
-#define FCFG1_CONFIG_SYNTH_DIV10_DISABLE_CORNER_CAP_M               0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV10_DISABLE_CORNER_CAP_S                       28
+#define FCFG1_CONFIG_SYNTH_DIV10_MIN_ALLOWED_RTRIM_W                         4
+#define FCFG1_CONFIG_SYNTH_DIV10_MIN_ALLOWED_RTRIM_M                0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV10_MIN_ALLOWED_RTRIM_S                        28
 
 // Field: [27:12] RFC_MDM_DEMIQMC0
 //
-// Trim value for RF Core.
-// Value is read by RF Core ROM FW during RF Core initialization.
+// Internal. Only to be used through TI provided API.
 #define FCFG1_CONFIG_SYNTH_DIV10_RFC_MDM_DEMIQMC0_W                         16
 #define FCFG1_CONFIG_SYNTH_DIV10_RFC_MDM_DEMIQMC0_M                 0x0FFFF000
 #define FCFG1_CONFIG_SYNTH_DIV10_RFC_MDM_DEMIQMC0_S                         12
@@ -652,65 +972,109 @@
 #define FCFG1_CONFIG_SYNTH_DIV10_LDOVCO_TRIM_OUTPUT_M               0x00000FC0
 #define FCFG1_CONFIG_SYNTH_DIV10_LDOVCO_TRIM_OUTPUT_S                        6
 
-// Field:   [5:0] SLDO_TRIM_OUTPUT
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV10_SLDO_TRIM_OUTPUT_W                          6
-#define FCFG1_CONFIG_SYNTH_DIV10_SLDO_TRIM_OUTPUT_M                 0x0000003F
-#define FCFG1_CONFIG_SYNTH_DIV10_SLDO_TRIM_OUTPUT_S                          0
+#define FCFG1_CONFIG_SYNTH_DIV10_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N     \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV10_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV10_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M   \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV10_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S   \
+                                                                             5
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CONFIG_SYNTH_DIV12
+// Register: FCFG1_O_CONFIG_SYNTH_DIV12_CC26
 //
 //*****************************************************************************
-// Field:    [28] DISABLE_CORNER_CAP
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV12_DISABLE_CORNER_CAP                 0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV12_DISABLE_CORNER_CAP_BITN                    28
-#define FCFG1_CONFIG_SYNTH_DIV12_DISABLE_CORNER_CAP_M               0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV12_DISABLE_CORNER_CAP_S                       28
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_MIN_ALLOWED_RTRIM_W                    4
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_MIN_ALLOWED_RTRIM_M           0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_MIN_ALLOWED_RTRIM_S                   28
 
 // Field: [27:12] RFC_MDM_DEMIQMC0
 //
-// Trim value for RF Core.
-// Value is read by RF Core ROM FW during RF Core initialization.
-#define FCFG1_CONFIG_SYNTH_DIV12_RFC_MDM_DEMIQMC0_W                         16
-#define FCFG1_CONFIG_SYNTH_DIV12_RFC_MDM_DEMIQMC0_M                 0x0FFFF000
-#define FCFG1_CONFIG_SYNTH_DIV12_RFC_MDM_DEMIQMC0_S                         12
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_RFC_MDM_DEMIQMC0_W                    16
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_RFC_MDM_DEMIQMC0_M            0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_RFC_MDM_DEMIQMC0_S                    12
 
 // Field:  [11:6] LDOVCO_TRIM_OUTPUT
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV12_LDOVCO_TRIM_OUTPUT_W                        6
-#define FCFG1_CONFIG_SYNTH_DIV12_LDOVCO_TRIM_OUTPUT_M               0x00000FC0
-#define FCFG1_CONFIG_SYNTH_DIV12_LDOVCO_TRIM_OUTPUT_S                        6
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_LDOVCO_TRIM_OUTPUT_W                   6
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_LDOVCO_TRIM_OUTPUT_M          0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_LDOVCO_TRIM_OUTPUT_S                   6
 
-// Field:   [5:0] SLDO_TRIM_OUTPUT
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV12_SLDO_TRIM_OUTPUT_W                          6
-#define FCFG1_CONFIG_SYNTH_DIV12_SLDO_TRIM_OUTPUT_M                 0x0000003F
-#define FCFG1_CONFIG_SYNTH_DIV12_SLDO_TRIM_OUTPUT_S                          0
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV12_CC26_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_CONFIG_SYNTH_DIV12_CC13
+//
+//*****************************************************************************
+// Field: [31:28] MIN_ALLOWED_RTRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_MIN_ALLOWED_RTRIM_W                    4
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_MIN_ALLOWED_RTRIM_M           0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_MIN_ALLOWED_RTRIM_S                   28
+
+// Field: [27:12] RFC_MDM_DEMIQMC0
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_RFC_MDM_DEMIQMC0_W                    16
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_RFC_MDM_DEMIQMC0_M            0x0FFFF000
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_RFC_MDM_DEMIQMC0_S                    12
+
+// Field:  [11:6] LDOVCO_TRIM_OUTPUT
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_LDOVCO_TRIM_OUTPUT_W                   6
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_LDOVCO_TRIM_OUTPUT_M          0x00000FC0
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_LDOVCO_TRIM_OUTPUT_S                   6
+
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV12_CC13_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S \
+                                                                             5
 
 //*****************************************************************************
 //
 // Register: FCFG1_O_CONFIG_SYNTH_DIV15
 //
 //*****************************************************************************
-// Field:    [28] DISABLE_CORNER_CAP
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV15_DISABLE_CORNER_CAP                 0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV15_DISABLE_CORNER_CAP_BITN                    28
-#define FCFG1_CONFIG_SYNTH_DIV15_DISABLE_CORNER_CAP_M               0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV15_DISABLE_CORNER_CAP_S                       28
+#define FCFG1_CONFIG_SYNTH_DIV15_MIN_ALLOWED_RTRIM_W                         4
+#define FCFG1_CONFIG_SYNTH_DIV15_MIN_ALLOWED_RTRIM_M                0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV15_MIN_ALLOWED_RTRIM_S                        28
 
 // Field: [27:12] RFC_MDM_DEMIQMC0
 //
-// Trim value for RF Core.
-// Value is read by RF Core ROM FW during RF Core initialization.
+// Internal. Only to be used through TI provided API.
 #define FCFG1_CONFIG_SYNTH_DIV15_RFC_MDM_DEMIQMC0_W                         16
 #define FCFG1_CONFIG_SYNTH_DIV15_RFC_MDM_DEMIQMC0_M                 0x0FFFF000
 #define FCFG1_CONFIG_SYNTH_DIV15_RFC_MDM_DEMIQMC0_S                         12
@@ -722,30 +1086,33 @@
 #define FCFG1_CONFIG_SYNTH_DIV15_LDOVCO_TRIM_OUTPUT_M               0x00000FC0
 #define FCFG1_CONFIG_SYNTH_DIV15_LDOVCO_TRIM_OUTPUT_S                        6
 
-// Field:   [5:0] SLDO_TRIM_OUTPUT
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV15_SLDO_TRIM_OUTPUT_W                          6
-#define FCFG1_CONFIG_SYNTH_DIV15_SLDO_TRIM_OUTPUT_M                 0x0000003F
-#define FCFG1_CONFIG_SYNTH_DIV15_SLDO_TRIM_OUTPUT_S                          0
+#define FCFG1_CONFIG_SYNTH_DIV15_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N     \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV15_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV15_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M   \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV15_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S   \
+                                                                             5
 
 //*****************************************************************************
 //
 // Register: FCFG1_O_CONFIG_SYNTH_DIV30
 //
 //*****************************************************************************
-// Field:    [28] DISABLE_CORNER_CAP
+// Field: [31:28] MIN_ALLOWED_RTRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV30_DISABLE_CORNER_CAP                 0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV30_DISABLE_CORNER_CAP_BITN                    28
-#define FCFG1_CONFIG_SYNTH_DIV30_DISABLE_CORNER_CAP_M               0x10000000
-#define FCFG1_CONFIG_SYNTH_DIV30_DISABLE_CORNER_CAP_S                       28
+#define FCFG1_CONFIG_SYNTH_DIV30_MIN_ALLOWED_RTRIM_W                         4
+#define FCFG1_CONFIG_SYNTH_DIV30_MIN_ALLOWED_RTRIM_M                0xF0000000
+#define FCFG1_CONFIG_SYNTH_DIV30_MIN_ALLOWED_RTRIM_S                        28
 
 // Field: [27:12] RFC_MDM_DEMIQMC0
 //
-// Trim value for RF Core.
-// Value is read by RF Core ROM FW during RF Core initialization.
+// Internal. Only to be used through TI provided API.
 #define FCFG1_CONFIG_SYNTH_DIV30_RFC_MDM_DEMIQMC0_W                         16
 #define FCFG1_CONFIG_SYNTH_DIV30_RFC_MDM_DEMIQMC0_M                 0x0FFFF000
 #define FCFG1_CONFIG_SYNTH_DIV30_RFC_MDM_DEMIQMC0_S                         12
@@ -757,378 +1124,17 @@
 #define FCFG1_CONFIG_SYNTH_DIV30_LDOVCO_TRIM_OUTPUT_M               0x00000FC0
 #define FCFG1_CONFIG_SYNTH_DIV30_LDOVCO_TRIM_OUTPUT_S                        6
 
-// Field:   [5:0] SLDO_TRIM_OUTPUT
+// Field:     [5] RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DIV30_SLDO_TRIM_OUTPUT_W                          6
-#define FCFG1_CONFIG_SYNTH_DIV30_SLDO_TRIM_OUTPUT_M                 0x0000003F
-#define FCFG1_CONFIG_SYNTH_DIV30_SLDO_TRIM_OUTPUT_S                          0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_MISC_ADC_DIV5
-//
-//*****************************************************************************
-// Field: [21:18] MIN_ALLOWED_RTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV5_MIN_ALLOWED_RTRIM_W                       4
-#define FCFG1_CONFIG_MISC_ADC_DIV5_MIN_ALLOWED_RTRIM_M              0x003C0000
-#define FCFG1_CONFIG_MISC_ADC_DIV5_MIN_ALLOWED_RTRIM_S                      18
-
-// Field:  [16:9] RSSI_OFFSET
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV5_RSSI_OFFSET_W                             8
-#define FCFG1_CONFIG_MISC_ADC_DIV5_RSSI_OFFSET_M                    0x0001FE00
-#define FCFG1_CONFIG_MISC_ADC_DIV5_RSSI_OFFSET_S                             9
-
-// Field:   [8:6] QUANTCTLTHRES
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV5_QUANTCTLTHRES_W                           3
-#define FCFG1_CONFIG_MISC_ADC_DIV5_QUANTCTLTHRES_M                  0x000001C0
-#define FCFG1_CONFIG_MISC_ADC_DIV5_QUANTCTLTHRES_S                           6
-
-// Field:   [5:0] DACTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV5_DACTRIM_W                                 6
-#define FCFG1_CONFIG_MISC_ADC_DIV5_DACTRIM_M                        0x0000003F
-#define FCFG1_CONFIG_MISC_ADC_DIV5_DACTRIM_S                                 0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_MISC_ADC_DIV6
-//
-//*****************************************************************************
-// Field: [21:18] MIN_ALLOWED_RTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV6_MIN_ALLOWED_RTRIM_W                       4
-#define FCFG1_CONFIG_MISC_ADC_DIV6_MIN_ALLOWED_RTRIM_M              0x003C0000
-#define FCFG1_CONFIG_MISC_ADC_DIV6_MIN_ALLOWED_RTRIM_S                      18
-
-// Field:  [16:9] RSSI_OFFSET
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV6_RSSI_OFFSET_W                             8
-#define FCFG1_CONFIG_MISC_ADC_DIV6_RSSI_OFFSET_M                    0x0001FE00
-#define FCFG1_CONFIG_MISC_ADC_DIV6_RSSI_OFFSET_S                             9
-
-// Field:   [8:6] QUANTCTLTHRES
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV6_QUANTCTLTHRES_W                           3
-#define FCFG1_CONFIG_MISC_ADC_DIV6_QUANTCTLTHRES_M                  0x000001C0
-#define FCFG1_CONFIG_MISC_ADC_DIV6_QUANTCTLTHRES_S                           6
-
-// Field:   [5:0] DACTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV6_DACTRIM_W                                 6
-#define FCFG1_CONFIG_MISC_ADC_DIV6_DACTRIM_M                        0x0000003F
-#define FCFG1_CONFIG_MISC_ADC_DIV6_DACTRIM_S                                 0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_MISC_ADC_DIV10
-//
-//*****************************************************************************
-// Field: [21:18] MIN_ALLOWED_RTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV10_MIN_ALLOWED_RTRIM_W                      4
-#define FCFG1_CONFIG_MISC_ADC_DIV10_MIN_ALLOWED_RTRIM_M             0x003C0000
-#define FCFG1_CONFIG_MISC_ADC_DIV10_MIN_ALLOWED_RTRIM_S                     18
-
-// Field:  [16:9] RSSI_OFFSET
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV10_RSSI_OFFSET_W                            8
-#define FCFG1_CONFIG_MISC_ADC_DIV10_RSSI_OFFSET_M                   0x0001FE00
-#define FCFG1_CONFIG_MISC_ADC_DIV10_RSSI_OFFSET_S                            9
-
-// Field:   [8:6] QUANTCTLTHRES
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV10_QUANTCTLTHRES_W                          3
-#define FCFG1_CONFIG_MISC_ADC_DIV10_QUANTCTLTHRES_M                 0x000001C0
-#define FCFG1_CONFIG_MISC_ADC_DIV10_QUANTCTLTHRES_S                          6
-
-// Field:   [5:0] DACTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV10_DACTRIM_W                                6
-#define FCFG1_CONFIG_MISC_ADC_DIV10_DACTRIM_M                       0x0000003F
-#define FCFG1_CONFIG_MISC_ADC_DIV10_DACTRIM_S                                0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_MISC_ADC_DIV12
-//
-//*****************************************************************************
-// Field: [21:18] MIN_ALLOWED_RTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV12_MIN_ALLOWED_RTRIM_W                      4
-#define FCFG1_CONFIG_MISC_ADC_DIV12_MIN_ALLOWED_RTRIM_M             0x003C0000
-#define FCFG1_CONFIG_MISC_ADC_DIV12_MIN_ALLOWED_RTRIM_S                     18
-
-// Field:  [16:9] RSSI_OFFSET
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV12_RSSI_OFFSET_W                            8
-#define FCFG1_CONFIG_MISC_ADC_DIV12_RSSI_OFFSET_M                   0x0001FE00
-#define FCFG1_CONFIG_MISC_ADC_DIV12_RSSI_OFFSET_S                            9
-
-// Field:   [8:6] QUANTCTLTHRES
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV12_QUANTCTLTHRES_W                          3
-#define FCFG1_CONFIG_MISC_ADC_DIV12_QUANTCTLTHRES_M                 0x000001C0
-#define FCFG1_CONFIG_MISC_ADC_DIV12_QUANTCTLTHRES_S                          6
-
-// Field:   [5:0] DACTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV12_DACTRIM_W                                6
-#define FCFG1_CONFIG_MISC_ADC_DIV12_DACTRIM_M                       0x0000003F
-#define FCFG1_CONFIG_MISC_ADC_DIV12_DACTRIM_S                                0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_MISC_ADC_DIV15
-//
-//*****************************************************************************
-// Field: [21:18] MIN_ALLOWED_RTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV15_MIN_ALLOWED_RTRIM_W                      4
-#define FCFG1_CONFIG_MISC_ADC_DIV15_MIN_ALLOWED_RTRIM_M             0x003C0000
-#define FCFG1_CONFIG_MISC_ADC_DIV15_MIN_ALLOWED_RTRIM_S                     18
-
-// Field:  [16:9] RSSI_OFFSET
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV15_RSSI_OFFSET_W                            8
-#define FCFG1_CONFIG_MISC_ADC_DIV15_RSSI_OFFSET_M                   0x0001FE00
-#define FCFG1_CONFIG_MISC_ADC_DIV15_RSSI_OFFSET_S                            9
-
-// Field:   [8:6] QUANTCTLTHRES
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV15_QUANTCTLTHRES_W                          3
-#define FCFG1_CONFIG_MISC_ADC_DIV15_QUANTCTLTHRES_M                 0x000001C0
-#define FCFG1_CONFIG_MISC_ADC_DIV15_QUANTCTLTHRES_S                          6
-
-// Field:   [5:0] DACTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV15_DACTRIM_W                                6
-#define FCFG1_CONFIG_MISC_ADC_DIV15_DACTRIM_M                       0x0000003F
-#define FCFG1_CONFIG_MISC_ADC_DIV15_DACTRIM_S                                0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_MISC_ADC_DIV30
-//
-//*****************************************************************************
-// Field: [21:18] MIN_ALLOWED_RTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV30_MIN_ALLOWED_RTRIM_W                      4
-#define FCFG1_CONFIG_MISC_ADC_DIV30_MIN_ALLOWED_RTRIM_M             0x003C0000
-#define FCFG1_CONFIG_MISC_ADC_DIV30_MIN_ALLOWED_RTRIM_S                     18
-
-// Field:  [16:9] RSSI_OFFSET
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV30_RSSI_OFFSET_W                            8
-#define FCFG1_CONFIG_MISC_ADC_DIV30_RSSI_OFFSET_M                   0x0001FE00
-#define FCFG1_CONFIG_MISC_ADC_DIV30_RSSI_OFFSET_S                            9
-
-// Field:   [8:6] QUANTCTLTHRES
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV30_QUANTCTLTHRES_W                          3
-#define FCFG1_CONFIG_MISC_ADC_DIV30_QUANTCTLTHRES_M                 0x000001C0
-#define FCFG1_CONFIG_MISC_ADC_DIV30_QUANTCTLTHRES_S                          6
-
-// Field:   [5:0] DACTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DIV30_DACTRIM_W                                6
-#define FCFG1_CONFIG_MISC_ADC_DIV30_DACTRIM_M                       0x0000003F
-#define FCFG1_CONFIG_MISC_ADC_DIV30_DACTRIM_S                                0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_SHDW_DIE_ID_0
-//
-//*****************************************************************************
-// Field:  [31:0] ID_31_0
-//
-// Shadow of the DIE_ID_0 register in eFuse row number 3
-#define FCFG1_SHDW_DIE_ID_0_ID_31_0_W                                       32
-#define FCFG1_SHDW_DIE_ID_0_ID_31_0_M                               0xFFFFFFFF
-#define FCFG1_SHDW_DIE_ID_0_ID_31_0_S                                        0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_SHDW_DIE_ID_1
-//
-//*****************************************************************************
-// Field:  [31:0] ID_63_32
-//
-// Shadow of the DIE_ID_1 register in eFuse row number 4
-#define FCFG1_SHDW_DIE_ID_1_ID_63_32_W                                      32
-#define FCFG1_SHDW_DIE_ID_1_ID_63_32_M                              0xFFFFFFFF
-#define FCFG1_SHDW_DIE_ID_1_ID_63_32_S                                       0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_SHDW_DIE_ID_2
-//
-//*****************************************************************************
-// Field:  [31:0] ID_95_64
-//
-// Shadow of the DIE_ID_2 register in eFuse row number 5
-#define FCFG1_SHDW_DIE_ID_2_ID_95_64_W                                      32
-#define FCFG1_SHDW_DIE_ID_2_ID_95_64_M                              0xFFFFFFFF
-#define FCFG1_SHDW_DIE_ID_2_ID_95_64_S                                       0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_SHDW_DIE_ID_3
-//
-//*****************************************************************************
-// Field:  [31:0] ID_127_96
-//
-// Shadow of the DIE_ID_3 register in eFuse row number 6
-#define FCFG1_SHDW_DIE_ID_3_ID_127_96_W                                     32
-#define FCFG1_SHDW_DIE_ID_3_ID_127_96_M                             0xFFFFFFFF
-#define FCFG1_SHDW_DIE_ID_3_ID_127_96_S                                      0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_SHDW_OSC_BIAS_LDO_TRIM
-//
-//*****************************************************************************
-// Field: [28:27] SET_RCOSC_HF_COARSE_RESISTOR
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_SET_RCOSC_HF_COARSE_RESISTOR_W  \
-                                                                             2
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_SET_RCOSC_HF_COARSE_RESISTOR_M  \
-                                                                    0x18000000
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_SET_RCOSC_HF_COARSE_RESISTOR_S  \
-                                                                            27
-
-// Field: [26:23] TRIMMAG
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMMAG_W                               4
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMMAG_M                      0x07800000
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMMAG_S                              23
-
-// Field: [22:18] TRIMIREF
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMIREF_W                              5
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMIREF_M                     0x007C0000
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMIREF_S                             18
-
-// Field: [17:16] ITRIM_DIG_LDO
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_ITRIM_DIG_LDO_W                         2
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_ITRIM_DIG_LDO_M                0x00030000
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_ITRIM_DIG_LDO_S                        16
-
-// Field: [15:12] VTRIM_DIG
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_DIG_W                             4
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_DIG_M                    0x0000F000
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_DIG_S                            12
-
-// Field:  [11:8] VTRIM_COARSE
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_COARSE_W                          4
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_COARSE_M                 0x00000F00
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_COARSE_S                          8
-
-// Field:   [7:0] RCOSCHF_CTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_RCOSCHF_CTRIM_W                         8
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_RCOSCHF_CTRIM_M                0x000000FF
-#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_RCOSCHF_CTRIM_S                         0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_SHDW_ANA_TRIM
-//
-//*****************************************************************************
-// Field: [26:25] BOD_BANDGAP_TRIM_CNF
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_W                           2
-#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_M                  0x06000000
-#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_S                          25
-
-// Field:    [24] VDDR_ENABLE_PG1
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1                         0x01000000
-#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1_BITN                            24
-#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1_M                       0x01000000
-#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1_S                               24
-
-// Field:    [23] VDDR_OK_HYS
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS                             0x00800000
-#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS_BITN                                23
-#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS_M                           0x00800000
-#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS_S                                   23
-
-// Field: [22:21] IPTAT_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_IPTAT_TRIM_W                                     2
-#define FCFG1_SHDW_ANA_TRIM_IPTAT_TRIM_M                            0x00600000
-#define FCFG1_SHDW_ANA_TRIM_IPTAT_TRIM_S                                    21
-
-// Field: [20:16] VDDR_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_VDDR_TRIM_W                                      5
-#define FCFG1_SHDW_ANA_TRIM_VDDR_TRIM_M                             0x001F0000
-#define FCFG1_SHDW_ANA_TRIM_VDDR_TRIM_S                                     16
-
-// Field: [15:11] TRIMBOD_INTMODE
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_INTMODE_W                                5
-#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_INTMODE_M                       0x0000F800
-#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_INTMODE_S                               11
-
-// Field:  [10:6] TRIMBOD_EXTMODE
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_EXTMODE_W                                5
-#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_EXTMODE_M                       0x000007C0
-#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_EXTMODE_S                                6
-
-// Field:   [5:0] TRIMTEMP
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_SHDW_ANA_TRIM_TRIMTEMP_W                                       6
-#define FCFG1_SHDW_ANA_TRIM_TRIMTEMP_M                              0x0000003F
-#define FCFG1_SHDW_ANA_TRIM_TRIMTEMP_S                                       0
+#define FCFG1_CONFIG_SYNTH_DIV30_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N     \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV30_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_BITN \
+                                                                             5
+#define FCFG1_CONFIG_SYNTH_DIV30_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_M   \
+                                                                    0x00000020
+#define FCFG1_CONFIG_SYNTH_DIV30_RFC_MDM_DEMIQMC0_TRIMCOMPLETE_N_S   \
+                                                                             5
 
 //*****************************************************************************
 //
@@ -1324,6 +1330,13 @@
 #define FCFG1_FLASH_PP_PUMP_SU_M                                    0xFF000000
 #define FCFG1_FLASH_PP_PUMP_SU_S                                            24
 
+// Field: [23:16] TRIM3P4
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_FLASH_PP_TRIM3P4_W                                             8
+#define FCFG1_FLASH_PP_TRIM3P4_M                                    0x00FF0000
+#define FCFG1_FLASH_PP_TRIM3P4_S                                            16
+
 // Field:  [15:0] MAX_PP
 //
 // Internal. Only to be used through TI provided API.
@@ -1454,6 +1467,13 @@
 #define FCFG1_FLASH_V_V_READ_M                                      0x0000FF00
 #define FCFG1_FLASH_V_V_READ_S                                               8
 
+// Field:   [7:0] TRIM0P8
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_FLASH_V_TRIM0P8_W                                              8
+#define FCFG1_FLASH_V_TRIM0P8_M                                     0x000000FF
+#define FCFG1_FLASH_V_TRIM0P8_S                                              0
+
 //*****************************************************************************
 //
 // Register: FCFG1_O_USER_ID
@@ -1461,7 +1481,7 @@
 //*****************************************************************************
 // Field: [31:28] PG_REV
 //
-// Field used to distinguish revisions of the device.
+// Field used to distinguish revisions of the device
 #define FCFG1_USER_ID_PG_REV_W                                               4
 #define FCFG1_USER_ID_PG_REV_M                                      0xF0000000
 #define FCFG1_USER_ID_PG_REV_S                                              28
@@ -1477,12 +1497,30 @@
 #define FCFG1_USER_ID_VER_M                                         0x0C000000
 #define FCFG1_USER_ID_VER_S                                                 26
 
+// Field:    [25] PA
+//
+// 0: Does not support 20dBm PA
+// 1: Supports 20dBM PA
+#define FCFG1_USER_ID_PA                                            0x02000000
+#define FCFG1_USER_ID_PA_BITN                                               25
+#define FCFG1_USER_ID_PA_M                                          0x02000000
+#define FCFG1_USER_ID_PA_S                                                  25
+
+// Field:    [23] CC13
+//
+// 0: CC26xx device type
+// 1: CC13xx device type
+#define FCFG1_USER_ID_CC13                                          0x00800000
+#define FCFG1_USER_ID_CC13_BITN                                             23
+#define FCFG1_USER_ID_CC13_M                                        0x00800000
+#define FCFG1_USER_ID_CC13_S                                                23
+
 // Field: [22:19] SEQUENCE
 //
 // Sequence.
 //
 // Used to differentiate between marketing/orderable product where other fields
-// of USER_ID is the same (temp range, flash size, voltage range etc)
+// of this register are the same (temp range, flash size, voltage range etc)
 #define FCFG1_USER_ID_SEQUENCE_W                                             4
 #define FCFG1_USER_ID_SEQUENCE_M                                    0x00780000
 #define FCFG1_USER_ID_SEQUENCE_S                                            19
@@ -1491,11 +1529,15 @@
 //
 // Package type.
 //
-// 0x0: 4x4mm
-// 0x1: 5x5mm
-// 0x2: 7x7mm
+// 0x0: 4x4mm QFN (RHB) package
+// 0x1: 5x5mm QFN (RSM) package
+// 0x2: 7x7mm QFN (RGZ) package
+// 0x3: Wafer sale package (naked die)
+// 0x4: WCSP (YFV)
+// 0x5: 7x7mm QFN package with Wettable Flanks
 //
-// Others values are reserved for future use.
+// Other values are reserved for future use.
+// Packages available for a specific device are shown in the device datasheet.
 #define FCFG1_USER_ID_PKG_W                                                  3
 #define FCFG1_USER_ID_PKG_M                                         0x00070000
 #define FCFG1_USER_ID_PKG_S                                                 16
@@ -1598,12 +1640,12 @@
 #define FCFG1_ANA2_TRIM_ATESTLF_UDIGLDO_IBIAS_TRIM_M                0x00400000
 #define FCFG1_ANA2_TRIM_ATESTLF_UDIGLDO_IBIAS_TRIM_S                        22
 
-// Field: [21:16] NANOAMP_RES_TRIM
+// Field: [21:15] NANOAMP_RES_TRIM
 //
 // Internal. Only to be used through TI provided API.
-#define FCFG1_ANA2_TRIM_NANOAMP_RES_TRIM_W                                   6
-#define FCFG1_ANA2_TRIM_NANOAMP_RES_TRIM_M                          0x003F0000
-#define FCFG1_ANA2_TRIM_NANOAMP_RES_TRIM_S                                  16
+#define FCFG1_ANA2_TRIM_NANOAMP_RES_TRIM_W                                   7
+#define FCFG1_ANA2_TRIM_NANOAMP_RES_TRIM_M                          0x003F8000
+#define FCFG1_ANA2_TRIM_NANOAMP_RES_TRIM_S                                  15
 
 // Field:    [11] DITHER_EN
 //
@@ -1680,39 +1722,6 @@
 #define FCFG1_LDO_TRIM_VTRIM_DELTA_W                                         3
 #define FCFG1_LDO_TRIM_VTRIM_DELTA_M                                0x00000007
 #define FCFG1_LDO_TRIM_VTRIM_DELTA_S                                         0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_BAT_RC_LDO_TRIM
-//
-//*****************************************************************************
-// Field: [27:24] VTRIM_BOD
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_BOD_W                                    4
-#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_BOD_M                           0x0F000000
-#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_BOD_S                                   24
-
-// Field: [19:16] VTRIM_UDIG
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_UDIG_W                                   4
-#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_UDIG_M                          0x000F0000
-#define FCFG1_BAT_RC_LDO_TRIM_VTRIM_UDIG_S                                  16
-
-// Field:  [11:8] RCOSCHF_ITUNE_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_BAT_RC_LDO_TRIM_RCOSCHF_ITUNE_TRIM_W                           4
-#define FCFG1_BAT_RC_LDO_TRIM_RCOSCHF_ITUNE_TRIM_M                  0x00000F00
-#define FCFG1_BAT_RC_LDO_TRIM_RCOSCHF_ITUNE_TRIM_S                           8
-
-// Field:   [1:0] MEASUREPER
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_BAT_RC_LDO_TRIM_MEASUREPER_W                                   2
-#define FCFG1_BAT_RC_LDO_TRIM_MEASUREPER_M                          0x00000003
-#define FCFG1_BAT_RC_LDO_TRIM_MEASUREPER_S                                   0
 
 //*****************************************************************************
 //
@@ -1924,6 +1933,20 @@
 // Register: FCFG1_O_MISC_TRIM
 //
 //*****************************************************************************
+// Field: [16:12] TRIM_RECHARGE_COMP_OFFSET
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_MISC_TRIM_TRIM_RECHARGE_COMP_OFFSET_W                          5
+#define FCFG1_MISC_TRIM_TRIM_RECHARGE_COMP_OFFSET_M                 0x0001F000
+#define FCFG1_MISC_TRIM_TRIM_RECHARGE_COMP_OFFSET_S                         12
+
+// Field:  [11:8] TRIM_RECHARGE_COMP_REFLEVEL
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_MISC_TRIM_TRIM_RECHARGE_COMP_REFLEVEL_W                        4
+#define FCFG1_MISC_TRIM_TRIM_RECHARGE_COMP_REFLEVEL_M               0x00000F00
+#define FCFG1_MISC_TRIM_TRIM_RECHARGE_COMP_REFLEVEL_S                        8
+
 // Field:   [7:0] TEMPVSLOPE
 //
 // Signed byte value representing the TEMP slope with battery voltage, in
@@ -1964,25 +1987,6 @@
 #define FCFG1_RCOSC_HF_TEMPCOMP_CTRIMFRACT_SLOPE_W                           8
 #define FCFG1_RCOSC_HF_TEMPCOMP_CTRIMFRACT_SLOPE_M                  0x000000FF
 #define FCFG1_RCOSC_HF_TEMPCOMP_CTRIMFRACT_SLOPE_S                           0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_TRIM_CAL_REVISION
-//
-//*****************************************************************************
-// Field: [31:16] FT1
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_TRIM_CAL_REVISION_FT1_W                                       16
-#define FCFG1_TRIM_CAL_REVISION_FT1_M                               0xFFFF0000
-#define FCFG1_TRIM_CAL_REVISION_FT1_S                                       16
-
-// Field:  [15:0] MP1
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_TRIM_CAL_REVISION_MP1_W                                       16
-#define FCFG1_TRIM_CAL_REVISION_MP1_M                               0x0000FFFF
-#define FCFG1_TRIM_CAL_REVISION_MP1_S                                        0
 
 //*****************************************************************************
 //
@@ -2061,22 +2065,6 @@
 #define FCFG1_MISC_OTP_DATA_PER_E_W                                          3
 #define FCFG1_MISC_OTP_DATA_PER_E_M                                 0x00007000
 #define FCFG1_MISC_OTP_DATA_PER_E_S                                         12
-
-// Field:  [11:8] MIN_ALLOWED_RTRIM_DIV5
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_MISC_OTP_DATA_MIN_ALLOWED_RTRIM_DIV5_W                         4
-#define FCFG1_MISC_OTP_DATA_MIN_ALLOWED_RTRIM_DIV5_M                0x00000F00
-#define FCFG1_MISC_OTP_DATA_MIN_ALLOWED_RTRIM_DIV5_S                         8
-
-// Field:   [7:0] TEST_PROGRAM_REV
-//
-// The revision of the test program used in the production process when FCFG1
-// was programmed.
-// Value migth change without warning.
-#define FCFG1_MISC_OTP_DATA_TEST_PROGRAM_REV_W                               8
-#define FCFG1_MISC_OTP_DATA_TEST_PROGRAM_REV_M                      0x000000FF
-#define FCFG1_MISC_OTP_DATA_TEST_PROGRAM_REV_S                               0
 
 //*****************************************************************************
 //
@@ -2183,90 +2171,6 @@
 #define FCFG1_CONFIG_OSC_TOP_RCOSCLF_RTUNE_TRIM_W                            2
 #define FCFG1_CONFIG_OSC_TOP_RCOSCLF_RTUNE_TRIM_M                   0x00000003
 #define FCFG1_CONFIG_OSC_TOP_RCOSCLF_RTUNE_TRIM_S                            0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_RF_FRONTEND
-//
-//*****************************************************************************
-// Field: [31:28] IFAMP_IB
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_IFAMP_IB_W                                  4
-#define FCFG1_CONFIG_RF_FRONTEND_IFAMP_IB_M                         0xF0000000
-#define FCFG1_CONFIG_RF_FRONTEND_IFAMP_IB_S                                 28
-
-// Field: [27:24] LNA_IB
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_LNA_IB_W                                    4
-#define FCFG1_CONFIG_RF_FRONTEND_LNA_IB_M                           0x0F000000
-#define FCFG1_CONFIG_RF_FRONTEND_LNA_IB_S                                   24
-
-// Field: [23:19] IFAMP_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_IFAMP_TRIM_W                                5
-#define FCFG1_CONFIG_RF_FRONTEND_IFAMP_TRIM_M                       0x00F80000
-#define FCFG1_CONFIG_RF_FRONTEND_IFAMP_TRIM_S                               19
-
-// Field: [18:14] CTL_PA0_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_CTL_PA0_TRIM_W                              5
-#define FCFG1_CONFIG_RF_FRONTEND_CTL_PA0_TRIM_M                     0x0007C000
-#define FCFG1_CONFIG_RF_FRONTEND_CTL_PA0_TRIM_S                             14
-
-// Field:    [13] PATRIMCOMPLETE_N
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_PATRIMCOMPLETE_N                   0x00002000
-#define FCFG1_CONFIG_RF_FRONTEND_PATRIMCOMPLETE_N_BITN                      13
-#define FCFG1_CONFIG_RF_FRONTEND_PATRIMCOMPLETE_N_M                 0x00002000
-#define FCFG1_CONFIG_RF_FRONTEND_PATRIMCOMPLETE_N_S                         13
-
-// Field:   [6:0] RFLDO_TRIM_OUTPUT
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_RF_FRONTEND_RFLDO_TRIM_OUTPUT_W                         7
-#define FCFG1_CONFIG_RF_FRONTEND_RFLDO_TRIM_OUTPUT_M                0x0000007F
-#define FCFG1_CONFIG_RF_FRONTEND_RFLDO_TRIM_OUTPUT_S                         0
-
-//*****************************************************************************
-//
-// Register: FCFG1_O_CONFIG_SYNTH
-//
-//*****************************************************************************
-// Field:    [28] DISABLE_CORNER_CAP
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_DISABLE_CORNER_CAP                       0x10000000
-#define FCFG1_CONFIG_SYNTH_DISABLE_CORNER_CAP_BITN                          28
-#define FCFG1_CONFIG_SYNTH_DISABLE_CORNER_CAP_M                     0x10000000
-#define FCFG1_CONFIG_SYNTH_DISABLE_CORNER_CAP_S                             28
-
-// Field: [27:12] RFC_MDM_DEMIQMC0
-//
-// Trim value for RF Core.
-// Value is read by RF Core ROM FW during RF Core initialization only on
-// cc13xx.
-#define FCFG1_CONFIG_SYNTH_RFC_MDM_DEMIQMC0_W                               16
-#define FCFG1_CONFIG_SYNTH_RFC_MDM_DEMIQMC0_M                       0x0FFFF000
-#define FCFG1_CONFIG_SYNTH_RFC_MDM_DEMIQMC0_S                               12
-
-// Field:  [11:6] LDOVCO_TRIM_OUTPUT
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_LDOVCO_TRIM_OUTPUT_W                              6
-#define FCFG1_CONFIG_SYNTH_LDOVCO_TRIM_OUTPUT_M                     0x00000FC0
-#define FCFG1_CONFIG_SYNTH_LDOVCO_TRIM_OUTPUT_S                              6
-
-// Field:   [5:0] SLDO_TRIM_OUTPUT
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_SYNTH_SLDO_TRIM_OUTPUT_W                                6
-#define FCFG1_CONFIG_SYNTH_SLDO_TRIM_OUTPUT_M                       0x0000003F
-#define FCFG1_CONFIG_SYNTH_SLDO_TRIM_OUTPUT_S                                0
 
 //*****************************************************************************
 //
@@ -2458,47 +2362,6 @@
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CONFIG_MISC_ADC
-//
-//*****************************************************************************
-// Field: [21:18] MIN_ALLOWED_RTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_MIN_ALLOWED_RTRIM_W                            4
-#define FCFG1_CONFIG_MISC_ADC_MIN_ALLOWED_RTRIM_M                   0x003C0000
-#define FCFG1_CONFIG_MISC_ADC_MIN_ALLOWED_RTRIM_S                           18
-
-// Field:    [17] RSSITRIMCOMPLETE_N
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_RSSITRIMCOMPLETE_N                    0x00020000
-#define FCFG1_CONFIG_MISC_ADC_RSSITRIMCOMPLETE_N_BITN                       17
-#define FCFG1_CONFIG_MISC_ADC_RSSITRIMCOMPLETE_N_M                  0x00020000
-#define FCFG1_CONFIG_MISC_ADC_RSSITRIMCOMPLETE_N_S                          17
-
-// Field:  [16:9] RSSI_OFFSET
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_RSSI_OFFSET_W                                  8
-#define FCFG1_CONFIG_MISC_ADC_RSSI_OFFSET_M                         0x0001FE00
-#define FCFG1_CONFIG_MISC_ADC_RSSI_OFFSET_S                                  9
-
-// Field:   [8:6] QUANTCTLTHRES
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_QUANTCTLTHRES_W                                3
-#define FCFG1_CONFIG_MISC_ADC_QUANTCTLTHRES_M                       0x000001C0
-#define FCFG1_CONFIG_MISC_ADC_QUANTCTLTHRES_S                                6
-
-// Field:   [5:0] DACTRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CONFIG_MISC_ADC_DACTRIM_W                                      6
-#define FCFG1_CONFIG_MISC_ADC_DACTRIM_M                             0x0000003F
-#define FCFG1_CONFIG_MISC_ADC_DACTRIM_S                                      0
-
-//*****************************************************************************
-//
 // Register: FCFG1_O_VOLT_TRIM
 //
 //*****************************************************************************
@@ -2677,25 +2540,6 @@
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_CAP_TRIM
-//
-//*****************************************************************************
-// Field: [31:16] FLUX_CAP_0P28_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CAP_TRIM_FLUX_CAP_0P28_TRIM_W                                 16
-#define FCFG1_CAP_TRIM_FLUX_CAP_0P28_TRIM_M                         0xFFFF0000
-#define FCFG1_CAP_TRIM_FLUX_CAP_0P28_TRIM_S                                 16
-
-// Field:  [15:0] FLUX_CAP_0P4_TRIM
-//
-// Internal. Only to be used through TI provided API.
-#define FCFG1_CAP_TRIM_FLUX_CAP_0P4_TRIM_W                                  16
-#define FCFG1_CAP_TRIM_FLUX_CAP_0P4_TRIM_M                          0x0000FFFF
-#define FCFG1_CAP_TRIM_FLUX_CAP_0P4_TRIM_S                                   0
-
-//*****************************************************************************
-//
 // Register: FCFG1_O_MISC_OTP_DATA_1
 //
 //*****************************************************************************
@@ -2750,275 +2594,311 @@
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_PWD_CURR_20C
+// Register: FCFG1_O_SHDW_DIE_ID_0
 //
 //*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
+// Field:  [31:0] ID_31_0
 //
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_20C_DELTA_CACHE_REF_W                                 8
-#define FCFG1_PWD_CURR_20C_DELTA_CACHE_REF_M                        0xFF000000
-#define FCFG1_PWD_CURR_20C_DELTA_CACHE_REF_S                                24
-
-// Field: [23:16] DELTA_RFMEM_RET
-//
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_20C_DELTA_RFMEM_RET_W                                 8
-#define FCFG1_PWD_CURR_20C_DELTA_RFMEM_RET_M                        0x00FF0000
-#define FCFG1_PWD_CURR_20C_DELTA_RFMEM_RET_S                                16
-
-// Field:  [15:8] DELTA_XOSC_LPM
-//
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_20C_DELTA_XOSC_LPM_W                                  8
-#define FCFG1_PWD_CURR_20C_DELTA_XOSC_LPM_M                         0x0000FF00
-#define FCFG1_PWD_CURR_20C_DELTA_XOSC_LPM_S                                  8
-
-// Field:   [7:0] BASELINE
-//
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_20C_BASELINE_W                                        8
-#define FCFG1_PWD_CURR_20C_BASELINE_M                               0x000000FF
-#define FCFG1_PWD_CURR_20C_BASELINE_S                                        0
+// Shadow of DIE_ID_0 register in eFuse row number 5
+#define FCFG1_SHDW_DIE_ID_0_ID_31_0_W                                       32
+#define FCFG1_SHDW_DIE_ID_0_ID_31_0_M                               0xFFFFFFFF
+#define FCFG1_SHDW_DIE_ID_0_ID_31_0_S                                        0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_PWD_CURR_35C
+// Register: FCFG1_O_SHDW_DIE_ID_1
 //
 //*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
+// Field:  [31:0] ID_63_32
 //
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_35C_DELTA_CACHE_REF_W                                 8
-#define FCFG1_PWD_CURR_35C_DELTA_CACHE_REF_M                        0xFF000000
-#define FCFG1_PWD_CURR_35C_DELTA_CACHE_REF_S                                24
-
-// Field: [23:16] DELTA_RFMEM_RET
-//
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_35C_DELTA_RFMEM_RET_W                                 8
-#define FCFG1_PWD_CURR_35C_DELTA_RFMEM_RET_M                        0x00FF0000
-#define FCFG1_PWD_CURR_35C_DELTA_RFMEM_RET_S                                16
-
-// Field:  [15:8] DELTA_XOSC_LPM
-//
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_35C_DELTA_XOSC_LPM_W                                  8
-#define FCFG1_PWD_CURR_35C_DELTA_XOSC_LPM_M                         0x0000FF00
-#define FCFG1_PWD_CURR_35C_DELTA_XOSC_LPM_S                                  8
-
-// Field:   [7:0] BASELINE
-//
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_35C_BASELINE_W                                        8
-#define FCFG1_PWD_CURR_35C_BASELINE_M                               0x000000FF
-#define FCFG1_PWD_CURR_35C_BASELINE_S                                        0
+// Shadow of DIE_ID_1 register in eFuse row number 6
+#define FCFG1_SHDW_DIE_ID_1_ID_63_32_W                                      32
+#define FCFG1_SHDW_DIE_ID_1_ID_63_32_M                              0xFFFFFFFF
+#define FCFG1_SHDW_DIE_ID_1_ID_63_32_S                                       0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_PWD_CURR_50C
+// Register: FCFG1_O_SHDW_DIE_ID_2
 //
 //*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
+// Field:  [31:0] ID_95_64
 //
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_50C_DELTA_CACHE_REF_W                                 8
-#define FCFG1_PWD_CURR_50C_DELTA_CACHE_REF_M                        0xFF000000
-#define FCFG1_PWD_CURR_50C_DELTA_CACHE_REF_S                                24
-
-// Field: [23:16] DELTA_RFMEM_RET
-//
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_50C_DELTA_RFMEM_RET_W                                 8
-#define FCFG1_PWD_CURR_50C_DELTA_RFMEM_RET_M                        0x00FF0000
-#define FCFG1_PWD_CURR_50C_DELTA_RFMEM_RET_S                                16
-
-// Field:  [15:8] DELTA_XOSC_LPM
-//
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_50C_DELTA_XOSC_LPM_W                                  8
-#define FCFG1_PWD_CURR_50C_DELTA_XOSC_LPM_M                         0x0000FF00
-#define FCFG1_PWD_CURR_50C_DELTA_XOSC_LPM_S                                  8
-
-// Field:   [7:0] BASELINE
-//
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_50C_BASELINE_W                                        8
-#define FCFG1_PWD_CURR_50C_BASELINE_M                               0x000000FF
-#define FCFG1_PWD_CURR_50C_BASELINE_S                                        0
+// Shadow of DIE_ID_2 register in eFuse row number 7
+#define FCFG1_SHDW_DIE_ID_2_ID_95_64_W                                      32
+#define FCFG1_SHDW_DIE_ID_2_ID_95_64_M                              0xFFFFFFFF
+#define FCFG1_SHDW_DIE_ID_2_ID_95_64_S                                       0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_PWD_CURR_65C
+// Register: FCFG1_O_SHDW_DIE_ID_3
 //
 //*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
+// Field:  [31:0] ID_127_96
 //
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_65C_DELTA_CACHE_REF_W                                 8
-#define FCFG1_PWD_CURR_65C_DELTA_CACHE_REF_M                        0xFF000000
-#define FCFG1_PWD_CURR_65C_DELTA_CACHE_REF_S                                24
-
-// Field: [23:16] DELTA_RFMEM_RET
-//
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_65C_DELTA_RFMEM_RET_W                                 8
-#define FCFG1_PWD_CURR_65C_DELTA_RFMEM_RET_M                        0x00FF0000
-#define FCFG1_PWD_CURR_65C_DELTA_RFMEM_RET_S                                16
-
-// Field:  [15:8] DELTA_XOSC_LPM
-//
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_65C_DELTA_XOSC_LPM_W                                  8
-#define FCFG1_PWD_CURR_65C_DELTA_XOSC_LPM_M                         0x0000FF00
-#define FCFG1_PWD_CURR_65C_DELTA_XOSC_LPM_S                                  8
-
-// Field:   [7:0] BASELINE
-//
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_65C_BASELINE_W                                        8
-#define FCFG1_PWD_CURR_65C_BASELINE_M                               0x000000FF
-#define FCFG1_PWD_CURR_65C_BASELINE_S                                        0
+// Shadow of DIE_ID_3 register in eFuse row number 8
+#define FCFG1_SHDW_DIE_ID_3_ID_127_96_W                                     32
+#define FCFG1_SHDW_DIE_ID_3_ID_127_96_M                             0xFFFFFFFF
+#define FCFG1_SHDW_DIE_ID_3_ID_127_96_S                                      0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_PWD_CURR_80C
+// Register: FCFG1_O_SHDW_OSC_BIAS_LDO_TRIM
 //
 //*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
+// Field: [26:23] TRIMMAG
 //
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_80C_DELTA_CACHE_REF_W                                 8
-#define FCFG1_PWD_CURR_80C_DELTA_CACHE_REF_M                        0xFF000000
-#define FCFG1_PWD_CURR_80C_DELTA_CACHE_REF_S                                24
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMMAG_W                               4
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMMAG_M                      0x07800000
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMMAG_S                              23
 
-// Field: [23:16] DELTA_RFMEM_RET
+// Field: [22:18] TRIMIREF
 //
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_80C_DELTA_RFMEM_RET_W                                 8
-#define FCFG1_PWD_CURR_80C_DELTA_RFMEM_RET_M                        0x00FF0000
-#define FCFG1_PWD_CURR_80C_DELTA_RFMEM_RET_S                                16
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMIREF_W                              5
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMIREF_M                     0x007C0000
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_TRIMIREF_S                             18
 
-// Field:  [15:8] DELTA_XOSC_LPM
+// Field: [17:16] ITRIM_DIG_LDO
 //
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_80C_DELTA_XOSC_LPM_W                                  8
-#define FCFG1_PWD_CURR_80C_DELTA_XOSC_LPM_M                         0x0000FF00
-#define FCFG1_PWD_CURR_80C_DELTA_XOSC_LPM_S                                  8
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_ITRIM_DIG_LDO_W                         2
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_ITRIM_DIG_LDO_M                0x00030000
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_ITRIM_DIG_LDO_S                        16
 
-// Field:   [7:0] BASELINE
+// Field: [15:12] VTRIM_DIG
 //
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_80C_BASELINE_W                                        8
-#define FCFG1_PWD_CURR_80C_BASELINE_M                               0x000000FF
-#define FCFG1_PWD_CURR_80C_BASELINE_S                                        0
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_DIG_W                             4
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_DIG_M                    0x0000F000
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_DIG_S                            12
 
-//*****************************************************************************
+// Field:  [11:8] VTRIM_COARSE
 //
-// Register: FCFG1_O_PWD_CURR_95C
-//
-//*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
-//
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_95C_DELTA_CACHE_REF_W                                 8
-#define FCFG1_PWD_CURR_95C_DELTA_CACHE_REF_M                        0xFF000000
-#define FCFG1_PWD_CURR_95C_DELTA_CACHE_REF_S                                24
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_COARSE_W                          4
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_COARSE_M                 0x00000F00
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_VTRIM_COARSE_S                          8
 
-// Field: [23:16] DELTA_RFMEM_RET
+// Field:   [7:0] RCOSCHF_CTRIM
 //
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_95C_DELTA_RFMEM_RET_W                                 8
-#define FCFG1_PWD_CURR_95C_DELTA_RFMEM_RET_M                        0x00FF0000
-#define FCFG1_PWD_CURR_95C_DELTA_RFMEM_RET_S                                16
-
-// Field:  [15:8] DELTA_XOSC_LPM
-//
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_95C_DELTA_XOSC_LPM_W                                  8
-#define FCFG1_PWD_CURR_95C_DELTA_XOSC_LPM_M                         0x0000FF00
-#define FCFG1_PWD_CURR_95C_DELTA_XOSC_LPM_S                                  8
-
-// Field:   [7:0] BASELINE
-//
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_95C_BASELINE_W                                        8
-#define FCFG1_PWD_CURR_95C_BASELINE_M                               0x000000FF
-#define FCFG1_PWD_CURR_95C_BASELINE_S                                        0
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_RCOSCHF_CTRIM_W                         8
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_RCOSCHF_CTRIM_M                0x000000FF
+#define FCFG1_SHDW_OSC_BIAS_LDO_TRIM_RCOSCHF_CTRIM_S                         0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_PWD_CURR_110C
+// Register: FCFG1_O_SHDW_ANA_TRIM
 //
 //*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
+// Field:    [30] ALT_VDDR_TRIM
 //
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_110C_DELTA_CACHE_REF_W                                8
-#define FCFG1_PWD_CURR_110C_DELTA_CACHE_REF_M                       0xFF000000
-#define FCFG1_PWD_CURR_110C_DELTA_CACHE_REF_S                               24
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_ALT_VDDR_TRIM                           0x40000000
+#define FCFG1_SHDW_ANA_TRIM_ALT_VDDR_TRIM_BITN                              30
+#define FCFG1_SHDW_ANA_TRIM_ALT_VDDR_TRIM_M                         0x40000000
+#define FCFG1_SHDW_ANA_TRIM_ALT_VDDR_TRIM_S                                 30
 
-// Field: [23:16] DELTA_RFMEM_RET
+// Field:    [29] DET_LOGIC_DIS
 //
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_110C_DELTA_RFMEM_RET_W                                8
-#define FCFG1_PWD_CURR_110C_DELTA_RFMEM_RET_M                       0x00FF0000
-#define FCFG1_PWD_CURR_110C_DELTA_RFMEM_RET_S                               16
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_DET_LOGIC_DIS                           0x20000000
+#define FCFG1_SHDW_ANA_TRIM_DET_LOGIC_DIS_BITN                              29
+#define FCFG1_SHDW_ANA_TRIM_DET_LOGIC_DIS_M                         0x20000000
+#define FCFG1_SHDW_ANA_TRIM_DET_LOGIC_DIS_S                                 29
 
-// Field:  [15:8] DELTA_XOSC_LPM
+// Field: [28:27] BOD_BANDGAP_TRIM_CNF_EXT
 //
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_110C_DELTA_XOSC_LPM_W                                 8
-#define FCFG1_PWD_CURR_110C_DELTA_XOSC_LPM_M                        0x0000FF00
-#define FCFG1_PWD_CURR_110C_DELTA_XOSC_LPM_S                                 8
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_EXT_W                       2
+#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_EXT_M              0x18000000
+#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_EXT_S                      27
 
-// Field:   [7:0] BASELINE
+// Field: [26:25] BOD_BANDGAP_TRIM_CNF
 //
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_110C_BASELINE_W                                       8
-#define FCFG1_PWD_CURR_110C_BASELINE_M                              0x000000FF
-#define FCFG1_PWD_CURR_110C_BASELINE_S                                       0
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_W                           2
+#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_M                  0x06000000
+#define FCFG1_SHDW_ANA_TRIM_BOD_BANDGAP_TRIM_CNF_S                          25
+
+// Field:    [24] VDDR_ENABLE_PG1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1                         0x01000000
+#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1_BITN                            24
+#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1_M                       0x01000000
+#define FCFG1_SHDW_ANA_TRIM_VDDR_ENABLE_PG1_S                               24
+
+// Field:    [23] VDDR_OK_HYS
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS                             0x00800000
+#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS_BITN                                23
+#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS_M                           0x00800000
+#define FCFG1_SHDW_ANA_TRIM_VDDR_OK_HYS_S                                   23
+
+// Field: [22:21] IPTAT_TRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_IPTAT_TRIM_W                                     2
+#define FCFG1_SHDW_ANA_TRIM_IPTAT_TRIM_M                            0x00600000
+#define FCFG1_SHDW_ANA_TRIM_IPTAT_TRIM_S                                    21
+
+// Field: [20:16] VDDR_TRIM
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_VDDR_TRIM_W                                      5
+#define FCFG1_SHDW_ANA_TRIM_VDDR_TRIM_M                             0x001F0000
+#define FCFG1_SHDW_ANA_TRIM_VDDR_TRIM_S                                     16
+
+// Field: [15:11] TRIMBOD_INTMODE
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_INTMODE_W                                5
+#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_INTMODE_M                       0x0000F800
+#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_INTMODE_S                               11
+
+// Field:  [10:6] TRIMBOD_EXTMODE
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_EXTMODE_W                                5
+#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_EXTMODE_M                       0x000007C0
+#define FCFG1_SHDW_ANA_TRIM_TRIMBOD_EXTMODE_S                                6
+
+// Field:   [5:0] TRIMTEMP
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_SHDW_ANA_TRIM_TRIMTEMP_W                                       6
+#define FCFG1_SHDW_ANA_TRIM_TRIMTEMP_M                              0x0000003F
+#define FCFG1_SHDW_ANA_TRIM_TRIMTEMP_S                                       0
 
 //*****************************************************************************
 //
-// Register: FCFG1_O_PWD_CURR_125C
+// Register: FCFG1_O_DAC_BIAS_CNF
 //
 //*****************************************************************************
-// Field: [31:24] DELTA_CACHE_REF
+// Field: [17:12] LPM_TRIM_IOUT
 //
-// Additional maximum current, in units of 1uA, with cache retention
-#define FCFG1_PWD_CURR_125C_DELTA_CACHE_REF_W                                8
-#define FCFG1_PWD_CURR_125C_DELTA_CACHE_REF_M                       0xFF000000
-#define FCFG1_PWD_CURR_125C_DELTA_CACHE_REF_S                               24
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_BIAS_CNF_LPM_TRIM_IOUT_W                                   6
+#define FCFG1_DAC_BIAS_CNF_LPM_TRIM_IOUT_M                          0x0003F000
+#define FCFG1_DAC_BIAS_CNF_LPM_TRIM_IOUT_S                                  12
 
-// Field: [23:16] DELTA_RFMEM_RET
+// Field:  [11:9] LPM_BIAS_WIDTH_TRIM
 //
-// Additional maximum current, in 1uA units, with RF memory retention
-#define FCFG1_PWD_CURR_125C_DELTA_RFMEM_RET_W                                8
-#define FCFG1_PWD_CURR_125C_DELTA_RFMEM_RET_M                       0x00FF0000
-#define FCFG1_PWD_CURR_125C_DELTA_RFMEM_RET_S                               16
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_BIAS_CNF_LPM_BIAS_WIDTH_TRIM_W                             3
+#define FCFG1_DAC_BIAS_CNF_LPM_BIAS_WIDTH_TRIM_M                    0x00000E00
+#define FCFG1_DAC_BIAS_CNF_LPM_BIAS_WIDTH_TRIM_S                             9
 
-// Field:  [15:8] DELTA_XOSC_LPM
+// Field:     [8] LPM_BIAS_BACKUP_EN
 //
-// Additional maximum current, in units of 1uA, with XOSC_HF on in low-power
-// mode
-#define FCFG1_PWD_CURR_125C_DELTA_XOSC_LPM_W                                 8
-#define FCFG1_PWD_CURR_125C_DELTA_XOSC_LPM_M                        0x0000FF00
-#define FCFG1_PWD_CURR_125C_DELTA_XOSC_LPM_S                                 8
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_BIAS_CNF_LPM_BIAS_BACKUP_EN                       0x00000100
+#define FCFG1_DAC_BIAS_CNF_LPM_BIAS_BACKUP_EN_BITN                           8
+#define FCFG1_DAC_BIAS_CNF_LPM_BIAS_BACKUP_EN_M                     0x00000100
+#define FCFG1_DAC_BIAS_CNF_LPM_BIAS_BACKUP_EN_S                              8
 
-// Field:   [7:0] BASELINE
+//*****************************************************************************
 //
-// Worst-case baseline maximum powerdown current, in units of 0.5uA
-#define FCFG1_PWD_CURR_125C_BASELINE_W                                       8
-#define FCFG1_PWD_CURR_125C_BASELINE_M                              0x000000FF
-#define FCFG1_PWD_CURR_125C_BASELINE_S                                       0
+// Register: FCFG1_O_TFW_PROBE
+//
+//*****************************************************************************
+// Field:  [31:0] REV
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_TFW_PROBE_REV_W                                               32
+#define FCFG1_TFW_PROBE_REV_M                                       0xFFFFFFFF
+#define FCFG1_TFW_PROBE_REV_S                                                0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_TFW_FT
+//
+//*****************************************************************************
+// Field:  [31:0] REV
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_TFW_FT_REV_W                                                  32
+#define FCFG1_TFW_FT_REV_M                                          0xFFFFFFFF
+#define FCFG1_TFW_FT_REV_S                                                   0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_DAC_CAL0
+//
+//*****************************************************************************
+// Field: [31:16] SOC_DAC_VOUT_CAL_DECOUPLE_C2
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL0_SOC_DAC_VOUT_CAL_DECOUPLE_C2_W                       16
+#define FCFG1_DAC_CAL0_SOC_DAC_VOUT_CAL_DECOUPLE_C2_M               0xFFFF0000
+#define FCFG1_DAC_CAL0_SOC_DAC_VOUT_CAL_DECOUPLE_C2_S                       16
+
+// Field:  [15:0] SOC_DAC_VOUT_CAL_DECOUPLE_C1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL0_SOC_DAC_VOUT_CAL_DECOUPLE_C1_W                       16
+#define FCFG1_DAC_CAL0_SOC_DAC_VOUT_CAL_DECOUPLE_C1_M               0x0000FFFF
+#define FCFG1_DAC_CAL0_SOC_DAC_VOUT_CAL_DECOUPLE_C1_S                        0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_DAC_CAL1
+//
+//*****************************************************************************
+// Field: [31:16] SOC_DAC_VOUT_CAL_PRECH_C2
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL1_SOC_DAC_VOUT_CAL_PRECH_C2_W                          16
+#define FCFG1_DAC_CAL1_SOC_DAC_VOUT_CAL_PRECH_C2_M                  0xFFFF0000
+#define FCFG1_DAC_CAL1_SOC_DAC_VOUT_CAL_PRECH_C2_S                          16
+
+// Field:  [15:0] SOC_DAC_VOUT_CAL_PRECH_C1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL1_SOC_DAC_VOUT_CAL_PRECH_C1_W                          16
+#define FCFG1_DAC_CAL1_SOC_DAC_VOUT_CAL_PRECH_C1_M                  0x0000FFFF
+#define FCFG1_DAC_CAL1_SOC_DAC_VOUT_CAL_PRECH_C1_S                           0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_DAC_CAL2
+//
+//*****************************************************************************
+// Field: [31:16] SOC_DAC_VOUT_CAL_ADCREF_C2
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL2_SOC_DAC_VOUT_CAL_ADCREF_C2_W                         16
+#define FCFG1_DAC_CAL2_SOC_DAC_VOUT_CAL_ADCREF_C2_M                 0xFFFF0000
+#define FCFG1_DAC_CAL2_SOC_DAC_VOUT_CAL_ADCREF_C2_S                         16
+
+// Field:  [15:0] SOC_DAC_VOUT_CAL_ADCREF_C1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL2_SOC_DAC_VOUT_CAL_ADCREF_C1_W                         16
+#define FCFG1_DAC_CAL2_SOC_DAC_VOUT_CAL_ADCREF_C1_M                 0x0000FFFF
+#define FCFG1_DAC_CAL2_SOC_DAC_VOUT_CAL_ADCREF_C1_S                          0
+
+//*****************************************************************************
+//
+// Register: FCFG1_O_DAC_CAL3
+//
+//*****************************************************************************
+// Field: [31:16] SOC_DAC_VOUT_CAL_VDDS_C2
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL3_SOC_DAC_VOUT_CAL_VDDS_C2_W                           16
+#define FCFG1_DAC_CAL3_SOC_DAC_VOUT_CAL_VDDS_C2_M                   0xFFFF0000
+#define FCFG1_DAC_CAL3_SOC_DAC_VOUT_CAL_VDDS_C2_S                           16
+
+// Field:  [15:0] SOC_DAC_VOUT_CAL_VDDS_C1
+//
+// Internal. Only to be used through TI provided API.
+#define FCFG1_DAC_CAL3_SOC_DAC_VOUT_CAL_VDDS_C1_W                           16
+#define FCFG1_DAC_CAL3_SOC_DAC_VOUT_CAL_VDDS_C1_M                   0x0000FFFF
+#define FCFG1_DAC_CAL3_SOC_DAC_VOUT_CAL_VDDS_C1_S                            0
 
 
 #endif // __FCFG1__

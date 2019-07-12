@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_event_h
-*  Revised:        2016-06-21 09:05:39 +0200 (Tue, 21 Jun 2016)
-*  Revision:       46731
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -144,6 +144,18 @@
 
 // Output Selection for CPU Interrupt 33
 #define EVENT_O_CPUIRQSEL33                                         0x00000084
+
+// Output Selection for CPU Interrupt 34
+#define EVENT_O_CPUIRQSEL34                                         0x00000088
+
+// Output Selection for CPU Interrupt 35
+#define EVENT_O_CPUIRQSEL35                                         0x0000008C
+
+// Output Selection for CPU Interrupt 36
+#define EVENT_O_CPUIRQSEL36                                         0x00000090
+
+// Output Selection for CPU Interrupt 37
+#define EVENT_O_CPUIRQSEL37                                         0x00000094
 
 // Output Selection for RFC Event 0
 #define EVENT_O_RFCSEL0                                             0x00000100
@@ -325,7 +337,7 @@
 // Output Selection for I2S Subscriber 0
 #define EVENT_O_I2SSTMPSEL0                                         0x00000900
 
-// Output Selection for FRZ Subscriber 0
+// Output Selection for FRZ Subscriber
 #define EVENT_O_FRZSEL0                                             0x00000A00
 
 // Set or Clear Software Events
@@ -387,6 +399,16 @@
 // Register: EVENT_O_CPUIRQSEL3
 //
 //*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// PKA_IRQ                  PKA Interrupt event
+#define EVENT_CPUIRQSEL3_EV_W                                                7
+#define EVENT_CPUIRQSEL3_EV_M                                       0x0000007F
+#define EVENT_CPUIRQSEL3_EV_S                                                0
+#define EVENT_CPUIRQSEL3_EV_PKA_IRQ                                 0x0000001F
+
 //*****************************************************************************
 //
 // Register: EVENT_O_CPUIRQSEL4
@@ -433,8 +455,6 @@
 //                          AUX_EVENT0 AON wake up event.
 //                          MCU domain wakeup control
 //                          AON_EVENT:MCUWUSEL
-//                          AUX domain wakeup control
-//                          AON_EVENT:AUXWUSEL
 #define EVENT_CPUIRQSEL6_EV_W                                                7
 #define EVENT_CPUIRQSEL6_EV_M                                       0x0000007F
 #define EVENT_CPUIRQSEL6_EV_S                                                0
@@ -500,7 +520,7 @@
 //
 // Read only selection value
 // ENUMs:
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 #define EVENT_CPUIRQSEL10_EV_W                                               7
 #define EVENT_CPUIRQSEL10_EV_M                                      0x0000007F
@@ -552,8 +572,6 @@
 //                          AUX_EVENT2 AON wake up event.
 //                          MCU domain wakeup control
 //                          AON_EVENT:MCUWUSEL
-//                          AUX domain wakeup control
-//                          AON_EVENT:AUXWUSEL
 #define EVENT_CPUIRQSEL13_EV_W                                               7
 #define EVENT_CPUIRQSEL13_EV_M                                      0x0000007F
 #define EVENT_CPUIRQSEL13_EV_S                                               0
@@ -817,34 +835,45 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV5               RFC RAT event 5, configured by RFC_RAT:RATEV.OEVT5
-// RFC_IN_EV4               RFC RAT event 4, configured by RFC_RAT:RATEV.OEVT4
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // CRYPTO_DMA_DONE_IRQ      CRYPTO DMA input done event, the correspondingg
 //                          flag is CRYPTO:IRQSTAT.DMA_IN_DONE. Controlled
 //                          by CRYPTO:IRQEN.DMA_IN_DONE
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
 // DMA_CH18_DONE            DMA done for software tiggered UDMA channel 18,
 //                          see UDMA0:SOFTREQ
 // DMA_CH0_DONE             DMA done for software tiggered UDMA channel 0, see
@@ -872,9 +901,12 @@
 #define EVENT_CPUIRQSEL30_EV_AUX_TDC_DONE                           0x0000006C
 #define EVENT_CPUIRQSEL30_EV_AUX_COMPB                              0x0000006B
 #define EVENT_CPUIRQSEL30_EV_AUX_AON_WU_EV                          0x00000069
-#define EVENT_CPUIRQSEL30_EV_RFC_IN_EV5                             0x00000060
-#define EVENT_CPUIRQSEL30_EV_RFC_IN_EV4                             0x0000005F
 #define EVENT_CPUIRQSEL30_EV_CRYPTO_DMA_DONE_IRQ                    0x0000005E
+#define EVENT_CPUIRQSEL30_EV_AUX_TIMER2_PULSE                       0x0000003C
+#define EVENT_CPUIRQSEL30_EV_AUX_TIMER2_EV3                         0x0000003B
+#define EVENT_CPUIRQSEL30_EV_AUX_TIMER2_EV2                         0x0000003A
+#define EVENT_CPUIRQSEL30_EV_AUX_TIMER2_EV1                         0x00000039
+#define EVENT_CPUIRQSEL30_EV_AUX_TIMER2_EV0                         0x00000038
 #define EVENT_CPUIRQSEL30_EV_DMA_CH18_DONE                          0x00000016
 #define EVENT_CPUIRQSEL30_EV_DMA_CH0_DONE                           0x00000014
 #define EVENT_CPUIRQSEL30_EV_AON_AUX_SWEV0                          0x0000000A
@@ -909,8 +941,8 @@
 // Read only selection value
 // ENUMs:
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 #define EVENT_CPUIRQSEL32_EV_W                                               7
 #define EVENT_CPUIRQSEL32_EV_M                                      0x0000007F
 #define EVENT_CPUIRQSEL32_EV_S                                               0
@@ -930,6 +962,68 @@
 #define EVENT_CPUIRQSEL33_EV_M                                      0x0000007F
 #define EVENT_CPUIRQSEL33_EV_S                                               0
 #define EVENT_CPUIRQSEL33_EV_TRNG_IRQ                               0x00000068
+
+//*****************************************************************************
+//
+// Register: EVENT_O_CPUIRQSEL34
+//
+//*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// OSC_COMB                 Combined event from Oscillator control
+#define EVENT_CPUIRQSEL34_EV_W                                               7
+#define EVENT_CPUIRQSEL34_EV_M                                      0x0000007F
+#define EVENT_CPUIRQSEL34_EV_S                                               0
+#define EVENT_CPUIRQSEL34_EV_OSC_COMB                               0x00000006
+
+//*****************************************************************************
+//
+// Register: EVENT_O_CPUIRQSEL35
+//
+//*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+#define EVENT_CPUIRQSEL35_EV_W                                               7
+#define EVENT_CPUIRQSEL35_EV_M                                      0x0000007F
+#define EVENT_CPUIRQSEL35_EV_S                                               0
+#define EVENT_CPUIRQSEL35_EV_AUX_TIMER2_EV0                         0x00000038
+
+//*****************************************************************************
+//
+// Register: EVENT_O_CPUIRQSEL36
+//
+//*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
+#define EVENT_CPUIRQSEL36_EV_W                                               7
+#define EVENT_CPUIRQSEL36_EV_M                                      0x0000007F
+#define EVENT_CPUIRQSEL36_EV_S                                               0
+#define EVENT_CPUIRQSEL36_EV_UART1_COMB                             0x00000025
+
+//*****************************************************************************
+//
+// Register: EVENT_O_CPUIRQSEL37
+//
+//*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// BATMON_COMB              Combined event from battery monitor
+#define EVENT_CPUIRQSEL37_EV_W                                               7
+#define EVENT_CPUIRQSEL37_EV_M                                      0x0000007F
+#define EVENT_CPUIRQSEL37_EV_S                                               0
+#define EVENT_CPUIRQSEL37_EV_BATMON_COMB                            0x00000005
 
 //*****************************************************************************
 //
@@ -1075,43 +1169,58 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // SWEV1                    Software event 1, triggered by SWEV.SWEV1
 // SWEV0                    Software event 0, triggered by SWEV.SWEV0
 // CRYPTO_RESULT_AVAIL_IRQ  CRYPTO result available interupt event, the
 //                          corresponding flag is found here
 //                          CRYPTO:IRQSTAT.RESULT_AVAIL. Controlled by
 //                          CRYPTO:IRQSTAT.RESULT_AVAIL
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
 // DMA_DONE_COMB            Combined DMA done, corresponding flags are here
 //                          UDMA0:REQDONE
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -1144,7 +1253,13 @@
 #define EVENT_RFCSEL9_EV_SWEV1                                      0x00000065
 #define EVENT_RFCSEL9_EV_SWEV0                                      0x00000064
 #define EVENT_RFCSEL9_EV_CRYPTO_RESULT_AVAIL_IRQ                    0x0000005D
+#define EVENT_RFCSEL9_EV_AUX_TIMER2_PULSE                           0x0000003C
+#define EVENT_RFCSEL9_EV_AUX_TIMER2_EV3                             0x0000003B
+#define EVENT_RFCSEL9_EV_AUX_TIMER2_EV2                             0x0000003A
+#define EVENT_RFCSEL9_EV_AUX_TIMER2_EV1                             0x00000039
+#define EVENT_RFCSEL9_EV_AUX_TIMER2_EV0                             0x00000038
 #define EVENT_RFCSEL9_EV_DMA_DONE_COMB                              0x00000027
+#define EVENT_RFCSEL9_EV_UART1_COMB                                 0x00000025
 #define EVENT_RFCSEL9_EV_UART0_COMB                                 0x00000024
 #define EVENT_RFCSEL9_EV_SSI1_COMB                                  0x00000023
 #define EVENT_RFCSEL9_EV_SSI0_COMB                                  0x00000022
@@ -1163,36 +1278,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV5               RFC RAT event 5, configured by RFC_RAT:RATEV.OEVT5
-// RFC_IN_EV4               RFC RAT event 4, configured by RFC_RAT:RATEV.OEVT4
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT1              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT1 wil be routed here.
@@ -1207,9 +1323,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -1223,7 +1351,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -1235,6 +1363,8 @@
 // I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -1255,8 +1385,6 @@
 #define EVENT_GPT0ACAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT0ACAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT0ACAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT0ACAPTSEL_EV_RFC_IN_EV5                            0x00000060
-#define EVENT_GPT0ACAPTSEL_EV_RFC_IN_EV4                            0x0000005F
 #define EVENT_GPT0ACAPTSEL_EV_PORT_EVENT1                           0x00000056
 #define EVENT_GPT0ACAPTSEL_EV_PORT_EVENT0                           0x00000055
 #define EVENT_GPT0ACAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -1267,6 +1395,12 @@
 #define EVENT_GPT0ACAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT0ACAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT0ACAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT0ACAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT0ACAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT0ACAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT0ACAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT0ACAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT0ACAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT0ACAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT0ACAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT0ACAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -1278,6 +1412,8 @@
 #define EVENT_GPT0ACAPTSEL_EV_AUX_COMB                              0x0000000B
 #define EVENT_GPT0ACAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT0ACAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT0ACAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT0ACAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT0ACAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT0ACAPTSEL_EV_NONE                                  0x00000000
 
@@ -1289,36 +1425,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV5               RFC RAT event 5, configured by RFC_RAT:RATEV.OEVT5
-// RFC_IN_EV4               RFC RAT event 4, configured by RFC_RAT:RATEV.OEVT4
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT1              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT1 wil be routed here.
@@ -1333,9 +1470,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -1349,7 +1498,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -1361,6 +1510,8 @@
 // I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -1381,8 +1532,6 @@
 #define EVENT_GPT0BCAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT0BCAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT0BCAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT0BCAPTSEL_EV_RFC_IN_EV5                            0x00000060
-#define EVENT_GPT0BCAPTSEL_EV_RFC_IN_EV4                            0x0000005F
 #define EVENT_GPT0BCAPTSEL_EV_PORT_EVENT1                           0x00000056
 #define EVENT_GPT0BCAPTSEL_EV_PORT_EVENT0                           0x00000055
 #define EVENT_GPT0BCAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -1393,6 +1542,12 @@
 #define EVENT_GPT0BCAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT0BCAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT0BCAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT0BCAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT0BCAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT0BCAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT0BCAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT0BCAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT0BCAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT0BCAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT0BCAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT0BCAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -1404,6 +1559,8 @@
 #define EVENT_GPT0BCAPTSEL_EV_AUX_COMB                              0x0000000B
 #define EVENT_GPT0BCAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT0BCAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT0BCAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT0BCAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT0BCAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT0BCAPTSEL_EV_NONE                                  0x00000000
 
@@ -1415,36 +1572,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV5               RFC RAT event 5, configured by RFC_RAT:RATEV.OEVT5
-// RFC_IN_EV4               RFC RAT event 4, configured by RFC_RAT:RATEV.OEVT4
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT3              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT3 wil be routed here.
@@ -1459,9 +1617,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -1475,7 +1645,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -1487,6 +1657,8 @@
 // I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -1507,8 +1679,6 @@
 #define EVENT_GPT1ACAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT1ACAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT1ACAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT1ACAPTSEL_EV_RFC_IN_EV5                            0x00000060
-#define EVENT_GPT1ACAPTSEL_EV_RFC_IN_EV4                            0x0000005F
 #define EVENT_GPT1ACAPTSEL_EV_PORT_EVENT3                           0x00000058
 #define EVENT_GPT1ACAPTSEL_EV_PORT_EVENT2                           0x00000057
 #define EVENT_GPT1ACAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -1519,6 +1689,12 @@
 #define EVENT_GPT1ACAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT1ACAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT1ACAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT1ACAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT1ACAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT1ACAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT1ACAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT1ACAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT1ACAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT1ACAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT1ACAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT1ACAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -1530,6 +1706,8 @@
 #define EVENT_GPT1ACAPTSEL_EV_AUX_COMB                              0x0000000B
 #define EVENT_GPT1ACAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT1ACAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT1ACAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT1ACAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT1ACAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT1ACAPTSEL_EV_NONE                                  0x00000000
 
@@ -1541,36 +1719,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV5               RFC RAT event 5, configured by RFC_RAT:RATEV.OEVT5
-// RFC_IN_EV4               RFC RAT event 4, configured by RFC_RAT:RATEV.OEVT4
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT3              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT3 wil be routed here.
@@ -1585,9 +1764,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -1601,7 +1792,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -1613,6 +1804,8 @@
 // I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -1633,8 +1826,6 @@
 #define EVENT_GPT1BCAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT1BCAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT1BCAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT1BCAPTSEL_EV_RFC_IN_EV5                            0x00000060
-#define EVENT_GPT1BCAPTSEL_EV_RFC_IN_EV4                            0x0000005F
 #define EVENT_GPT1BCAPTSEL_EV_PORT_EVENT3                           0x00000058
 #define EVENT_GPT1BCAPTSEL_EV_PORT_EVENT2                           0x00000057
 #define EVENT_GPT1BCAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -1645,6 +1836,12 @@
 #define EVENT_GPT1BCAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT1BCAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT1BCAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT1BCAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT1BCAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT1BCAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT1BCAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT1BCAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT1BCAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT1BCAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT1BCAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT1BCAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -1656,6 +1853,8 @@
 #define EVENT_GPT1BCAPTSEL_EV_AUX_COMB                              0x0000000B
 #define EVENT_GPT1BCAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT1BCAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT1BCAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT1BCAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT1BCAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT1BCAPTSEL_EV_NONE                                  0x00000000
 
@@ -1667,36 +1866,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV7               RFC RAT event 7, configured by RFC_RAT:RATEV.OEVT7
-// RFC_IN_EV6               RFC RAT event 6, configured by RFC_RAT:RATEV.OEVT6
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT5              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT4 wil be routed here.
@@ -1711,9 +1911,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -1727,7 +1939,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -1739,6 +1951,8 @@
 // I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -1759,8 +1973,6 @@
 #define EVENT_GPT2ACAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT2ACAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT2ACAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT2ACAPTSEL_EV_RFC_IN_EV7                            0x00000062
-#define EVENT_GPT2ACAPTSEL_EV_RFC_IN_EV6                            0x00000061
 #define EVENT_GPT2ACAPTSEL_EV_PORT_EVENT5                           0x0000005A
 #define EVENT_GPT2ACAPTSEL_EV_PORT_EVENT4                           0x00000059
 #define EVENT_GPT2ACAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -1771,6 +1983,12 @@
 #define EVENT_GPT2ACAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT2ACAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT2ACAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT2ACAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT2ACAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT2ACAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT2ACAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT2ACAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT2ACAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT2ACAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT2ACAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT2ACAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -1782,6 +2000,8 @@
 #define EVENT_GPT2ACAPTSEL_EV_AUX_COMB                              0x0000000B
 #define EVENT_GPT2ACAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT2ACAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT2ACAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT2ACAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT2ACAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT2ACAPTSEL_EV_NONE                                  0x00000000
 
@@ -1793,36 +2013,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV7               RFC RAT event 7, configured by RFC_RAT:RATEV.OEVT7
-// RFC_IN_EV6               RFC RAT event 6, configured by RFC_RAT:RATEV.OEVT6
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT5              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT4 wil be routed here.
@@ -1837,9 +2058,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -1853,7 +2086,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -1865,6 +2098,8 @@
 // I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -1885,8 +2120,6 @@
 #define EVENT_GPT2BCAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT2BCAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT2BCAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT2BCAPTSEL_EV_RFC_IN_EV7                            0x00000062
-#define EVENT_GPT2BCAPTSEL_EV_RFC_IN_EV6                            0x00000061
 #define EVENT_GPT2BCAPTSEL_EV_PORT_EVENT5                           0x0000005A
 #define EVENT_GPT2BCAPTSEL_EV_PORT_EVENT4                           0x00000059
 #define EVENT_GPT2BCAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -1897,6 +2130,12 @@
 #define EVENT_GPT2BCAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT2BCAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT2BCAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT2BCAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT2BCAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT2BCAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT2BCAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT2BCAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT2BCAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT2BCAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT2BCAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT2BCAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -1908,6 +2147,8 @@
 #define EVENT_GPT2BCAPTSEL_EV_AUX_COMB                              0x0000000B
 #define EVENT_GPT2BCAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT2BCAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT2BCAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT2BCAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT2BCAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT2BCAPTSEL_EV_NONE                                  0x00000000
 
@@ -2044,21 +2285,65 @@
 // Register: EVENT_O_UDMACH5SSEL
 //
 //*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// UART1_RX_DMASREQ         UART1 RX DMA single request, controlled by
+//                          UART1:DMACTL.RXDMAE
+#define EVENT_UDMACH5SSEL_EV_W                                               7
+#define EVENT_UDMACH5SSEL_EV_M                                      0x0000007F
+#define EVENT_UDMACH5SSEL_EV_S                                               0
+#define EVENT_UDMACH5SSEL_EV_UART1_RX_DMASREQ                       0x00000035
+
 //*****************************************************************************
 //
 // Register: EVENT_O_UDMACH5BSEL
 //
 //*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// UART1_RX_DMABREQ         UART1 RX DMA burst request, controlled by
+//                          UART1:DMACTL.RXDMAE
+#define EVENT_UDMACH5BSEL_EV_W                                               7
+#define EVENT_UDMACH5BSEL_EV_M                                      0x0000007F
+#define EVENT_UDMACH5BSEL_EV_S                                               0
+#define EVENT_UDMACH5BSEL_EV_UART1_RX_DMABREQ                       0x00000034
+
 //*****************************************************************************
 //
 // Register: EVENT_O_UDMACH6SSEL
 //
 //*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// UART1_TX_DMASREQ         UART1 TX DMA single request, controlled by
+//                          UART1:DMACTL.TXDMAE
+#define EVENT_UDMACH6SSEL_EV_W                                               7
+#define EVENT_UDMACH6SSEL_EV_M                                      0x0000007F
+#define EVENT_UDMACH6SSEL_EV_S                                               0
+#define EVENT_UDMACH6SSEL_EV_UART1_TX_DMASREQ                       0x00000037
+
 //*****************************************************************************
 //
 // Register: EVENT_O_UDMACH6BSEL
 //
 //*****************************************************************************
+// Field:   [6:0] EV
+//
+// Read only selection value
+// ENUMs:
+// UART1_TX_DMABREQ         UART1 TX DMA burst request, controlled by
+//                          UART1:DMACTL.TXDMAE
+#define EVENT_UDMACH6BSEL_EV_W                                               7
+#define EVENT_UDMACH6BSEL_EV_M                                      0x0000007F
+#define EVENT_UDMACH6BSEL_EV_S                                               0
+#define EVENT_UDMACH6BSEL_EV_UART1_TX_DMABREQ                       0x00000036
+
 //*****************************************************************************
 //
 // Register: EVENT_O_UDMACH7SSEL
@@ -2100,7 +2385,8 @@
 //
 // Read only selection value
 // ENUMs:
-// AUX_SW_DMABREQ           AUX observation loopback
+// AUX_SW_DMABREQ           DMA sofware trigger from AUX, triggered by
+//                          AUX_EVCTL:DMASWREQ.START
 #define EVENT_UDMACH8SSEL_EV_W                                               7
 #define EVENT_UDMACH8SSEL_EV_M                                      0x0000007F
 #define EVENT_UDMACH8SSEL_EV_S                                               0
@@ -2115,7 +2401,8 @@
 //
 // Read only selection value
 // ENUMs:
-// AUX_SW_DMABREQ           AUX observation loopback
+// AUX_SW_DMABREQ           DMA sofware trigger from AUX, triggered by
+//                          AUX_EVCTL:DMASWREQ.START
 #define EVENT_UDMACH8BSEL_EV_W                                               7
 #define EVENT_UDMACH8BSEL_EV_M                                      0x0000007F
 #define EVENT_UDMACH8BSEL_EV_S                                               0
@@ -2129,6 +2416,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2164,6 +2454,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2197,6 +2490,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2232,6 +2528,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2265,6 +2564,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2300,6 +2602,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2333,6 +2638,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2368,6 +2676,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // GPT3B_DMABREQ            GPT3B DMA trigger event. Configured by GPT3:DMAEV
@@ -2418,6 +2729,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // CPU_HALTED               CPU halted
@@ -2427,31 +2741,32 @@
 //                          AUX_EVCTL:DMACTL
 // AUX_DMASREQ              DMA single request event from AUX, configured by
 //                          AUX_EVCTL:DMACTL
-// AUX_SW_DMABREQ           AUX observation loopback
+// AUX_SW_DMABREQ           DMA sofware trigger from AUX, triggered by
+//                          AUX_EVCTL:DMASWREQ.START
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // TRNG_IRQ                 TRNG Interrupt event, controlled by TRNG:IRQEN.EN
 // SWEV3                    Software event 3, triggered by SWEV.SWEV3
 // SWEV2                    Software event 2, triggered by SWEV.SWEV2
@@ -2459,10 +2774,6 @@
 // SWEV0                    Software event 0, triggered by SWEV.SWEV0
 // WDT_NMI                  Watchdog non maskable interrupt event, controlled
 //                          by WDT:CTL.INTTYPE
-// RFC_IN_EV7               RFC RAT event 7, configured by RFC_RAT:RATEV.OEVT7
-// RFC_IN_EV6               RFC RAT event 6, configured by RFC_RAT:RATEV.OEVT6
-// RFC_IN_EV5               RFC RAT event 5, configured by RFC_RAT:RATEV.OEVT5
-// RFC_IN_EV4               RFC RAT event 4, configured by RFC_RAT:RATEV.OEVT4
 // CRYPTO_DMA_DONE_IRQ      CRYPTO DMA input done event, the correspondingg
 //                          flag is CRYPTO:IRQSTAT.DMA_IN_DONE. Controlled
 //                          by CRYPTO:IRQEN.DMA_IN_DONE
@@ -2510,6 +2821,24 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_TX_DMASREQ         UART1 TX DMA single request, controlled by
+//                          UART1:DMACTL.TXDMAE
+// UART1_TX_DMABREQ         UART1 TX DMA burst request, controlled by
+//                          UART1:DMACTL.TXDMAE
+// UART1_RX_DMASREQ         UART1 RX DMA single request, controlled by
+//                          UART1:DMACTL.RXDMAE
+// UART1_RX_DMABREQ         UART1 RX DMA burst request, controlled by
+//                          UART1:DMACTL.RXDMAE
 // UART0_TX_DMASREQ         UART0 TX DMA single request, controlled by
 //                          UART0:DMACTL.TXDMAE
 // UART0_TX_DMABREQ         UART0 TX DMA burst request, controlled by
@@ -2537,12 +2866,15 @@
 // DMA_DONE_COMB            Combined DMA done, corresponding flags are here
 //                          UDMA0:REQDONE
 // DMA_ERR                  DMA bus error, corresponds to UDMA0:ERROR.STATUS
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
+// PKA_IRQ                  PKA Interrupt event
 // RFC_CPE_1                Combined Interrupt for CPE Generated events.
 //                          Corresponding flags are here
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
@@ -2553,14 +2885,12 @@
 //                          AUX_EVENT2 AON wake up event.
 //                          MCU domain wakeup control
 //                          AON_EVENT:MCUWUSEL
-//                          AUX domain wakeup control
-//                          AON_EVENT:AUXWUSEL
 // RFC_CPE_0                Combined Interrupt for CPE Generated events.
 //                          Corresponding flags are here
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -2588,6 +2918,8 @@
 // I2S_IRQ                  Interrupt event from I2S
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -2627,10 +2959,6 @@
 #define EVENT_UDMACH14BSEL_EV_SWEV1                                 0x00000065
 #define EVENT_UDMACH14BSEL_EV_SWEV0                                 0x00000064
 #define EVENT_UDMACH14BSEL_EV_WDT_NMI                               0x00000063
-#define EVENT_UDMACH14BSEL_EV_RFC_IN_EV7                            0x00000062
-#define EVENT_UDMACH14BSEL_EV_RFC_IN_EV6                            0x00000061
-#define EVENT_UDMACH14BSEL_EV_RFC_IN_EV5                            0x00000060
-#define EVENT_UDMACH14BSEL_EV_RFC_IN_EV4                            0x0000005F
 #define EVENT_UDMACH14BSEL_EV_CRYPTO_DMA_DONE_IRQ                   0x0000005E
 #define EVENT_UDMACH14BSEL_EV_CRYPTO_RESULT_AVAIL_IRQ               0x0000005D
 #define EVENT_UDMACH14BSEL_EV_PORT_EVENT7                           0x0000005C
@@ -2657,6 +2985,15 @@
 #define EVENT_UDMACH14BSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_UDMACH14BSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_UDMACH14BSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_UDMACH14BSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_UDMACH14BSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_UDMACH14BSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_UDMACH14BSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_UDMACH14BSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_UDMACH14BSEL_EV_UART1_TX_DMASREQ                      0x00000037
+#define EVENT_UDMACH14BSEL_EV_UART1_TX_DMABREQ                      0x00000036
+#define EVENT_UDMACH14BSEL_EV_UART1_RX_DMASREQ                      0x00000035
+#define EVENT_UDMACH14BSEL_EV_UART1_RX_DMABREQ                      0x00000034
 #define EVENT_UDMACH14BSEL_EV_UART0_TX_DMASREQ                      0x00000033
 #define EVENT_UDMACH14BSEL_EV_UART0_TX_DMABREQ                      0x00000032
 #define EVENT_UDMACH14BSEL_EV_UART0_RX_DMASREQ                      0x00000031
@@ -2671,9 +3008,11 @@
 #define EVENT_UDMACH14BSEL_EV_SSI0_RX_DMABREQ                       0x00000028
 #define EVENT_UDMACH14BSEL_EV_DMA_DONE_COMB                         0x00000027
 #define EVENT_UDMACH14BSEL_EV_DMA_ERR                               0x00000026
+#define EVENT_UDMACH14BSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_UDMACH14BSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_UDMACH14BSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_UDMACH14BSEL_EV_SSI0_COMB                             0x00000022
+#define EVENT_UDMACH14BSEL_EV_PKA_IRQ                               0x0000001F
 #define EVENT_UDMACH14BSEL_EV_RFC_CPE_1                             0x0000001E
 #define EVENT_UDMACH14BSEL_EV_AUX_SWEV1                             0x0000001D
 #define EVENT_UDMACH14BSEL_EV_RFC_CPE_0                             0x0000001B
@@ -2696,6 +3035,8 @@
 #define EVENT_UDMACH14BSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_UDMACH14BSEL_EV_I2S_IRQ                               0x00000008
 #define EVENT_UDMACH14BSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_UDMACH14BSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_UDMACH14BSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_UDMACH14BSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_UDMACH14BSEL_EV_AON_PROG2                             0x00000003
 #define EVENT_UDMACH14BSEL_EV_AON_PROG1                             0x00000002
@@ -2910,36 +3251,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV7               RFC RAT event 7, configured by RFC_RAT:RATEV.OEVT7
-// RFC_IN_EV6               RFC RAT event 6, configured by RFC_RAT:RATEV.OEVT6
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT7              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT7 wil be routed here.
@@ -2954,9 +3296,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -2970,7 +3324,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -2979,8 +3333,11 @@
 //                          FLASH:FEDACSTAT.RVF_INT
 // AUX_COMB                 AUX combined event, the corresponding flag
 //                          register is here AUX_EVCTL:EVTOMCUFLAGS
+// I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -3001,8 +3358,6 @@
 #define EVENT_GPT3ACAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT3ACAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT3ACAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT3ACAPTSEL_EV_RFC_IN_EV7                            0x00000062
-#define EVENT_GPT3ACAPTSEL_EV_RFC_IN_EV6                            0x00000061
 #define EVENT_GPT3ACAPTSEL_EV_PORT_EVENT7                           0x0000005C
 #define EVENT_GPT3ACAPTSEL_EV_PORT_EVENT6                           0x0000005B
 #define EVENT_GPT3ACAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -3013,6 +3368,12 @@
 #define EVENT_GPT3ACAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT3ACAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT3ACAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT3ACAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT3ACAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT3ACAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT3ACAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT3ACAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT3ACAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT3ACAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT3ACAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT3ACAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -3022,7 +3383,10 @@
 #define EVENT_GPT3ACAPTSEL_EV_RFC_CMD_ACK                           0x00000019
 #define EVENT_GPT3ACAPTSEL_EV_FLASH                                 0x00000015
 #define EVENT_GPT3ACAPTSEL_EV_AUX_COMB                              0x0000000B
+#define EVENT_GPT3ACAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT3ACAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT3ACAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT3ACAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT3ACAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT3ACAPTSEL_EV_NONE                                  0x00000000
 
@@ -3034,36 +3398,37 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // AON_RTC_UPD              RTC periodic event controlled by
 //                          AON_RTC:CTL.RTC_UPD_EN
 // AUX_ADC_IRQ              AUX ADC interrupt event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_IRQ. Status flags
-//                          are found here AUX_EVCTL:EVTOMCUFLAGS
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_IRQ. Status
+//                          flags are found here AUX_EVCTL:EVTOMCUFLAGS
 // AUX_OBSMUX0              Loopback of OBSMUX0 through AUX, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.OBSMUX0
+//                          AUX_EVCTL:EVTOMCUFLAGS.MCU_OBSMUX0
 // AUX_ADC_FIFO_ALMOST_FULL AUX ADC FIFO watermark event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_FIFO_ALMOST_FULL
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_FIFO_ALMOST_FULL
 // AUX_ADC_DONE             AUX ADC done, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.ADC_DONE
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_ADC_DONE
 // AUX_SMPH_AUTOTAKE_DONE   Autotake event from AUX semaphore, configured by
 //                          AUX_SMPH:AUTOTAKE
 // AUX_TIMER1_EV            AUX timer 1 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER1_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER1_EV
 // AUX_TIMER0_EV            AUX timer 0 event, corresponds to
-//                          AUX_EVCTL:EVTOMCUFLAGS.TIMER0_EV
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER0_EV
 // AUX_TDC_DONE             AUX TDC measurement done event, corresponds to the
-//                          flag AUX_EVCTL:EVTOMCUFLAGS.TDC_DONE and the
-//                          AUX_TDC status AUX_TDC:STAT.DONE
+//                          flag AUX_EVCTL:EVTOMCUFLAGS.AUX_TDC_DONE and
+//                          the AUX_TDC status AUX_TDC:STAT.DONE
 // AUX_COMPB                AUX Compare B event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPB
 // AUX_COMPA                AUX Compare A event, corresponds to
 //                          AUX_EVCTL:EVTOMCUFLAGS.AUX_COMPA
-// AUX_AON_WU_EV            AON wakeup event, corresponds flags are here
-//                          AUX_EVCTL:EVTOMCUFLAGS.AON_WU_EV
-// RFC_IN_EV7               RFC RAT event 7, configured by RFC_RAT:RATEV.OEVT7
-// RFC_IN_EV6               RFC RAT event 6, configured by RFC_RAT:RATEV.OEVT6
+// AUX_AON_WU_EV            AON wakeup event, the corresponding flag is here
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_WU_EV
 // PORT_EVENT7              Port capture event from IOC, configured by
 //                          IOC:IOCFGn.PORT_ID. Events on ports configured
 //                          with ENUM PORT_EVENT7 wil be routed here.
@@ -3078,9 +3443,21 @@
 // GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
 // GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
 // GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
+// AUX_TIMER2_PULSE         AUX Timer2 pulse, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_PULSE
+// AUX_TIMER2_EV3           AUX Timer2 event 3, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV3
+// AUX_TIMER2_EV2           AUX Timer2 event 2, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV2
+// AUX_TIMER2_EV1           AUX Timer2 event 1, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV1
+// AUX_TIMER2_EV0           AUX Timer2 event 0, corresponding to flag
+//                          AUX_EVCTL:EVTOMCUFLAGS.AUX_TIMER2_EV0
+// UART1_COMB               UART1 combined interrupt, interrupt flags are
+//                          found here UART1:MIS
 // UART0_COMB               UART0 combined interrupt, interrupt flags are
 //                          found here UART0:MIS
-// SSI1_COMB                SSI0 combined interrupt, interrupt flags are found
+// SSI1_COMB                SSI1 combined interrupt, interrupt flags are found
 //                          here SSI1:MIS
 // SSI0_COMB                SSI0 combined interrupt, interrupt flags are found
 //                          here SSI0:MIS
@@ -3094,7 +3471,7 @@
 //                          RFC_DBELL:RFCPEIFG. Only interrupts selected
 //                          with CPE0 in RFC_DBELL:RFCPEIFG can trigger a
 //                          RFC_CPE_0 event
-// RFC_HW_COMB              Combined RCF hardware interrupt, corresponding
+// RFC_HW_COMB              Combined RFC hardware interrupt, corresponding
 //                          flag is here RFC_DBELL:RFHWIFG
 // RFC_CMD_ACK              RFC Doorbell Command Acknowledgement Interrupt,
 //                          equvialent to RFC_DBELL:RFACKIFG.ACKFLAG
@@ -3103,8 +3480,11 @@
 //                          FLASH:FEDACSTAT.RVF_INT
 // AUX_COMB                 AUX combined event, the corresponding flag
 //                          register is here AUX_EVCTL:EVTOMCUFLAGS
+// I2C_IRQ                  Interrupt event from I2C
 // AON_RTC_COMB             Event from AON_RTC, controlled by the
 //                          AON_RTC:CTL.COMB_EV_MASK setting
+// OSC_COMB                 Combined event from Oscillator control
+// BATMON_COMB              Combined event from battery monitor
 // AON_GPIO_EDGE            Edge detect event from IOC. Configureded by the
 //                          IOC:IOCFGn.EDGE_IRQ_EN and  IOC:IOCFGn.EDGE_DET
 //                          settings
@@ -3125,8 +3505,6 @@
 #define EVENT_GPT3BCAPTSEL_EV_AUX_COMPB                             0x0000006B
 #define EVENT_GPT3BCAPTSEL_EV_AUX_COMPA                             0x0000006A
 #define EVENT_GPT3BCAPTSEL_EV_AUX_AON_WU_EV                         0x00000069
-#define EVENT_GPT3BCAPTSEL_EV_RFC_IN_EV7                            0x00000062
-#define EVENT_GPT3BCAPTSEL_EV_RFC_IN_EV6                            0x00000061
 #define EVENT_GPT3BCAPTSEL_EV_PORT_EVENT7                           0x0000005C
 #define EVENT_GPT3BCAPTSEL_EV_PORT_EVENT6                           0x0000005B
 #define EVENT_GPT3BCAPTSEL_EV_GPT3B_CMP                             0x00000044
@@ -3137,6 +3515,12 @@
 #define EVENT_GPT3BCAPTSEL_EV_GPT1A_CMP                             0x0000003F
 #define EVENT_GPT3BCAPTSEL_EV_GPT0B_CMP                             0x0000003E
 #define EVENT_GPT3BCAPTSEL_EV_GPT0A_CMP                             0x0000003D
+#define EVENT_GPT3BCAPTSEL_EV_AUX_TIMER2_PULSE                      0x0000003C
+#define EVENT_GPT3BCAPTSEL_EV_AUX_TIMER2_EV3                        0x0000003B
+#define EVENT_GPT3BCAPTSEL_EV_AUX_TIMER2_EV2                        0x0000003A
+#define EVENT_GPT3BCAPTSEL_EV_AUX_TIMER2_EV1                        0x00000039
+#define EVENT_GPT3BCAPTSEL_EV_AUX_TIMER2_EV0                        0x00000038
+#define EVENT_GPT3BCAPTSEL_EV_UART1_COMB                            0x00000025
 #define EVENT_GPT3BCAPTSEL_EV_UART0_COMB                            0x00000024
 #define EVENT_GPT3BCAPTSEL_EV_SSI1_COMB                             0x00000023
 #define EVENT_GPT3BCAPTSEL_EV_SSI0_COMB                             0x00000022
@@ -3146,7 +3530,10 @@
 #define EVENT_GPT3BCAPTSEL_EV_RFC_CMD_ACK                           0x00000019
 #define EVENT_GPT3BCAPTSEL_EV_FLASH                                 0x00000015
 #define EVENT_GPT3BCAPTSEL_EV_AUX_COMB                              0x0000000B
+#define EVENT_GPT3BCAPTSEL_EV_I2C_IRQ                               0x00000009
 #define EVENT_GPT3BCAPTSEL_EV_AON_RTC_COMB                          0x00000007
+#define EVENT_GPT3BCAPTSEL_EV_OSC_COMB                              0x00000006
+#define EVENT_GPT3BCAPTSEL_EV_BATMON_COMB                           0x00000005
 #define EVENT_GPT3BCAPTSEL_EV_AON_GPIO_EDGE                         0x00000004
 #define EVENT_GPT3BCAPTSEL_EV_NONE                                  0x00000000
 
@@ -3158,8 +3545,19 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
+// GPT3B_CMP                GPT3B compare event. Configured by GPT3:TBMR.TCACT
+// GPT3A_CMP                GPT3A compare event. Configured by GPT3:TAMR.TCACT
+// GPT2B_CMP                GPT2B compare event. Configured by GPT2:TBMR.TCACT
+// GPT2A_CMP                GPT2A compare event. Configured by GPT2:TAMR.TCACT
+// GPT1B_CMP                GPT1B compare event. Configured by GPT1:TBMR.TCACT
+// GPT1A_CMP                GPT1A compare event. Configured by GPT1:TAMR.TCACT
+// GPT0B_CMP                GPT0B compare event. Configured by GPT0:TBMR.TCACT
+// GPT0A_CMP                GPT0A compare event. Configured by GPT0:TAMR.TCACT
 // GPT1B                    GPT1B interrupt event, controlled by GPT1:TBMR
 // GPT1A                    GPT1A interrupt event, controlled by GPT1:TAMR
 // GPT0B                    GPT0B interrupt event, controlled by GPT0:TBMR
@@ -3173,6 +3571,14 @@
 #define EVENT_AUXSEL0_EV_M                                          0x0000007F
 #define EVENT_AUXSEL0_EV_S                                                   0
 #define EVENT_AUXSEL0_EV_ALWAYS_ACTIVE                              0x00000079
+#define EVENT_AUXSEL0_EV_GPT3B_CMP                                  0x00000044
+#define EVENT_AUXSEL0_EV_GPT3A_CMP                                  0x00000043
+#define EVENT_AUXSEL0_EV_GPT2B_CMP                                  0x00000042
+#define EVENT_AUXSEL0_EV_GPT2A_CMP                                  0x00000041
+#define EVENT_AUXSEL0_EV_GPT1B_CMP                                  0x00000040
+#define EVENT_AUXSEL0_EV_GPT1A_CMP                                  0x0000003F
+#define EVENT_AUXSEL0_EV_GPT0B_CMP                                  0x0000003E
+#define EVENT_AUXSEL0_EV_GPT0A_CMP                                  0x0000003D
 #define EVENT_AUXSEL0_EV_GPT1B                                      0x00000013
 #define EVENT_AUXSEL0_EV_GPT1A                                      0x00000012
 #define EVENT_AUXSEL0_EV_GPT0B                                      0x00000011
@@ -3207,21 +3613,16 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
-// RFC_IN_EV7               RFC RAT event 7, configured by RFC_RAT:RATEV.OEVT7
-// RFC_IN_EV6               RFC RAT event 6, configured by RFC_RAT:RATEV.OEVT6
-// RFC_IN_EV5               RFC RAT event 5, configured by RFC_RAT:RATEV.OEVT5
-// RFC_IN_EV4               RFC RAT event 4, configured by RFC_RAT:RATEV.OEVT4
 // NONE                     Always inactive
 #define EVENT_I2SSTMPSEL0_EV_W                                               7
 #define EVENT_I2SSTMPSEL0_EV_M                                      0x0000007F
 #define EVENT_I2SSTMPSEL0_EV_S                                               0
 #define EVENT_I2SSTMPSEL0_EV_ALWAYS_ACTIVE                          0x00000079
-#define EVENT_I2SSTMPSEL0_EV_RFC_IN_EV7                             0x00000062
-#define EVENT_I2SSTMPSEL0_EV_RFC_IN_EV6                             0x00000061
-#define EVENT_I2SSTMPSEL0_EV_RFC_IN_EV5                             0x00000060
-#define EVENT_I2SSTMPSEL0_EV_RFC_IN_EV4                             0x0000005F
 #define EVENT_I2SSTMPSEL0_EV_NONE                                   0x00000000
 
 //*****************************************************************************
@@ -3232,6 +3633,9 @@
 // Field:   [6:0] EV
 //
 // Read/write selection value
+//
+// Writing any other value than values defined by a ENUM may result in
+// undefined behavior.
 // ENUMs:
 // ALWAYS_ACTIVE            Always asserted
 // CPU_HALTED               CPU halted

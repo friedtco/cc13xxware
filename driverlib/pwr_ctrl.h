@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       pwr_ctrl.h
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2017-11-02 15:41:14 +0100 (Thu, 02 Nov 2017)
+*  Revision:       50165
 *
 *  Description:    Defines and prototypes for the System Power Control.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,20 +61,19 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ints.h>
-#include <inc/hw_aon_wuc.h>
-#include <inc/hw_aon_sysctl.h>
-#include <inc/hw_aon_rtc.h>
-#include <inc/hw_adi_2_refsys.h>
-#include <driverlib/debug.h>
-#include <driverlib/interrupt.h>
-#include <driverlib/osc.h>
-#include <driverlib/cpu.h>
-#include <driverlib/prcm.h>
-#include <driverlib/aon_ioc.h>
-#include <driverlib/adi.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ints.h"
+#include "../inc/hw_aon_pmctl.h"
+#include "../inc/hw_aon_rtc.h"
+#include "../inc/hw_adi_2_refsys.h"
+#include "debug.h"
+#include "interrupt.h"
+#include "osc.h"
+#include "cpu.h"
+#include "prcm.h"
+#include "aon_ioc.h"
+#include "adi.h"
 
 //*****************************************************************************
 //
@@ -181,11 +180,9 @@ PowerCtrlSourceGet(void)
 {
     uint32_t ui32PowerConfig;
 
-    //
     // Return the current power source
-    //
-    ui32PowerConfig = HWREG(AON_SYSCTL_BASE + AON_SYSCTL_O_PWRCTL);
-    if(ui32PowerConfig & AON_SYSCTL_PWRCTL_DCDC_ACTIVE)
+    ui32PowerConfig = HWREG(AON_PMCTL_BASE + AON_PMCTL_O_PWRCTL);
+    if(ui32PowerConfig & AON_PMCTL_PWRCTL_DCDC_ACTIVE)
     {
         return (PWRCTRL_PWRSRC_DCDC);
     }
@@ -199,7 +196,9 @@ PowerCtrlSourceGet(void)
 //
 //! \brief OBSOLETE: Get the last known reset source of the system.
 //!
-//! Recommend using function \ref SysCtrlResetSourceGet() instead of this one.
+//! \deprecated This function will be removed in a future release.
+//! Use \ref SysCtrlResetSourceGet() instead.
+//!
 //! This function returns reset source but does not cover if waking up from shutdown.
 //! This function can be seen as a subset of function \ref SysCtrlResetSourceGet()
 //! and will be removed in a future release.
@@ -221,60 +220,50 @@ PowerCtrlSourceGet(void)
 __STATIC_INLINE uint32_t
 PowerCtrlResetSourceGet(void)
 {
-    //
     //  Get the reset source.
-    //
-    return (( HWREG( AON_SYSCTL_BASE + AON_SYSCTL_O_RESETCTL ) &
-        AON_SYSCTL_RESETCTL_RESET_SRC_M ) >>
-        AON_SYSCTL_RESETCTL_RESET_SRC_S ) ;
+    return (( HWREG( AON_PMCTL_BASE + AON_PMCTL_O_RESETCTL ) &
+        AON_PMCTL_RESETCTL_RESET_SRC_M ) >>
+        AON_PMCTL_RESETCTL_RESET_SRC_S ) ;
 }
 
 //*****************************************************************************
 //
-//! \brief Close the latches in the AON IOC interface and in padring.
+//! \brief Enables pad sleep in order to latch device outputs before shutdown.
 //!
-//! Use this function to unfreeze the current value retained on the IOs driven
-//! by the device. This is required if it is desired to maintain the level of
-//! any IO driven when going through a shutdown/powerdown cycle.
+//! See \ref SysCtrlShutdown() for more information about how to enter
+//! shutdown and how to wake up from shutdown.
 //!
 //! \return None
 //!
-//! \sa \ref PowerCtrlIOFreezeDisable()
+//! \sa \ref PowerCtrlPadSleepDisable()
 //
 //*****************************************************************************
 __STATIC_INLINE void
-PowerCtrlIOFreezeEnable(void)
+PowerCtrlPadSleepEnable(void)
 {
-    //
-    // Close the IO latches at AON_IOC level and in the padring.
-    //
-    AONIOCFreezeEnable();
-    HWREG(AON_SYSCTL_BASE + AON_SYSCTL_O_SLEEPCTL) = 0;
+    HWREG(AON_PMCTL_BASE + AON_PMCTL_O_SLEEPCTL) = 0;
     HWREG(AON_RTC_BASE + AON_RTC_O_SYNC);
 }
 
 //*****************************************************************************
 //
-//! Open the latches in the AON IOC interface and in padring.
+//! \brief Disables pad sleep in order to unlatch device outputs after wakeup from shutdown.
 //!
-//! Use this function to unfreeze the latches that retained on the IOs driven
-//! by the device. This function should not be called before the application
-//! has reinitialized the IO configuration that will drive the IOs to the
-//! desired level.
+//! This function must be called by the application after the device wakes up
+//! from shutdown.
+//!
+//! See \ref SysCtrlShutdown() for more information about how to enter
+//! shutdown and how to wake up from shutdown.
 //!
 //! \return None
 //!
-//! \sa \ref PowerCtrlIOFreezeEnable()
+//! \sa \ref PowerCtrlPadSleepEnable()
 //
 //*****************************************************************************
 __STATIC_INLINE void
-PowerCtrlIOFreezeDisable(void)
+PowerCtrlPadSleepDisable(void)
 {
-    //
-    // Open the IO latches at AON_IOC level and in the padring
-    //
-    AONIOCFreezeDisable();
-    HWREG(AON_SYSCTL_BASE + AON_SYSCTL_O_SLEEPCTL) = 1;
+    HWREG(AON_PMCTL_BASE + AON_PMCTL_O_SLEEPCTL) = 1;
     HWREG(AON_RTC_BASE + AON_RTC_O_SYNC);
 }
 
@@ -285,7 +274,7 @@ PowerCtrlIOFreezeDisable(void)
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_PowerCtrlSourceSet
         #undef  PowerCtrlSourceSet
         #define PowerCtrlSourceSet              ROM_PowerCtrlSourceSet

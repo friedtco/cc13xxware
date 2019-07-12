@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       osc.h
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2019-02-14 09:35:31 +0100 (Thu, 14 Feb 2019)
+*  Revision:       54539
 *
 *  Description:    Defines and prototypes for the system oscillator control.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,14 +61,16 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_aon_wuc.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ddi.h>
-#include <inc/hw_ddi_0_osc.h>
-#include <driverlib/rom.h>
-#include <driverlib/ddi.h>
-#include <driverlib/debug.h>
+#include "../inc/hw_aon_pmctl.h"
+#include "../inc/hw_ccfg.h"
+#include "../inc/hw_fcfg1.h"
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ddi.h"
+#include "../inc/hw_ddi_0_osc.h"
+#include "rom.h"
+#include "ddi.h"
+#include "debug.h"
 
 //*****************************************************************************
 //
@@ -92,8 +94,12 @@ extern "C"
     #define OSCHF_SwitchToRcOscTurnOffXosc  NOROM_OSCHF_SwitchToRcOscTurnOffXosc
     #define OSCHF_DebugGetCrystalAmplitude  NOROM_OSCHF_DebugGetCrystalAmplitude
     #define OSCHF_DebugGetExpectedAverageCrystalAmplitude NOROM_OSCHF_DebugGetExpectedAverageCrystalAmplitude
+    #define OSC_HPOSC_Debug_InitFreqOffsetParams NOROM_OSC_HPOSC_Debug_InitFreqOffsetParams
+    #define OSC_HPOSCInitializeFrequencyOffsetParameters NOROM_OSC_HPOSCInitializeFrequencyOffsetParameters
     #define OSC_HPOSCRelativeFrequencyOffsetGet NOROM_OSC_HPOSCRelativeFrequencyOffsetGet
+    #define OSC_AdjustXoscHfCapArray        NOROM_OSC_AdjustXoscHfCapArray
     #define OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert NOROM_OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert
+    #define OSC_HPOSCRtcCompensate          NOROM_OSC_HPOSCRtcCompensate
 #endif
 
 //*****************************************************************************
@@ -110,7 +116,6 @@ extern "C"
 //
 //*****************************************************************************
 #define OSC_SRC_CLK_HF          0x00000001
-#define OSC_SRC_CLK_MF          0x00000002
 #define OSC_SRC_CLK_LF          0x00000004
 
 #define OSC_RCOSC_HF            0x00000000
@@ -120,9 +125,6 @@ extern "C"
 
 #define SCLK_HF_RCOSC_HF        0
 #define SCLK_HF_XOSC_HF         1
-
-#define SCLK_MF_RCOSC_HF        0
-#define SCLK_MF_XOSC_HF         1
 
 #define SCLK_LF_FROM_RCOSC_HF   0
 #define SCLK_LF_FROM_XOSC_HF    1
@@ -149,15 +151,11 @@ extern "C"
 __STATIC_INLINE void
 OSCXHfPowerModeSet(uint32_t ui32Mode)
 {
-    //
     // Check the arguments.
-    //
     ASSERT((ui32Mode == LOW_POWER_XOSC) ||
            (ui32Mode == HIGH_POWER_XOSC));
 
-    //
     // Change the power mode.
-    //
     DDI16BitWrite(AUX_DDI0_OSC_BASE, DDI_0_OSC_O_CTL0, DDI_0_OSC_CTL0_XOSC_HF_POWER_MODE,
                   ui32Mode);
 }
@@ -215,15 +213,14 @@ OSCClockLossEventDisable( void )
 //! Use this function to set the oscillator source for one or more of the
 //! system source clocks.
 //!
-//! When selecting the high frequency clock source, this function will not do
+//! When selecting the high frequency clock source (OSC_SRC_CLK_HF), this function will not do
 //! the actual switch. Enabling the high frequency XTAL can take several hundred
-//! micro seconds, so the actual switch is split into a separate function,
+//! micro seconds, so the actual switch is done in a separate function, \ref OSCHfSourceSwitch(),
 //! leaving System CPU free to perform other tasks as the XTAL starts up.
 //!
-//! \note The High Frequency (\ref OSC_SRC_CLK_HF) and Medium Frequency
-//! (\ref OSC_SRC_CLK_MF) can only be derived from the high frequency
-//! oscillator. The Low Frequency source clock (\ref OSC_SRC_CLK_LF) can be
-//! derived from all 4 oscillators.
+//! \note The High Frequency (\ref OSC_SRC_CLK_HF) can only be derived from the
+//! high frequency oscillator. The Low Frequency source clock (\ref OSC_SRC_CLK_LF)
+//! can be derived from all 4 oscillators.
 //!
 //! \note If enabling \ref OSC_XOSC_LF it is not safe to go to powerdown/shutdown
 //! until the LF clock is running which can be checked using \ref OSCClockSourceGet().
@@ -233,7 +230,6 @@ OSCClockLossEventDisable( void )
 //!
 //! \param ui32SrcClk is the source clocks to configure.
 //! - \ref OSC_SRC_CLK_HF
-//! - \ref OSC_SRC_CLK_MF
 //! - \ref OSC_SRC_CLK_LF
 //! \param ui32Osc is the oscillator that drives the source clock.
 //! - \ref OSC_RCOSC_HF
@@ -241,7 +237,7 @@ OSCClockLossEventDisable( void )
 //! - \ref OSC_RCOSC_LF (only when ui32SrcClk is \ref OSC_SRC_CLK_LF)
 //! - \ref OSC_XOSC_LF (only when ui32SrcClk is \ref OSC_SRC_CLK_LF)
 //!
-//! \sa OSCClockSourceGet()
+//! \sa \ref OSCClockSourceGet(), \ref OSCHfSourceSwitch()
 //!
 //! \return None
 //
@@ -257,7 +253,6 @@ extern void OSCClockSourceSet(uint32_t ui32SrcClk, uint32_t ui32Osc);
 //!
 //! \param ui32SrcClk is the source clock to check.
 //! - \ref OSC_SRC_CLK_HF
-//! - \ref OSC_SRC_CLK_MF
 //! - \ref OSC_SRC_CLK_LF
 //!
 //! \return Returns the type of oscillator that drives the clock source.
@@ -289,9 +284,7 @@ extern uint32_t OSCClockSourceGet(uint32_t ui32SrcClk);
 __STATIC_INLINE bool
 OSCHfSourceReady(void)
 {
-    //
     // Return the readiness of the HF clock source
-    //
     return (DDI16BitfieldRead(AUX_DDI0_OSC_BASE, DDI_0_OSC_O_STAT0,
                               DDI_0_OSC_STAT0_PENDINGSCLKHFSWITCHING_M,
                               DDI_0_OSC_STAT0_PENDINGSCLKHFSWITCHING_S)) ?
@@ -304,7 +297,7 @@ OSCHfSourceReady(void)
 //!
 //! When switching the HF clock source the clock period might be prolonged
 //! leaving the clock 'stuck-at' high or low for a few cycles. To ensure that
-//! this does not coincide with a read access to the Flash potentially
+//! this does not coincide with a read access to the Flash, potentially
 //! freezing the device, the HF clock source switch must be executed from ROM.
 //!
 //! \note This function will not return until the clock source has been
@@ -319,57 +312,82 @@ OSCHfSourceReady(void)
 __STATIC_INLINE void
 OSCHfSourceSwitch(void)
 {
-    //
+    // Read target clock (lower half of the 32-bit CTL0 register)
+    uint16_t hfSrc = HWREGH(AUX_DDI0_OSC_BASE + DDI_0_OSC_O_CTL0) & DDI_0_OSC_CTL0_SCLK_HF_SRC_SEL_M;
+
+    // If target clock source is RCOSC, change clock source for DCDC to RCOSC
+    if(hfSrc == DDI_0_OSC_CTL0_SCLK_HF_SRC_SEL_RCOSC)
+    {
+        // Force DCDC to use RCOSC before switching SCLK_HF to RCOSC
+        HWREG(AUX_DDI0_OSC_BASE + DDI_O_MASK16B + (DDI_0_OSC_O_CTL0 << 1) + 4) = DDI_0_OSC_CTL0_CLK_DCDC_SRC_SEL_M | (DDI_0_OSC_CTL0_CLK_DCDC_SRC_SEL_M >> 16);
+        // Dummy read to ensure that the write has propagated
+        HWREGH(AUX_DDI0_OSC_BASE + DDI_0_OSC_O_CTL0);
+    }
+
     // Switch the HF clock source
-    //
     HapiHFSourceSafeSwitch();
+
+    // If target clock source is XOSC, change clock source for DCDC to "auto"
+    if(hfSrc == DDI_0_OSC_CTL0_SCLK_HF_SRC_SEL_XOSC)
+    {
+        // Set DCDC clock source back to "auto" after SCLK_HF was switched to XOSC
+        HWREG(AUX_DDI0_OSC_BASE + DDI_O_MASK16B + (DDI_0_OSC_O_CTL0 << 1) + 4) = DDI_0_OSC_CTL0_CLK_DCDC_SRC_SEL_M;
+    }
 }
 
 //*****************************************************************************
 //
-//! \brief Deprecated: Empty function - original functionality is removed.
+//! \brief Identifies if HPOSC is enabled.
 //!
-//! \deprecated Functionality has been moved to the startup code. The dummy function
-//! will be removed in the next major release of CC26xxWare/CC13xxWare.
+//! This function checks if the device supports HPOSC and that HPOSC is selected
+//! as HF oscillator for use when the radio is active.
 //!
-//! The original functionality was described as follows:
-//! Enable System CPU access to the OSC_DIG module.
-//! Force power on AUX and enable clocks to allow System CPU access on
-//! the OSC_DIG interface.
-//!
-//! \note Access to the OSC_DIG interface is a shared resource between the
-//! Sensor Controller and the CPU, so enabling or disabling this interface must
-//! be done with consideration.
-//!
-//! \return None
+//! \return Returns status of HPOSC functionality:
+//! - \c true  : HPOSC is enabled.
+//! - \c false : HPOSC is not enabled.
 //
 //*****************************************************************************
-__STATIC_INLINE void
-OSCInterfaceEnable(void)
+__STATIC_INLINE bool
+OSC_IsHPOSCEnabled(void)
 {
+    bool enabled = false;
+
+    if((( HWREG(CCFG_BASE + CCFG_O_MODE_CONF) & CCFG_MODE_CONF_XOSC_FREQ_M) == CCFG_MODE_CONF_XOSC_FREQ_HPOSC) &&
+       (( HWREG(FCFG1_BASE + FCFG1_O_OSC_CONF) & FCFG1_OSC_CONF_HPOSC_OPTION) == 0))
+    {
+        enabled = true;
+    }
+
+    return (enabled);
 }
 
 //*****************************************************************************
 //
-//! \brief Deprecated: Empty function - original functionality is removed.
+//! \brief Identifies if HPOSC is enabled and that SCLK_LF is derived from XOSC_HF.
 //!
-//! \deprecated Functionality has been moved to the startup code. The dummy function
-//! will be removed in the next major release of CC26xxWare/CC13xxWare.
+//! This function checks if the device supports HPOSC and that HPOSC is selected
+//! as HF oscillator for use when the radio is active and also that SCLK_LF is
+//! derived from XOSC_HF.
 //!
-//! The original functionality was described as follows:
-//! Disable System CPU access to the OSC_DIG module.
-//! Release the "force power on" of AUX and disable clock to AUX.
-//!
-//! \note Access to the OSC_DIG interface is a shared resource between the
-//! Sensor Controller and the CPU, so enabling or disabling this interface must
-//! be done with consideration.
-//!
-//! \return None
+//! \return Returns status of HPOSC and SCLK_LF configuration:
+//! - \c true  : HPOSC is enabled and SCLK_LF is derived from XOSC_HF.
+//! - \c false : Either HPOSC not enabled or SCLK_LF is not derived from XOSC_HF.
 //
 //*****************************************************************************
-__STATIC_INLINE void
-OSCInterfaceDisable(void)
+__STATIC_INLINE bool
+OSC_IsHPOSCEnabledWithHfDerivedLfClock(void)
 {
+    bool enabled = false;
+
+    // Check configuration by reading lower half of the 32-bit CTL0 register
+    uint16_t regVal = HWREGH(AUX_DDI0_OSC_BASE + DDI_0_OSC_O_CTL0);
+    if( ( ( regVal & DDI_0_OSC_CTL0_SCLK_LF_SRC_SEL_M ) == DDI_0_OSC_CTL0_SCLK_LF_SRC_SEL_XOSCHFDLF ) &&
+        ( ( regVal & DDI_0_OSC_CTL0_HPOSC_MODE_EN_M   ) == DDI_0_OSC_CTL0_HPOSC_MODE_EN             )   )
+    {
+            enabled = true;
+    }
+
+    return (enabled);
 }
 
 //*****************************************************************************
@@ -387,7 +405,6 @@ OSCInterfaceDisable(void)
 //*****************************************************************************
 extern uint32_t OSCHF_GetStartupTime( uint32_t timeUntilWakeupInMs );
 
-
 //*****************************************************************************
 //
 //! \brief Turns on XOSC_HF (but without switching to XOSC_HF).
@@ -399,7 +416,6 @@ extern uint32_t OSCHF_GetStartupTime( uint32_t timeUntilWakeupInMs );
 //
 //*****************************************************************************
 extern void OSCHF_TurnOnXosc( void );
-
 
 //*****************************************************************************
 //
@@ -415,7 +431,6 @@ extern void OSCHF_TurnOnXosc( void );
 //
 //*****************************************************************************
 extern bool OSCHF_AttemptToSwitchToXosc( void );
-
 
 //*****************************************************************************
 //
@@ -468,6 +483,53 @@ extern uint32_t OSCHF_DebugGetExpectedAverageCrystalAmplitude( void );
 
 //*****************************************************************************
 //
+//! \brief Data structure for experimental HPOSC polynomials calculation.
+//!
+//! The structure of the meas_1, meas_2 and meas_3 parameter is
+//! as defined in FCFG1_O_HPOSC_MEAS_1, 2 and 3.
+//!
+//! \sa OSC_HPOSC_Debug_InitFreqOffsetParams()
+//
+//*****************************************************************************
+typedef struct {
+   uint32_t    meas_1   ; //!< Measurement set 1 (typically at room temp)
+   uint32_t    meas_2   ; //!< Measurement set 2 (typically at high temp)
+   uint32_t    meas_3   ; //!< Measurement set 3 (typically at low temp)
+   int32_t     offsetD1 ; //!< Offset to measurement set 1
+   int32_t     offsetD2 ; //!< Offset to measurement set 2
+   int32_t     offsetD3 ; //!< Offset to measurement set 3
+   int32_t     polyP3   ; //!< The P3 polynomial
+} HposcDebugData_t;
+
+//*****************************************************************************
+//
+//! \brief Debug function to calculate the HPOSC polynomials for experimental data sets.
+//!
+//! \param pDebugData pointer to the input data collected in \ref HposcDebugData_t
+//!
+//! \return None
+//!
+//! \sa OSC_HPOSCInitializeFrequencyOffsetParameters()
+//
+//*****************************************************************************
+extern void OSC_HPOSC_Debug_InitFreqOffsetParams( HposcDebugData_t * pDebugData );
+
+//*****************************************************************************
+//
+//! \brief HPOSC initialization function. Must always be called before using HPOSC.
+//!
+//! Calculates the fitting curve parameters (polynomials) to used by the
+//! HPOSC temperature compensation.
+//!
+//! \return None
+//!
+//! \sa OSC_HPOSC_Debug_InitFreqOffsetParams()
+//
+//*****************************************************************************
+extern void OSC_HPOSCInitializeFrequencyOffsetParameters( void );
+
+//*****************************************************************************
+//
 //! \brief Calculate the temperature dependent relative frequency offset of HPOSC
 //!
 //! The HPOSC (High Precision Oscillator) frequency will vary slightly with chip temperature.
@@ -499,6 +561,24 @@ extern int32_t OSC_HPOSCRelativeFrequencyOffsetGet( int32_t tempDegC );
 
 //*****************************************************************************
 //
+//! \brief Adjust the XOSC HF cap array relative to the factory setting
+//!
+//! The cap array factory setting (FCFG) can be converted to a number in the range 0 - 63.
+//! Both this function and the customer configuration (CCFG) setting can apply a delta to the FCFG setting.
+//! The CCFG setting is automatically applied at boot time (See ../startup_files/ccfg.c).
+//! Calling this function will discard the CCFG setting and adjust relative to the FCFG setting.
+//!
+//! \note Adjusted value will not take effect before XOSC_HF is stopped and restarted
+//!
+//! \param capArrDelta specifies number of step to adjust the cap array relative to the factory setting.
+//!
+//! \return None
+//
+//*****************************************************************************
+extern void OSC_AdjustXoscHfCapArray( int32_t capArrDelta );
+
+//*****************************************************************************
+//
 //! \brief Converts the relative frequency offset of HPOSC to the RF Core parameter format.
 //!
 //! The HPOSC (High Precision Oscillator) clock is used by the RF Core.
@@ -518,6 +598,8 @@ extern int32_t OSC_HPOSCRelativeFrequencyOffsetGet( int32_t tempDegC );
 //! -   F_HPOSC is the current HPOSC frequency.
 //! -   RfCoreRelFreqOffset is the relative frequency offset in the "RF Core" format (the value returned).
 //!
+//! \param HPOSC_RelFreqOffset is the relative frequency offset parameter d returned from \ref OSC_HPOSCRelativeFrequencyOffsetGet()
+//!
 //! \return Returns the relative frequency offset in RF Core format.
 //!
 //! \sa OSC_HPOSCRelativeFrequencyOffsetGet()
@@ -525,6 +607,42 @@ extern int32_t OSC_HPOSCRelativeFrequencyOffsetGet( int32_t tempDegC );
 //*****************************************************************************
 extern int16_t OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert( int32_t HPOSC_RelFreqOffset );
 
+//*****************************************************************************
+//
+//! \brief Compensate the RTC increment based on the relative frequency offset of HPOSC
+//!
+//! The HPOSC (High Precision Oscillator) frequency will vary slightly with chip temperature.
+//! This variation forces the RTC increment to be compensated if SCLK_LF is configured
+//! to be derived from the HF clock of HPOSC.
+//! This function must only be called if SCLK_LF is configured to be derived from
+//! the HF clock of HPOSC. The status of this configuration can be determined
+//! by calling the \ref OSC_IsHPOSCEnabledWithHfDerivedLfClock() function.
+//!
+//! This function first calculates the HPOSC frequency, defined as:
+//! <pre>
+//!     F_HPOSC = F_nom * (1 + d/(2^22))
+//! </pre>
+//! where
+//! -   F_HPOSC is the current HPOSC frequency.
+//! -   F_nom is the nominal oscillator frequency, assumed to be 48.000 MHz.
+//! -   d is the relative frequency offset given by the input argument relFreqOffset.
+//! Then the SCLK_LF frequency is calculated, defined as:
+//! <pre>
+//!     F_SCLK_LF = F_HPOSC / 1536
+//! </pre>
+//! Then the RTC increment SUBSECINC is calculated, defined as;
+//! <pre>
+//!     SUBSECINC = (2^38) / F_SCLK_LF
+//! </pre>
+//! Finally the RTC module is updated with the calculated SUBSECINC value.
+//!
+//! \param relFreqOffset is the relative frequency offset parameter d returned from \ref OSC_HPOSCRelativeFrequencyOffsetGet()
+//!
+//! \return None
+//!
+//
+//*****************************************************************************
+extern void OSC_HPOSCRtcCompensate( int32_t relFreqOffset );
 
 //*****************************************************************************
 //
@@ -533,7 +651,7 @@ extern int16_t OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert( int32_t HP
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_OSCClockSourceSet
         #undef  OSCClockSourceSet
         #define OSCClockSourceSet               ROM_OSCClockSourceSet
@@ -566,13 +684,29 @@ extern int16_t OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert( int32_t HP
         #undef  OSCHF_DebugGetExpectedAverageCrystalAmplitude
         #define OSCHF_DebugGetExpectedAverageCrystalAmplitude ROM_OSCHF_DebugGetExpectedAverageCrystalAmplitude
     #endif
+    #ifdef ROM_OSC_HPOSC_Debug_InitFreqOffsetParams
+        #undef  OSC_HPOSC_Debug_InitFreqOffsetParams
+        #define OSC_HPOSC_Debug_InitFreqOffsetParams ROM_OSC_HPOSC_Debug_InitFreqOffsetParams
+    #endif
+    #ifdef ROM_OSC_HPOSCInitializeFrequencyOffsetParameters
+        #undef  OSC_HPOSCInitializeFrequencyOffsetParameters
+        #define OSC_HPOSCInitializeFrequencyOffsetParameters ROM_OSC_HPOSCInitializeFrequencyOffsetParameters
+    #endif
     #ifdef ROM_OSC_HPOSCRelativeFrequencyOffsetGet
         #undef  OSC_HPOSCRelativeFrequencyOffsetGet
         #define OSC_HPOSCRelativeFrequencyOffsetGet ROM_OSC_HPOSCRelativeFrequencyOffsetGet
     #endif
+    #ifdef ROM_OSC_AdjustXoscHfCapArray
+        #undef  OSC_AdjustXoscHfCapArray
+        #define OSC_AdjustXoscHfCapArray        ROM_OSC_AdjustXoscHfCapArray
+    #endif
     #ifdef ROM_OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert
         #undef  OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert
         #define OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert ROM_OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert
+    #endif
+    #ifdef ROM_OSC_HPOSCRtcCompensate
+        #undef  OSC_HPOSCRtcCompensate
+        #define OSC_HPOSCRtcCompensate          ROM_OSC_HPOSCRtcCompensate
     #endif
 #endif
 
@@ -584,7 +718,6 @@ extern int16_t OSC_HPOSCRelativeFrequencyOffsetToRFCoreFormatConvert( int32_t HP
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif // __OSC_H__
 

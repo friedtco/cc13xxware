@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       vims.c
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-06-05 12:13:49 +0200 (Mon, 05 Jun 2017)
+*  Revision:       49096
 *
 *  Description:    Driver for the VIMS.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 *
 ******************************************************************************/
 
-#include <driverlib/vims.h>
+#include "vims.h"
 
 //*****************************************************************************
 //
@@ -65,9 +65,7 @@ VIMSConfigure(uint32_t ui32Base, bool bRoundRobin, bool bPrefetch)
 {
     uint32_t ui32Reg;
 
-    //
     // Check the arguments.
-    //
     ASSERT(VIMSBaseValid(ui32Base));
 
     ui32Reg = HWREG(ui32Base + VIMS_O_CTL);
@@ -81,9 +79,7 @@ VIMSConfigure(uint32_t ui32Base, bool bRoundRobin, bool bPrefetch)
         ui32Reg |= VIMS_CTL_PREF_EN;
     }
 
-    //
     // Set the Arbitration and prefetch mode.
-    //
     HWREG(ui32Base + VIMS_O_CTL) = ui32Reg;
 }
 
@@ -97,18 +93,14 @@ VIMSModeSet(uint32_t ui32Base, uint32_t ui32Mode)
 {
     uint32_t ui32Reg;
 
-    //
     // Check the arguments.
-    //
     ASSERT(VIMSBaseValid(ui32Base));
 
     ASSERT((ui32Mode == VIMS_MODE_DISABLED)   ||
            (ui32Mode == VIMS_MODE_ENABLED)    ||
            (ui32Mode == VIMS_MODE_OFF));
 
-    //
     // Set the mode.
-    //
     ui32Reg = HWREG(ui32Base + VIMS_O_CTL);
     ui32Reg &= ~VIMS_CTL_MODE_M;
     ui32Reg |= (ui32Mode & VIMS_CTL_MODE_M);
@@ -126,9 +118,7 @@ VIMSModeGet(uint32_t ui32Base)
 {
     uint32_t ui32Reg;
 
-    //
     // Check the arguments.
-    //
     ASSERT(VIMSBaseValid(ui32Base));
 
     ui32Reg = HWREG(ui32Base + VIMS_O_STAT);
@@ -154,56 +144,29 @@ VIMSModeSafeSet( uint32_t ui32Base, uint32_t ui32NewMode, bool blocking )
 {
     uint32_t currentMode;
 
-    //
     // Check the arguments.
-    //
     ASSERT(VIMSBaseValid(ui32Base));
     ASSERT((ui32NewMode == VIMS_MODE_DISABLED)   ||
            (ui32NewMode == VIMS_MODE_ENABLED)    ||
            (ui32NewMode == VIMS_MODE_OFF));
 
-    //
     // Make sure that only the mode bits are set in the input parameter
     // (done just for security since it is critical to the code flow)
-    //
     ui32NewMode &= VIMS_CTL_MODE_M;
 
-    //
     // Wait for any pending change to complete and get current VIMS mode
     // (This is a blocking point but will typically only be a blocking point
     // only if mode is changed multiple times with blocking=0)
-    //
     do {
         currentMode = VIMSModeGet( ui32Base );
     } while ( currentMode == VIMS_MODE_CHANGING );
 
-    //
     // First check that it actually is a mode change request
-    //
     if ( ui32NewMode != currentMode ) {
-        //
-        // Due to a hw-problem it is strongly recommended to go via VIMS_MODE_OFF
-        // when leaving VIMS_MODE_ENABLED (=VIMS_CTL_MODE_CACHE)
-        // (And no need to go via OFF, if OFF is the final state and will be set later)
-        //
-        if (( currentMode == VIMS_CTL_MODE_CACHE ) &&
-            ( ui32NewMode != VIMS_CTL_MODE_OFF   )    )
-        {
-            VIMSModeSet( ui32Base, VIMS_MODE_OFF );
-
-            while ( HWREGBITW( VIMS_BASE + VIMS_O_STAT, VIMS_STAT_MODE_CHANGING_BITN )) {
-                // Do nothing - wait for change to complete.
-                // (Needed blocking point but it takes only some few cycles)
-            }
-        }
-        //
         // Set new mode
-        //
         VIMSModeSet( ui32Base, ui32NewMode );
 
-        //
         // Wait for final mode change to complete - if blocking is requested
-        //
         if ( blocking ) {
             while ( HWREGBITW( VIMS_BASE + VIMS_O_STAT, VIMS_STAT_MODE_CHANGING_BITN )) {
                 // Do nothing - wait for change to complete.

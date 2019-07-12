@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_ddi.h
-*  Revised:        2016-07-07 19:12:02 +0200 (Thu, 07 Jul 2016)
-*  Revision:       46848
+*  Revised:        2017-06-05 12:13:49 +0200 (Mon, 05 Jun 2017)
+*  Revision:       49096
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -177,17 +177,17 @@
 //
 //*****************************************************************************
 #define DDI_O_DIR             0x00000000  // Offset for the direct access instruction
-#define DDI_O_SET             0x00000040  // Offset for 'Set' instruction.
-#define DDI_O_CLR             0x00000080  // Offset for 'Clear' instruction.
-#define DDI_O_MASK4B          0x00000100  // Offset for 4-bit masked access.
+#define DDI_O_SET             0x00000080  // Offset for 'Set' instruction.
+#define DDI_O_CLR             0x00000100  // Offset for 'Clear' instruction.
+#define DDI_O_MASK4B          0x00000200  // Offset for 4-bit masked access.
                                           // Data bit[n] is written if mask bit[n] is set ('1').
                                           // Bits 7:4 are mask. Bits 3:0 are data.
                                           // Requires 'byte' write.
-#define DDI_O_MASK8B          0x00000180  // Offset for 8-bit masked access.
+#define DDI_O_MASK8B          0x00000300  // Offset for 8-bit masked access.
                                           // Data bit[n] is written if mask bit[n] is set ('1').
                                           // Bits 15:8 are mask. Bits 7:0 are data.
                                           // Requires 'short' write.
-#define DDI_O_MASK16B         0x00000200  // Offset for 16-bit masked access.
+#define DDI_O_MASK16B         0x00000400  // Offset for 16-bit masked access.
                                           // Data bit[n] is written if mask bit[n] is set ('1').
                                           // Bits 31:16 are mask. Bits 15:0 are data.
                                           // Requires 'long' write.

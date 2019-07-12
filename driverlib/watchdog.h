@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       wdt.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-05-23 12:08:52 +0200 (Tue, 23 May 2017)
+*  Revision:       49048
 *
 *  Description:    Defines and prototypes for the Watchdog Timer.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,12 +61,12 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_ints.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_wdt.h>
-#include <driverlib/debug.h>
-#include <driverlib/interrupt.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_ints.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_wdt.h"
+#include "debug.h"
+#include "interrupt.h"
 
 //*****************************************************************************
 //
@@ -113,9 +113,7 @@ extern "C"
 __STATIC_INLINE bool
 WatchdogRunning(void)
 {
-    //
     // See if the watchdog timer module is enabled, and return.
-    //
     return((HWREG(WDT_BASE + WDT_O_CTL) & WDT_CTL_INTEN) ? true : false);
 }
 
@@ -196,10 +194,8 @@ WatchdogResetDisable(void)
 __STATIC_INLINE void
 WatchdogLock(void)
 {
-    //
     // Lock out watchdog register writes. Writing anything to the WDT_O_LOCK
     // register causes the lock to go into effect.
-    //
     HWREG(WDT_BASE + WDT_O_LOCK) = WATCHDOG_LOCK_LOCKED;
 }
 
@@ -216,9 +212,7 @@ WatchdogLock(void)
 __STATIC_INLINE void
 WatchdogUnlock(void)
 {
-    //
     // Unlock watchdog register writes.
-    //
     HWREG(WDT_BASE + WDT_O_LOCK) = WATCHDOG_LOCK_UNLOCK;
 }
 
@@ -236,9 +230,7 @@ WatchdogUnlock(void)
 __STATIC_INLINE bool
 WatchdogLockState(void)
 {
-    //
     // Get the lock state.
-    //
     return((HWREG(WDT_BASE + WDT_O_LOCK) == WATCHDOG_LOCK_LOCKED) ?
                true : false);
 }
@@ -265,9 +257,7 @@ WatchdogLockState(void)
 __STATIC_INLINE void
 WatchdogReloadSet(uint32_t ui32LoadVal)
 {
-    //
     // Set the load register.
-    //
     HWREG(WDT_BASE + WDT_O_LOAD) = ui32LoadVal;
 }
 
@@ -286,9 +276,7 @@ WatchdogReloadSet(uint32_t ui32LoadVal)
 __STATIC_INLINE uint32_t
 WatchdogReloadGet(void)
 {
-    //
     // Get the load register.
-    //
     return(HWREG(WDT_BASE + WDT_O_LOAD));
 }
 
@@ -304,19 +292,20 @@ WatchdogReloadGet(void)
 __STATIC_INLINE uint32_t
 WatchdogValueGet(void)
 {
-    //
     // Get the current watchdog timer register value.
-    //
     return(HWREG(WDT_BASE + WDT_O_VALUE));
 }
 
 //*****************************************************************************
 //
-//! \brief Registers an interrupt handler for the watchdog timer interrupt.
+//! \brief Registers an interrupt handler for the watchdog timer interrupt in the dynamic interrupt table.
 //!
-//! This function does the actual registering of the interrupt handler. This
-//! function also enables the global interrupt in the interrupt controller; the
-//! watchdog timer interrupt must be enabled via \ref WatchdogIntEnable(). It is the
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
+//!
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
+//!
+//! The watchdog timer interrupt must be enabled via \ref WatchdogIntEnable(). It is the
 //! interrupt handler's responsibility to clear the interrupt source via
 //! \ref WatchdogIntClear().
 //!
@@ -336,20 +325,16 @@ WatchdogValueGet(void)
 __STATIC_INLINE void
 WatchdogIntRegister(void (*pfnHandler)(void))
 {
-    //
     // Register the interrupt handler.
-    //
     IntRegister(INT_WDT_IRQ, pfnHandler);
 
-    //
     // Enable the watchdog timer interrupt.
-    //
     IntEnable(INT_WDT_IRQ);
 }
 
 //*****************************************************************************
 //
-//! \brief Unregisters an interrupt handler for the watchdog timer interrupt.
+//! \brief Unregisters an interrupt handler for the watchdog timer interrupt in the dynamic interrupt table.
 //!
 //! This function does the actual unregistering of the interrupt handler. This
 //! function clears the handler to be called when a watchdog timer interrupt
@@ -369,14 +354,10 @@ WatchdogIntRegister(void (*pfnHandler)(void))
 __STATIC_INLINE void
 WatchdogIntUnregister(void)
 {
-    //
     // Disable the interrupt.
-    //
     IntDisable(INT_WDT_IRQ);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(INT_WDT_IRQ);
 }
 
@@ -414,10 +395,8 @@ WatchdogIntEnable(void)
 __STATIC_INLINE uint32_t
 WatchdogIntStatus(void)
 {
-    //
     // Return either the interrupt status or the raw interrupt status as
     // requested.
-    //
     return(HWREG(WDT_BASE + WDT_O_RIS));
 }
 
@@ -449,9 +428,7 @@ WatchdogIntStatus(void)
 __STATIC_INLINE void
 WatchdogIntClear(void)
 {
-    //
     // Clear the interrupt source.
-    //
     HWREG(WDT_BASE + WDT_O_ICR) = WATCHDOG_INT_TIMEOUT;
 }
 

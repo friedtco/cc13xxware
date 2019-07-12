@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       ioc.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2017-11-02 14:16:14 +0100 (Thu, 02 Nov 2017)
+*  Revision:       50156
 *
 *  Description:    Defines and prototypes for the IO Controller.
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -61,13 +61,13 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_ioc.h>
-#include <inc/hw_ints.h>
-#include <driverlib/interrupt.h>
-#include <driverlib/debug.h>
-#include <driverlib/gpio.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_ioc.h"
+#include "../inc/hw_ints.h"
+#include "interrupt.h"
+#include "debug.h"
+#include "gpio.h"
 
 //*****************************************************************************
 //
@@ -88,6 +88,7 @@ extern "C"
     #define IOCIOShutdownSet                NOROM_IOCIOShutdownSet
     #define IOCIOModeSet                    NOROM_IOCIOModeSet
     #define IOCIOIntSet                     NOROM_IOCIOIntSet
+    #define IOCIOEvtSet                     NOROM_IOCIOEvtSet
     #define IOCIOPortPullSet                NOROM_IOCIOPortPullSet
     #define IOCIOHystSet                    NOROM_IOCIOHystSet
     #define IOCIOInputSet                   NOROM_IOCIOInputSet
@@ -178,6 +179,10 @@ extern "C"
 #define IOC_PORT_MCU_UART0_TX     0x00000010  // MCU UART0 Transmit Pin
 #define IOC_PORT_MCU_UART0_CTS    0x00000011  // MCU UART0 Clear To Send Pin
 #define IOC_PORT_MCU_UART0_RTS    0x00000012  // MCU UART0 Request To Send Pin
+#define IOC_PORT_MCU_UART1_RX     0x00000013  // MCU UART1 Receive Pin
+#define IOC_PORT_MCU_UART1_TX     0x00000014  // MCU UART1 Transmit Pin
+#define IOC_PORT_MCU_UART1_CTS    0x00000015  // MCU UART1 Clear To Send Pin
+#define IOC_PORT_MCU_UART1_RTS    0x00000016  // MCU UART1 Request To Send Pin
 #define IOC_PORT_MCU_PORT_EVENT0  0x00000017  // MCU PORT EVENT 0
 #define IOC_PORT_MCU_PORT_EVENT1  0x00000018  // MCU PORT EVENT 1
 #define IOC_PORT_MCU_PORT_EVENT2  0x00000019  // MCU PORT EVENT 2
@@ -203,6 +208,10 @@ extern "C"
 #define IOC_PORT_RFC_GPO3         0x00000032  // RC Core Data Out Pin 3
 #define IOC_PORT_RFC_GPI0         0x00000033  // RC Core Data In Pin 0
 #define IOC_PORT_RFC_GPI1         0x00000034  // RC Core Data In Pin 1
+#define IOC_PORT_RFC_SMI_DL_OUT   0x00000035  // RF Core SMI Data Link Out
+#define IOC_PORT_RFC_SMI_DL_IN    0x00000036  // RF Core SMI Data Link in
+#define IOC_PORT_RFC_SMI_CL_OUT   0x00000037  // RF Core SMI Command Link Out
+#define IOC_PORT_RFC_SMI_CL_IN    0x00000038  // RF Core SMI Command Link In
 
 //*****************************************************************************
 //
@@ -218,7 +227,7 @@ extern "C"
 
 //*****************************************************************************
 //
-// Values that can be used to set the shutdown mode of an IO
+// Defines that can be used to set the shutdown mode of an IO
 //
 //*****************************************************************************
 #define IOC_NO_WAKE_UP          0x00000000
@@ -227,7 +236,7 @@ extern "C"
 
 //*****************************************************************************
 //
-// Values that can be used to set the IO Mode of an IO
+// Defines that can be used to set the IO Mode of an IO
 //
 //*****************************************************************************
 #define IOC_IOMODE_NORMAL       0x00000000  // Normal Input/Output
@@ -245,7 +254,7 @@ extern "C"
 
 //*****************************************************************************
 //
-// Values that can be used to set the edge detection on an IO
+// Defines that can be used to set the edge detection on an IO
 //
 //*****************************************************************************
 #define IOC_NO_EDGE             0x00000000  // No edge detection
@@ -258,7 +267,7 @@ extern "C"
 
 //*****************************************************************************
 //
-// Values that be used to set pull on an IO
+// Defines that be used to set pull on an IO
 //
 //*****************************************************************************
 #define IOC_NO_IOPULL           0x00006000  // No IO pull
@@ -269,7 +278,7 @@ extern "C"
 
 //*****************************************************************************
 //
-// Values that can be used to select the drive strength of an IO
+// Defines that can be used to select the drive strength of an IO
 //
 //*****************************************************************************
 #define IOC_CURRENT_2MA         0x00000000  // 2mA drive strength
@@ -284,6 +293,23 @@ extern "C"
                                             // (2/4/8 mA @ 2.5V)
 #define IOC_STRENGTH_MIN        0x00000100  // Minimum Drive Strength
                                             // (2/4/8 mA @ 3.3V)
+
+//*****************************************************************************
+//
+// Defines that can be used to enable event generation on edge detect
+//
+//*****************************************************************************
+#define IOC_EVT_AON_PROG2_DISABLE      0x00000000
+#define IOC_EVT_AON_PROG2_ENABLE       0x00800000
+#define IOC_EVT_AON_PROG1_DISABLE      0x00000000
+#define IOC_EVT_AON_PROG1_ENABLE       0x00400000
+#define IOC_EVT_AON_PROG0_DISABLE      0x00000000
+#define IOC_EVT_AON_PROG0_ENABLE       0x00200000
+#define IOC_EVT_RTC_DISABLE            0x00000000
+#define IOC_EVT_RTC_ENABLE             0x00000080
+#define IOC_EVT_MCU_WU_DISABLE         0x00000000
+#define IOC_EVT_MCU_WU_ENABLE          0x00000040
+
 //*****************************************************************************
 //
 // Defines for standard IO setup
@@ -344,6 +370,10 @@ extern "C"
 //! - \ref IOC_PORT_MCU_UART0_TX
 //! - \ref IOC_PORT_MCU_UART0_CTS
 //! - \ref IOC_PORT_MCU_UART0_RTS
+//! - \ref IOC_PORT_MCU_UART1_RX
+//! - \ref IOC_PORT_MCU_UART1_TX
+//! - \ref IOC_PORT_MCU_UART1_CTS
+//! - \ref IOC_PORT_MCU_UART1_RTS
 //! - \ref IOC_PORT_MCU_PORT_EVENT0
 //! - \ref IOC_PORT_MCU_PORT_EVENT1
 //! - \ref IOC_PORT_MCU_PORT_EVENT2
@@ -378,7 +408,7 @@ extern "C"
 //!   - \ref IOC_IOMODE_OPEN_DRAIN_INV
 //!   - \ref IOC_IOMODE_OPEN_SRC_NORMAL
 //!   - \ref IOC_IOMODE_OPEN_SRC_INV
-//! - Wake up mode:
+//! - Wake-up mode (from shutdown):
 //!   - \ref IOC_NO_WAKE_UP
 //!   - \ref IOC_WAKE_ON_LOW
 //!   - \ref IOC_WAKE_ON_HIGH
@@ -400,18 +430,33 @@ extern "C"
 //! - Hysteresis mode:
 //!   - \ref IOC_HYST_ENABLE
 //!   - \ref IOC_HYST_DISABLE
-//! - Slew control mode:
+//! - Slew rate reduction mode:
 //!   - \ref IOC_SLEW_ENABLE
 //!   - \ref IOC_SLEW_DISABLE
-//! - Maximum current mode:
-//!   - \ref IOC_CURRENT_2MA
-//!   - \ref IOC_CURRENT_4MA
-//!   - \ref IOC_CURRENT_8MA
+//! - Current mode (see \ref IOCIODrvStrengthSet() for more details):
+//!   - \ref IOC_CURRENT_2MA : Low-Current mode. Min 2 mA when \ti_code{ui32DrvStrength} is set to \ref IOC_STRENGTH_AUTO.
+//!   - \ref IOC_CURRENT_4MA : High-Current mode. Min 4 mA when \ti_code{ui32DrvStrength} is set to \ref IOC_STRENGTH_AUTO.
+//!   - \ref IOC_CURRENT_8MA : Extended-Current mode. Min 8 mA for double drive strength IOs (min 4 mA for normal IOs) when \ti_code{ui32DrvStrength} is set to \ref IOC_STRENGTH_AUTO.
 //! - Drive strength mode:
-//!   - \ref IOC_STRENGTH_AUTO
-//!   - \ref IOC_STRENGTH_MAX
-//!   - \ref IOC_STRENGTH_MED
-//!   - \ref IOC_STRENGTH_MIN
+//!   - \ref IOC_STRENGTH_AUTO : Automatic drive strength based on battery voltage.
+//!   - \ref IOC_STRENGTH_MAX : Maximum drive strength, used for low supply levels. Controlled by AON IOC (see \ref AONIOCDriveStrengthSet()).
+//!   - \ref IOC_STRENGTH_MED : Medium drive strength, used for medium supply levels. Controlled by AON IOC (see \ref AONIOCDriveStrengthSet()).
+//!   - \ref IOC_STRENGTH_MIN : Minimum drive strength, used for high supply levels. Controlled by AON IOC (see \ref AONIOCDriveStrengthSet()).
+//! - Assert AON_PROG2 event on edge detection:
+//!   - \ref IOC_EVT_AON_PROG2_DISABLE
+//!   - \ref IOC_EVT_AON_PROG2_ENABLE
+//! - Assert AON_PROG1 event on edge detection:
+//!   - \ref IOC_EVT_AON_PROG1_DISABLE
+//!   - \ref IOC_EVT_AON_PROG1_ENABLE
+//! - Assert AON_PROG0 event on edge detection:
+//!   - \ref IOC_EVT_AON_PROG0_DISABLE
+//!   - \ref IOC_EVT_AON_PROG0_ENABLE
+//! - Assert RTC event on edge detection:
+//!   - \ref IOC_EVT_RTC_DISABLE
+//!   - \ref IOC_EVT_RTC_ENABLE
+//! - Assert MCU_WU event on edge detection:
+//!   - \ref IOC_EVT_MCU_WU_DISABLE
+//!   - \ref IOC_EVT_MCU_WU_ENABLE
 //!
 //! \return None
 //
@@ -441,15 +486,17 @@ extern uint32_t IOCPortConfigureGet(uint32_t ui32IOId);
 
 //*****************************************************************************
 //
-//! \brief Set wake-up on an IO port.
+//! \brief Set wake-up mode from shutdown on an IO port.
 //!
-//! This function is used to set the wake-up mode of an IO.
+//! This function is used to set the wake-up mode from shutdown of an IO.
+//!
+//! IO must be configured as input in order for wakeup to work. See \ref IOCIOInputSet().
 //!
 //! \param ui32IOId defines the IO to configure.
 //! - \ref IOID_0
 //! - ...
 //! - \ref IOID_31
-//! \param ui32IOShutdown enables wake-up on LOW/HIGH by this IO port.
+//! \param ui32IOShutdown enables wake-up from shutdown on LOW/HIGH by this IO port.
 //! - \ref IOC_NO_WAKE_UP
 //! - \ref IOC_WAKE_ON_LOW
 //! - \ref IOC_WAKE_ON_HIGH
@@ -485,9 +532,9 @@ extern void IOCIOModeSet(uint32_t ui32IOId, uint32_t ui32IOMode);
 
 //*****************************************************************************
 //
-//! \brief Setup interrupt detection on an IO Port.
+//! \brief Setup edge detection and interrupt generation on an IO Port.
 //!
-//! This function is used to setup the interrupt detection on an IO.
+//! This function is used to setup the edge detection and interrupt generation on an IO.
 //!
 //! \param ui32IOId defines the IO to configure.
 //! - \ref IOID_0
@@ -507,6 +554,29 @@ extern void IOCIOModeSet(uint32_t ui32IOId, uint32_t ui32IOMode);
 //*****************************************************************************
 extern void IOCIOIntSet(uint32_t ui32IOId, uint32_t ui32Int,
                         uint32_t ui32EdgeDet);
+
+//*****************************************************************************
+//
+//! \brief Setup event generation on IO edge detection.
+//!
+//! This function is used to setup event generation for specific events
+//! when an IO edge detection occurs.
+//!
+//! \param ui32IOId defines the IO to configure.
+//! - \ref IOID_0
+//! - ...
+//! - \ref IOID_31
+//! \param ui32Evt is a bitwise OR of the IO events to generate when an IO edge detection occurs.
+//! All other IO event generations are disabled.
+//! - \ref IOC_EVT_AON_PROG2_ENABLE : AON_PROG2 event.
+//! - \ref IOC_EVT_AON_PROG1_ENABLE : AON_PROG1 event.
+//! - \ref IOC_EVT_AON_PROG0_ENABLE : AON_PROG0 event.
+//! - \ref IOC_EVT_RTC_ENABLE       : RTC event.
+//! - \ref IOC_EVT_MCU_WU_ENABLE    : MCU_WU event.
+//!
+//
+//*****************************************************************************
+extern void IOCIOEvtSet(uint32_t ui32IOId, uint32_t ui32Evt);
 
 //*****************************************************************************
 //
@@ -568,15 +638,15 @@ extern void IOCIOInputSet(uint32_t ui32IOId, uint32_t ui32Input);
 
 //*****************************************************************************
 //
-//! \brief Enable/disable the slew control on an IO port.
+//! \brief Configure slew rate on an IO port.
 //!
-//! This function is used to enable/disable slew control on an IO.
+//! This function is used to enable/disable reduced slew rate on an IO.
 //!
 //! \param ui32IOId defines the IO to configure.
 //! - \ref IOID_0
 //! - ...
 //! - \ref IOID_31
-//! \param ui32SlewEnable enables/disables the slew control on an output.
+//! \param ui32SlewEnable enables/disables reduced slew rate on an output.
 //! - \ref IOC_SLEW_ENABLE
 //! - \ref IOC_SLEW_DISABLE
 //!
@@ -609,11 +679,11 @@ extern void IOCIOSlewCtrlSet(uint32_t ui32IOId, uint32_t ui32SlewEnable);
 //! - ...
 //! - \ref IOID_31
 //! \param ui32IOCurrent selects the IO current mode.
-//! - \ref IOC_CURRENT_2MA : Low-Current mode. Min 2 mA when \ti_code{ui32DrvStrength} is set to AUTO.
-//! - \ref IOC_CURRENT_4MA : High-Current mode. Min 4 mA when \ti_code{ui32DrvStrength} is set to AUTO.
-//! - \ref IOC_CURRENT_8MA : Extended-Current mode. Min 8 mA for double drive strength IOs (min 4 mA for normal IOs) when \ti_code{ui32DrvStrength} is set to AUTO.
+//! - \ref IOC_CURRENT_2MA : Low-Current mode. Min 2 mA when \ti_code{ui32DrvStrength} is set to \ref IOC_STRENGTH_AUTO.
+//! - \ref IOC_CURRENT_4MA : High-Current mode. Min 4 mA when \ti_code{ui32DrvStrength} is set to \ref IOC_STRENGTH_AUTO.
+//! - \ref IOC_CURRENT_8MA : Extended-Current mode. Min 8 mA for double drive strength IOs (min 4 mA for normal IOs) when \ti_code{ui32DrvStrength} is set to \ref IOC_STRENGTH_AUTO.
 //! \param ui32DrvStrength sets the source for drive strength control of the IO port.
-//! - \ref IOC_STRENGTH_AUTO : Automatic drive strength, controlled by AON BATMON based on battery voltage (default).
+//! - \ref IOC_STRENGTH_AUTO : Automatic drive strength based on battery voltage.
 //! - \ref IOC_STRENGTH_MAX : Maximum drive strength, used for low supply levels. Controlled by AON IOC (see \ref AONIOCDriveStrengthSet()).
 //! - \ref IOC_STRENGTH_MED : Medium drive strength, used for medium supply levels. Controlled by AON IOC (see \ref AONIOCDriveStrengthSet()).
 //! - \ref IOC_STRENGTH_MIN : Minimum drive strength, used for high supply levels. Controlled by AON IOC (see \ref AONIOCDriveStrengthSet()).
@@ -649,6 +719,10 @@ extern void IOCIODrvStrengthSet(uint32_t ui32IOId, uint32_t ui32IOCurrent,
 //! - \ref IOC_PORT_MCU_UART0_TX
 //! - \ref IOC_PORT_MCU_UART0_CTS
 //! - \ref IOC_PORT_MCU_UART0_RTS
+//! - \ref IOC_PORT_MCU_UART1_RX
+//! - \ref IOC_PORT_MCU_UART1_TX
+//! - \ref IOC_PORT_MCU_UART1_CTS
+//! - \ref IOC_PORT_MCU_UART1_RTS
 //! - \ref IOC_PORT_MCU_PORT_EVENT0
 //! - \ref IOC_PORT_MCU_PORT_EVENT1
 //! - \ref IOC_PORT_MCU_PORT_EVENT2
@@ -682,11 +756,14 @@ extern void IOCIOPortIdSet(uint32_t ui32IOId, uint32_t ui32PortId);
 
 //*****************************************************************************
 //
-//! \brief Register an interrupt handler for an IO edge interrupt.
+//! \brief Register an interrupt handler for an IO edge interrupt in the dynamic interrupt table.
 //!
-//! This function does the actual registering of the interrupt handler. This
-//! function enables the global interrupt in the interrupt controller; specific
-//! IO interrupts must be enabled via \ref IOCIntEnable(). It is the interrupt
+//! \note Only use this function if you want to use the dynamic vector table (in SRAM)!
+//!
+//! This function registers a function as the interrupt handler for a specific
+//! interrupt and enables the corresponding interrupt in the interrupt controller.
+//!
+//! Specific IO interrupts must be enabled via \ref IOCIntEnable(). It is the interrupt
 //! handler's responsibility to clear the interrupt source.
 //!
 //! \param pfnHandler is a pointer to the function to be called when the
@@ -701,20 +778,16 @@ extern void IOCIOPortIdSet(uint32_t ui32IOId, uint32_t ui32PortId);
 __STATIC_INLINE void
 IOCIntRegister(void (*pfnHandler)(void))
 {
-    //
     // Register the interrupt handler.
-    //
     IntRegister(INT_AON_GPIO_EDGE, pfnHandler);
 
-    //
     // Enable the IO edge interrupt.
-    //
     IntEnable(INT_AON_GPIO_EDGE);
 }
 
 //*****************************************************************************
 //
-//! \brief Unregisters an interrupt handler for a IO edge interrupt.
+//! \brief Unregisters an interrupt handler for a IO edge interrupt in the dynamic interrupt table.
 //!
 //! This function does the actual unregistering of the interrupt handler.  It
 //! clears the handler to be called when an IO edge interrupt occurs.
@@ -728,14 +801,10 @@ IOCIntRegister(void (*pfnHandler)(void))
 __STATIC_INLINE void
 IOCIntUnregister(void)
 {
-    //
     // Disable the interrupts.
-    //
     IntDisable(INT_AON_GPIO_EDGE);
 
-    //
     // Unregister the interrupt handler.
-    //
     IntUnregister(INT_AON_GPIO_EDGE);
 }
 
@@ -806,14 +875,10 @@ extern void IOCIntDisable(uint32_t ui32IOId);
 __STATIC_INLINE void
 IOCIntClear(uint32_t ui32IOId)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(ui32IOId <= IOID_31);
 
-    //
     // Clear the requested interrupt source by clearing the event.
-    //
     GPIO_clearEventDio(ui32IOId);
 }
 
@@ -832,14 +897,10 @@ IOCIntClear(uint32_t ui32IOId)
 __STATIC_INLINE uint32_t
 IOCIntStatus(uint32_t ui32IOId)
 {
-    //
     // Check the arguments.
-    //
     ASSERT(ui32IOId <= IOID_31);
 
-    //
     // Get the event status.
-    //
     return (GPIO_getEventDio(ui32IOId));
 }
 
@@ -1057,7 +1118,7 @@ extern void IOCPinTypeAux(uint32_t ui32IOId);
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_IOCPortConfigureSet
         #undef  IOCPortConfigureSet
         #define IOCPortConfigureSet             ROM_IOCPortConfigureSet
@@ -1077,6 +1138,10 @@ extern void IOCPinTypeAux(uint32_t ui32IOId);
     #ifdef ROM_IOCIOIntSet
         #undef  IOCIOIntSet
         #define IOCIOIntSet                     ROM_IOCIOIntSet
+    #endif
+    #ifdef ROM_IOCIOEvtSet
+        #undef  IOCIOEvtSet
+        #define IOCIOEvtSet                     ROM_IOCIOEvtSet
     #endif
     #ifdef ROM_IOCIOPortPullSet
         #undef  IOCIOPortPullSet

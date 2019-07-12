@@ -1,12 +1,12 @@
 /******************************************************************************
 *  Filename:       aux_adc.h
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2018-02-07 09:45:39 +0100 (Wed, 07 Feb 2018)
+*  Revision:       51437
 *
 *  Description:    Defines and prototypes for the AUX Analog-to-Digital
 *                  Converter
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -62,13 +62,13 @@ extern "C"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <inc/hw_types.h>
-#include <inc/hw_memmap.h>
-#include <inc/hw_event.h>
-#include <inc/hw_adi.h>
-#include <inc/hw_adi_4_aux.h>
-#include <inc/hw_aux_anaif.h>
-#include <driverlib/rom.h>
+#include "../inc/hw_types.h"
+#include "../inc/hw_memmap.h"
+#include "../inc/hw_event.h"
+#include "../inc/hw_adi.h"
+#include "../inc/hw_adi_4_aux.h"
+#include "../inc/hw_aux_anaif.h"
+#include "rom.h"
 
 //*****************************************************************************
 //
@@ -132,6 +132,15 @@ extern "C"
 #define AUXADC_TRIGGER_GPT2B                (EVENT_AUXSEL0_EV_GPT2B)
 #define AUXADC_TRIGGER_GPT3A                (EVENT_AUXSEL0_EV_GPT3A)
 #define AUXADC_TRIGGER_GPT3B                (EVENT_AUXSEL0_EV_GPT3B)
+// Additional triggers specific for cc26x2 and cc13x2 devices
+#define AUXADC_TRIGGER_GPT0A_CMP            (EVENT_AUXSEL0_EV_GPT0A_CMP)
+#define AUXADC_TRIGGER_GPT0B_CMP            (EVENT_AUXSEL0_EV_GPT0B_CMP)
+#define AUXADC_TRIGGER_GPT1A_CMP            (EVENT_AUXSEL0_EV_GPT1A_CMP)
+#define AUXADC_TRIGGER_GPT1B_CMP            (EVENT_AUXSEL0_EV_GPT1B_CMP)
+#define AUXADC_TRIGGER_GPT2A_CMP            (EVENT_AUXSEL0_EV_GPT2A_CMP)
+#define AUXADC_TRIGGER_GPT2B_CMP            (EVENT_AUXSEL0_EV_GPT2B_CMP)
+#define AUXADC_TRIGGER_GPT3A_CMP            (EVENT_AUXSEL0_EV_GPT3A_CMP)
+#define AUXADC_TRIGGER_GPT3B_CMP            (EVENT_AUXSEL0_EV_GPT3B_CMP)
 
 //*****************************************************************************
 //
@@ -515,7 +524,7 @@ extern int32_t AUXADCUnadjustValueForGainAndOffset(int32_t adcValue, int32_t gai
 //
 //*****************************************************************************
 #if !defined(DRIVERLIB_NOROM) && !defined(DOXYGEN)
-    #include <driverlib/rom.h>
+    #include "../driverlib/rom.h"
     #ifdef ROM_AUXADCDisable
         #undef  AUXADCDisable
         #define AUXADCDisable                   ROM_AUXADCDisable

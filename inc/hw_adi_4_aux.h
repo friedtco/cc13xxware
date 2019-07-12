@@ -1,9 +1,9 @@
 /******************************************************************************
 *  Filename:       hw_adi_4_aux_h
-*  Revised:        2016-06-07 14:59:08 +0200 (Tue, 07 Jun 2016)
-*  Revision:       46618
+*  Revised:        2018-05-14 12:24:52 +0200 (Mon, 14 May 2018)
+*  Revision:       51990
 *
-* Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+* Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -76,28 +76,25 @@
 // ADC Reference 1
 #define ADI_4_AUX_O_ADCREF1                                         0x0000000B
 
+// Internal
+#define ADI_4_AUX_O_LPMBIAS                                         0x0000000E
+
 //*****************************************************************************
 //
 // Register: ADI_4_AUX_O_MUX0
 //
 //*****************************************************************************
-// Field:   [7:4] COMPA_IN
+// Field:     [6] ADCCOMPB_IN
 //
 // Internal. Only to be used through TI provided API.
 // ENUMs:
-// FCAP1                    Internal. Only to be used through TI provided API.
-// FCAP0                    Internal. Only to be used through TI provided API.
-// ATEST1                   Internal. Only to be used through TI provided API.
-// ATEST0                   Internal. Only to be used through TI provided API.
+// VDDR_1P8V                Internal. Only to be used through TI provided API.
 // NC                       Internal. Only to be used through TI provided API.
-#define ADI_4_AUX_MUX0_COMPA_IN_W                                            4
-#define ADI_4_AUX_MUX0_COMPA_IN_M                                   0x000000F0
-#define ADI_4_AUX_MUX0_COMPA_IN_S                                            4
-#define ADI_4_AUX_MUX0_COMPA_IN_FCAP1                               0x00000080
-#define ADI_4_AUX_MUX0_COMPA_IN_FCAP0                               0x00000040
-#define ADI_4_AUX_MUX0_COMPA_IN_ATEST1                              0x00000020
-#define ADI_4_AUX_MUX0_COMPA_IN_ATEST0                              0x00000010
-#define ADI_4_AUX_MUX0_COMPA_IN_NC                                  0x00000000
+#define ADI_4_AUX_MUX0_ADCCOMPB_IN                                  0x00000040
+#define ADI_4_AUX_MUX0_ADCCOMPB_IN_M                                0x00000040
+#define ADI_4_AUX_MUX0_ADCCOMPB_IN_S                                         6
+#define ADI_4_AUX_MUX0_ADCCOMPB_IN_VDDR_1P8V                        0x00000040
+#define ADI_4_AUX_MUX0_ADCCOMPB_IN_NC                               0x00000000
 
 // Field:   [3:0] COMPA_REF
 //
@@ -126,26 +123,26 @@
 //
 // Internal. Only to be used through TI provided API.
 // ENUMs:
-// AUXIO0                   Internal. Only to be used through TI provided API.
-// AUXIO1                   Internal. Only to be used through TI provided API.
-// AUXIO2                   Internal. Only to be used through TI provided API.
-// AUXIO3                   Internal. Only to be used through TI provided API.
-// AUXIO4                   Internal. Only to be used through TI provided API.
-// AUXIO5                   Internal. Only to be used through TI provided API.
-// AUXIO6                   Internal. Only to be used through TI provided API.
-// AUXIO7                   Internal. Only to be used through TI provided API.
+// AUXIO19                  Internal. Only to be used through TI provided API.
+// AUXIO20                  Internal. Only to be used through TI provided API.
+// AUXIO21                  Internal. Only to be used through TI provided API.
+// AUXIO22                  Internal. Only to be used through TI provided API.
+// AUXIO23                  Internal. Only to be used through TI provided API.
+// AUXIO24                  Internal. Only to be used through TI provided API.
+// AUXIO25                  Internal. Only to be used through TI provided API.
+// AUXIO26                  Internal. Only to be used through TI provided API.
 // NC                       Internal. Only to be used through TI provided API.
 #define ADI_4_AUX_MUX1_COMPA_IN_W                                            8
 #define ADI_4_AUX_MUX1_COMPA_IN_M                                   0x000000FF
 #define ADI_4_AUX_MUX1_COMPA_IN_S                                            0
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO0                              0x00000080
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO1                              0x00000040
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO2                              0x00000020
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO3                              0x00000010
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO4                              0x00000008
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO5                              0x00000004
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO6                              0x00000002
-#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO7                              0x00000001
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO19                             0x00000080
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO20                             0x00000040
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO21                             0x00000020
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO22                             0x00000010
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO23                             0x00000008
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO24                             0x00000004
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO25                             0x00000002
+#define ADI_4_AUX_MUX1_COMPA_IN_AUXIO26                             0x00000001
 #define ADI_4_AUX_MUX1_COMPA_IN_NC                                  0x00000000
 
 //*****************************************************************************
@@ -173,21 +170,21 @@
 #define ADI_4_AUX_MUX2_ADCCOMPB_IN_ATEST0                           0x00000008
 #define ADI_4_AUX_MUX2_ADCCOMPB_IN_NC                               0x00000000
 
-// Field:   [2:0] COMPB_REF
+// Field:   [2:0] DAC_VREF_SEL
 //
 // Internal. Only to be used through TI provided API.
 // ENUMs:
 // VDDS                     Internal. Only to be used through TI provided API.
-// VSS                      Internal. Only to be used through TI provided API.
+// ADCREF                   Internal. Only to be used through TI provided API.
 // DCOUPL                   Internal. Only to be used through TI provided API.
 // NC                       Internal. Only to be used through TI provided API.
-#define ADI_4_AUX_MUX2_COMPB_REF_W                                           3
-#define ADI_4_AUX_MUX2_COMPB_REF_M                                  0x00000007
-#define ADI_4_AUX_MUX2_COMPB_REF_S                                           0
-#define ADI_4_AUX_MUX2_COMPB_REF_VDDS                               0x00000004
-#define ADI_4_AUX_MUX2_COMPB_REF_VSS                                0x00000002
-#define ADI_4_AUX_MUX2_COMPB_REF_DCOUPL                             0x00000001
-#define ADI_4_AUX_MUX2_COMPB_REF_NC                                 0x00000000
+#define ADI_4_AUX_MUX2_DAC_VREF_SEL_W                                        3
+#define ADI_4_AUX_MUX2_DAC_VREF_SEL_M                               0x00000007
+#define ADI_4_AUX_MUX2_DAC_VREF_SEL_S                                        0
+#define ADI_4_AUX_MUX2_DAC_VREF_SEL_VDDS                            0x00000004
+#define ADI_4_AUX_MUX2_DAC_VREF_SEL_ADCREF                          0x00000002
+#define ADI_4_AUX_MUX2_DAC_VREF_SEL_DCOUPL                          0x00000001
+#define ADI_4_AUX_MUX2_DAC_VREF_SEL_NC                              0x00000000
 
 //*****************************************************************************
 //
@@ -198,26 +195,26 @@
 //
 // Internal. Only to be used through TI provided API.
 // ENUMs:
-// AUXIO0                   Internal. Only to be used through TI provided API.
-// AUXIO1                   Internal. Only to be used through TI provided API.
-// AUXIO2                   Internal. Only to be used through TI provided API.
-// AUXIO3                   Internal. Only to be used through TI provided API.
-// AUXIO4                   Internal. Only to be used through TI provided API.
-// AUXIO5                   Internal. Only to be used through TI provided API.
-// AUXIO6                   Internal. Only to be used through TI provided API.
-// AUXIO7                   Internal. Only to be used through TI provided API.
+// AUXIO19                  Internal. Only to be used through TI provided API.
+// AUXIO20                  Internal. Only to be used through TI provided API.
+// AUXIO21                  Internal. Only to be used through TI provided API.
+// AUXIO22                  Internal. Only to be used through TI provided API.
+// AUXIO23                  Internal. Only to be used through TI provided API.
+// AUXIO24                  Internal. Only to be used through TI provided API.
+// AUXIO25                  Internal. Only to be used through TI provided API.
+// AUXIO26                  Internal. Only to be used through TI provided API.
 // NC                       Internal. Only to be used through TI provided API.
 #define ADI_4_AUX_MUX3_ADCCOMPB_IN_W                                         8
 #define ADI_4_AUX_MUX3_ADCCOMPB_IN_M                                0x000000FF
 #define ADI_4_AUX_MUX3_ADCCOMPB_IN_S                                         0
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO0                           0x00000080
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO1                           0x00000040
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO2                           0x00000020
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO3                           0x00000010
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO4                           0x00000008
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO5                           0x00000004
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO6                           0x00000002
-#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO7                           0x00000001
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO19                          0x00000080
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO20                          0x00000040
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO21                          0x00000020
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO22                          0x00000010
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO23                          0x00000008
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO24                          0x00000004
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO25                          0x00000002
+#define ADI_4_AUX_MUX3_ADCCOMPB_IN_AUXIO26                          0x00000001
 #define ADI_4_AUX_MUX3_ADCCOMPB_IN_NC                               0x00000000
 
 //*****************************************************************************
@@ -278,21 +275,12 @@
 #define ADI_4_AUX_COMP_COMPA_REF_CURR_EN_M                          0x00000040
 #define ADI_4_AUX_COMP_COMPA_REF_CURR_EN_S                                   6
 
-// Field:   [5:3] COMPB_TRIM
+// Field:   [5:3] LPM_BIAS_WIDTH_TRIM
 //
-// COMPB voltage reference trim temperature coded:
-// ENUMs:
-// DIV4                     Divide reference by 4
-// DIV3                     Divide reference by 3
-// DIV2                     Divide reference by 2
-// DIV1                     No reference division
-#define ADI_4_AUX_COMP_COMPB_TRIM_W                                          3
-#define ADI_4_AUX_COMP_COMPB_TRIM_M                                 0x00000038
-#define ADI_4_AUX_COMP_COMPB_TRIM_S                                          3
-#define ADI_4_AUX_COMP_COMPB_TRIM_DIV4                              0x00000038
-#define ADI_4_AUX_COMP_COMPB_TRIM_DIV3                              0x00000018
-#define ADI_4_AUX_COMP_COMPB_TRIM_DIV2                              0x00000008
-#define ADI_4_AUX_COMP_COMPB_TRIM_DIV1                              0x00000000
+// Internal. Only to be used through TI provided API.
+#define ADI_4_AUX_COMP_LPM_BIAS_WIDTH_TRIM_W                                 3
+#define ADI_4_AUX_COMP_LPM_BIAS_WIDTH_TRIM_M                        0x00000038
+#define ADI_4_AUX_COMP_LPM_BIAS_WIDTH_TRIM_S                                 3
 
 // Field:     [2] COMPB_EN
 //
@@ -317,26 +305,26 @@
 //
 // Internal. Only to be used through TI provided API.
 // ENUMs:
-// AUXIO0                   Internal. Only to be used through TI provided API.
-// AUXIO1                   Internal. Only to be used through TI provided API.
-// AUXIO2                   Internal. Only to be used through TI provided API.
-// AUXIO3                   Internal. Only to be used through TI provided API.
-// AUXIO4                   Internal. Only to be used through TI provided API.
-// AUXIO5                   Internal. Only to be used through TI provided API.
-// AUXIO6                   Internal. Only to be used through TI provided API.
-// AUXIO7                   Internal. Only to be used through TI provided API.
+// AUXIO19                  Internal. Only to be used through TI provided API.
+// AUXIO20                  Internal. Only to be used through TI provided API.
+// AUXIO21                  Internal. Only to be used through TI provided API.
+// AUXIO22                  Internal. Only to be used through TI provided API.
+// AUXIO23                  Internal. Only to be used through TI provided API.
+// AUXIO24                  Internal. Only to be used through TI provided API.
+// AUXIO25                  Internal. Only to be used through TI provided API.
+// AUXIO26                  Internal. Only to be used through TI provided API.
 // NC                       Internal. Only to be used through TI provided API.
 #define ADI_4_AUX_MUX4_COMPA_REF_W                                           8
 #define ADI_4_AUX_MUX4_COMPA_REF_M                                  0x000000FF
 #define ADI_4_AUX_MUX4_COMPA_REF_S                                           0
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO0                             0x00000080
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO1                             0x00000040
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO2                             0x00000020
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO3                             0x00000010
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO4                             0x00000008
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO5                             0x00000004
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO6                             0x00000002
-#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO7                             0x00000001
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO19                            0x00000080
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO20                            0x00000040
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO21                            0x00000020
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO22                            0x00000010
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO23                            0x00000008
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO24                            0x00000004
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO25                            0x00000002
+#define ADI_4_AUX_MUX4_COMPA_REF_AUXIO26                            0x00000001
 #define ADI_4_AUX_MUX4_COMPA_REF_NC                                 0x00000000
 
 //*****************************************************************************
@@ -443,9 +431,14 @@
 //*****************************************************************************
 // Field:     [6] REF_ON_IDLE
 //
-// Keep ADCREF powered up in IDLE state when ADC0.SMPL_MODE = 0.
+// Enable ADCREF in IDLE state.
 //
-// Set to 1 if ADC0.SMPL_CYCLE_EXP is less than 6 (21.3us sampling time)
+// 0: Disabled in IDLE state
+// 1: Enabled in IDLE state
+//
+// Keep ADCREF enabled when ADC0.SMPL_MODE = 0.
+// Recommendation: Enable ADCREF always when ADC0.SMPL_CYCLE_EXP is less than
+// 0x6 (21.3us sampling time).
 #define ADI_4_AUX_ADCREF0_REF_ON_IDLE                               0x00000040
 #define ADI_4_AUX_ADCREF0_REF_ON_IDLE_M                             0x00000040
 #define ADI_4_AUX_ADCREF0_REF_ON_IDLE_S                                      6
@@ -503,6 +496,18 @@
 #define ADI_4_AUX_ADCREF1_VTRIM_W                                            6
 #define ADI_4_AUX_ADCREF1_VTRIM_M                                   0x0000003F
 #define ADI_4_AUX_ADCREF1_VTRIM_S                                            0
+
+//*****************************************************************************
+//
+// Register: ADI_4_AUX_O_LPMBIAS
+//
+//*****************************************************************************
+// Field:   [5:0] LPM_TRIM_IOUT
+//
+// Internal. Only to be used through TI provided API.
+#define ADI_4_AUX_LPMBIAS_LPM_TRIM_IOUT_W                                    6
+#define ADI_4_AUX_LPMBIAS_LPM_TRIM_IOUT_M                           0x0000003F
+#define ADI_4_AUX_LPMBIAS_LPM_TRIM_IOUT_S                                    0
 
 
 #endif // __ADI_4_AUX__

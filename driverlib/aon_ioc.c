@@ -1,11 +1,11 @@
 /******************************************************************************
 *  Filename:       aon_ioc.c
-*  Revised:        2016-06-30 09:21:03 +0200 (Thu, 30 Jun 2016)
-*  Revision:       46799
+*  Revised:        2016-10-06 17:21:09 +0200 (Thu, 06 Oct 2016)
+*  Revision:       47343
 *
 *  Description:    Driver for the AON IO Controller
 *
-*  Copyright (c) 2015 - 2016, Texas Instruments Incorporated
+*  Copyright (c) 2015 - 2017, Texas Instruments Incorporated
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -36,4 +36,4 @@
 *
 ******************************************************************************/
 
-#include <driverlib/aon_ioc.h>
+#include "aon_ioc.h"
