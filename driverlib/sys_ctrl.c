@@ -290,7 +290,7 @@ SysCtrlSetRechargeBeforePowerDown( uint32_t xoscPowerMode )
 //
 //*****************************************************************************
 void
-SysCtrlAdjustRechargeAfterPowerDown( uint32_t vddrRechargeMargin )
+SysCtrlAdjustRechargeAfterPowerDown( void )
 {
    // Nothing to be done but keeping this function for platform compatibility.
 }

@@ -395,7 +395,7 @@ extern void SysCtrlSetRechargeBeforePowerDown( uint32_t xoscPowerMode );
 //! \return None
 //
 //*****************************************************************************
-extern void SysCtrlAdjustRechargeAfterPowerDown( uint32_t vddrRechargeMargin );
+extern void SysCtrlAdjustRechargeAfterPowerDown( void );
 
 //*****************************************************************************
 //
