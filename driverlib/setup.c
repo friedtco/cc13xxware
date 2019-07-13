@@ -323,7 +323,7 @@ TrimAfterColdResetWakeupFromShutDown(uint32_t ui32Fcfg1Revision)
 #endif
 
     // Set AUX into power down active mode
-    AUXSYSIFOpModeChange( AUX_SYSIF_OPMODE_TARGET_PDA );
+    //AUXSYSIFOpModeChange( AUX_SYSIF_OPMODE_TARGET_PDA );
 
     // Disable EFUSE clock
     HWREGBITW( FLASH_BASE + FLASH_O_CFG, FLASH_CFG_DIS_EFUSECLK_BITN ) = 1;
