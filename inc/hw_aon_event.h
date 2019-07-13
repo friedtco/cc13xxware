@@ -48,6 +48,7 @@
 
 // Wake-up Selector For MCU
 #define AON_EVENT_O_MCUWUSEL1                                       0x00000004
+#define AON_EVENT_O_AUXWUSEL                                        AON_EVENT_O_MCUWUSEL1
 
 // Event Selector For MCU Event Fabric
 #define AON_EVENT_O_EVTOMCUSEL                                      0x00000008
@@ -207,6 +208,9 @@
 #define AON_EVENT_MCUWUSEL_WU2_EV_W                                          6
 #define AON_EVENT_MCUWUSEL_WU2_EV_M                                 0x003F0000
 #define AON_EVENT_MCUWUSEL_WU2_EV_S                                         16
+#define AON_EVENT_AUXWUSEL_WU2_EV_W                                 AON_EVENT_MCUWUSEL_WU2_EV_W
+#define AON_EVENT_AUXWUSEL_WU2_EV_M                                 AON_EVENT_MCUWUSEL_WU2_EV_M
+#define AON_EVENT_AUXWUSEL_WU2_EV_S                                 AON_EVENT_MCUWUSEL_WU2_EV_S
 #define AON_EVENT_MCUWUSEL_WU2_EV_NONE                              0x003F0000
 #define AON_EVENT_MCUWUSEL_WU2_EV_AUX_COMPB_ASYNC_N                 0x00380000
 #define AON_EVENT_MCUWUSEL_WU2_EV_AUX_COMPB_ASYNC                   0x00370000
@@ -298,6 +302,9 @@
 #define AON_EVENT_MCUWUSEL_WU1_EV_W                                          6
 #define AON_EVENT_MCUWUSEL_WU1_EV_M                                 0x00003F00
 #define AON_EVENT_MCUWUSEL_WU1_EV_S                                          8
+#define AON_EVENT_AUXWUSEL_WU1_EV_W                                 AON_EVENT_MCUWUSEL_WU1_EV_W
+#define AON_EVENT_AUXWUSEL_WU1_EV_M                                 AON_EVENT_MCUWUSEL_WU1_EV_M
+#define AON_EVENT_AUXWUSEL_WU1_EV_S                                 AON_EVENT_MCUWUSEL_WU1_EV_S
 #define AON_EVENT_MCUWUSEL_WU1_EV_NONE                              0x00003F00
 #define AON_EVENT_MCUWUSEL_WU1_EV_AUX_COMPB_ASYNC_N                 0x00003800
 #define AON_EVENT_MCUWUSEL_WU1_EV_AUX_COMPB_ASYNC                   0x00003700
@@ -389,6 +396,9 @@
 #define AON_EVENT_MCUWUSEL_WU0_EV_W                                          6
 #define AON_EVENT_MCUWUSEL_WU0_EV_M                                 0x0000003F
 #define AON_EVENT_MCUWUSEL_WU0_EV_S                                          0
+#define AON_EVENT_AUXWUSEL_WU0_EV_W                                 AON_EVENT_MCUWUSEL_WU0_EV_W
+#define AON_EVENT_AUXWUSEL_WU0_EV_M                                 AON_EVENT_MCUWUSEL_WU0_EV_M
+#define AON_EVENT_AUXWUSEL_WU0_EV_S                                 AON_EVENT_MCUWUSEL_WU0_EV_S
 #define AON_EVENT_MCUWUSEL_WU0_EV_NONE                              0x0000003F
 #define AON_EVENT_MCUWUSEL_WU0_EV_AUX_COMPB_ASYNC_N                 0x00000038
 #define AON_EVENT_MCUWUSEL_WU0_EV_AUX_COMPB_ASYNC                   0x00000037
