@@ -49,6 +49,8 @@
     #define AONEventMcuWakeUpSet            NOROM_AONEventMcuWakeUpSet
     #undef  AONEventMcuWakeUpGet
     #define AONEventMcuWakeUpGet            NOROM_AONEventMcuWakeUpGet
+    #undef  AONEventAuxWakeUpSet
+    #define AONEventAuxWakeUpSet            NOROM_AONEventAuxWakeUpSet
     #undef  AONEventMcuSet
     #define AONEventMcuSet                  NOROM_AONEventMcuSet
     #undef  AONEventMcuGet
@@ -93,7 +95,6 @@ AONEventMcuWakeUpGet(uint32_t ui32MCUWUEvent)
 
     // Check the arguments.
     ASSERT(( ui32MCUWUEvent >= AON_EVENT_MCU_WU0 ) && ( ui32MCUWUEvent <= AON_EVENT_MCU_WU7 ))
-
     ui32Shift  = (( ui32MCUWUEvent & 3 ) << 3            );
     ui32RegAdr = ( AON_EVENT_BASE + AON_EVENT_O_MCUWUSEL );
     if ( ui32MCUWUEvent > 3 ) {
@@ -101,6 +102,46 @@ AONEventMcuWakeUpGet(uint32_t ui32MCUWUEvent)
     }
     return (( HWREG( ui32RegAdr ) >> ui32Shift ) & 0x3F );
 }
+
+//*****************************************************************************
+//
+//! Select event source for the specified AUX wakeup programmable event
+//
+//*****************************************************************************
+void
+AONEventAuxWakeUpSet(uint32_t ui32AUXWUEvent, uint32_t ui32EventSrc)
+{
+    uint32_t ui32Ctrl;
+
+    //
+    // Check the arguments.
+    //
+    ASSERT((ui32AUXWUEvent == AON_EVENT_AUX_WU0) ||
+           (ui32AUXWUEvent == AON_EVENT_AUX_WU1) ||
+           (ui32AUXWUEvent == AON_EVENT_AUX_WU2));
+    ASSERT(ui32EventSrc <= AON_EVENT_NONE);
+
+    ui32Ctrl = HWREG(AON_EVENT_BASE + AON_EVENT_O_AUXWUSEL);
+
+    if(ui32AUXWUEvent == AON_EVENT_AUX_WU0)
+    {
+        ui32Ctrl &= ~(AON_EVENT_AUXWUSEL_WU0_EV_M);
+        ui32Ctrl |= (ui32EventSrc & 0x3f) << AON_EVENT_AUXWUSEL_WU0_EV_S;
+    }
+    else if(ui32AUXWUEvent == AON_EVENT_AUX_WU1)
+    {
+        ui32Ctrl &= ~(AON_EVENT_AUXWUSEL_WU1_EV_M);
+        ui32Ctrl |= (ui32EventSrc & 0x3f) << AON_EVENT_AUXWUSEL_WU1_EV_S;
+    }
+    else if(ui32AUXWUEvent == AON_EVENT_AUX_WU2)
+    {
+        ui32Ctrl &= ~(AON_EVENT_AUXWUSEL_WU2_EV_M);
+        ui32Ctrl |= (ui32EventSrc & 0x3f) << AON_EVENT_AUXWUSEL_WU2_EV_S;
+    }
+
+    HWREG(AON_EVENT_BASE + AON_EVENT_O_AUXWUSEL) = ui32Ctrl;
+}
+
 
 //*****************************************************************************
 //
