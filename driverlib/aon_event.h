@@ -147,6 +147,9 @@ extern "C"
 #define AON_EVENT_MCU_WU5 5     // Programmable MCU wake-up event 5
 #define AON_EVENT_MCU_WU6 6     // Programmable MCU wake-up event 6
 #define AON_EVENT_MCU_WU7 7     // Programmable MCU wake-up event 7
+#define AON_EVENT_AUX_WU0 0     // Programmable AUX wakeup event 0
+#define AON_EVENT_AUX_WU1 1     // Programmable AUX wakeup event 1
+#define AON_EVENT_AUX_WU2 2     // Programmable AUX wakeup event 2
 
 //*****************************************************************************
 //

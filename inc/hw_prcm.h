@@ -1016,6 +1016,7 @@
 #define PRCM_UARTCLKGR_CLK_EN_S                                              0
 #define PRCM_UARTCLKGR_CLK_EN_UART1                                 0x00000002
 #define PRCM_UARTCLKGR_CLK_EN_UART0                                 0x00000001
+#define PRCM_UARTCLKGR_CLK_EN PRCM_UARTCLKGR_CLK_EN_UART0
 
 //*****************************************************************************
 //
